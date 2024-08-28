@@ -1,0 +1,114 @@
+@startuml Class diagram
+
+class Player {
+  +String id
+  +String username
+  +String walletAddress
+}
+
+class Token {
+  +String id
+  +String symbol
+}
+
+class Meme {
+  +String id
+  +String tokenId
+  +String name
+  +Int hp
+  +Int attack
+  +Int defense
+  +Int criticChance
+  +Int speed
+}
+
+class PlayerToken {
+  +String id
+  +String playerId
+  +String tokenId
+  +bigint balance
+}
+
+class PlayerMeme {
+  +String id
+  +String playerId
+  +String memeId
+}
+
+class Skills {
+  +String id
+  +String skillTypeId
+  +String name
+  +Int power 
+}
+
+class SkillTypes {
+  +String id
+  +String name
+}
+
+class MemeSkills {
+  +String id
+  +String memeId
+  +String skillId
+}
+
+class AttackResultId {
+  +String id
+  +String name
+}
+
+
+class BattleSession {
+  +String id
+  +Date createdAt
+  +String status
+}
+
+class BattleSessionPlayer {
+  +String id
+  +String battleSessionid
+  +String playerId
+}
+
+class BattleSessionPlayerMeme {
+   +String id
+  +String battleSessionid
+  +String playerMemeId
+}
+
+class BattleSessionAttacksLog {
+  +String id
+  +Date timestamp
+  +String atackerId
+  +String receiverId
+  +String skillid
+  +string  attackResultId
+}
+
+class MemeStakingLine {
+  +String id
+  +Float stakedAmount
+  +Date createdAt
+}
+
+class MemeWithdrawLine {
+  +String id
+  +Float withdrawAmount
+  +Date createdAt
+}
+
+    Player "1" -- "*" PlayerToken : has
+    Player "1" -- "*" PlayerMeme : owns
+    Player "1" -- "*" BattleSessionPlayer : participates
+    Token "1" -- "*" PlayerToken : represents
+    Meme "1" -- "*" PlayerMeme : instance of
+    Meme "1" -- "*" MemeSkills : has
+    Skills "1" -- "*" MemeSkills : associated with
+    SkillTypes "1" -- "*" Skills : categorizes
+    BattleSession "1" -- "*" BattleSessionPlayer : includes
+    BattleSession "1" -- "*" BattleSessionPlayerMeme : involves
+    BattleSession "1" -- "*" BattleSessionAttacksLog : records
+    AttackResultId "1" -- "*" BattleSessionAttacksLog : describes
+    Meme "1" -- "*" MemeStakingLine : stakes
+    Meme "1" -- "*" MemeWithdrawLine : withdraws
