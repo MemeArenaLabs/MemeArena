@@ -1,0 +1,10 @@
+# Obtener todos los usuarios
+GET http://localhost:3000/users
+Accept: application/json
+
+###
+
+# Obtener los memes de un usuario específico
+# Cambia el :id por el ID real del usuario que quieres consultar
+GET http://localhost:3000/users/76ffb67a-f8cd-40eb-ae36-693704655dac/memes
+Accept: application/json

@@ -10,16 +10,14 @@ export class MemeService {
   constructor(
     @InjectRepository(Meme)
     private memeRepository: Repository<Meme>,
-    private userService: UserService,
   ) {}
   
   async create(createMemeDto: CreateMemeDto): Promise<Meme> {
-    const user = await this.userService.findOne(createMemeDto.userId);
     const meme = this.memeRepository.create(createMemeDto);
     return await this.memeRepository.save(meme);
   }
 
-  async getMemesByUser(userId: number): Promise<Meme[]> {
+  async getMemesByUser(userId: string): Promise<Meme[]> {
     return await this.memeRepository.find({
       where: { user: { id: userId } },
     });

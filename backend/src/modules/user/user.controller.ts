@@ -4,10 +4,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { MemeService } from 'src/modules/meme/meme.service';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
-  memeService: MemeService;
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly memeService: MemeService
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -15,7 +17,7 @@ export class UserController {
   }
 
   @Get(':userId/memes')
-  getUserMemes(@Param('userId') userId: number) {
+  getUserMemes(@Param('userId') userId: string) {
     return this.memeService.getMemesByUser(userId);
   }
 
@@ -27,12 +29,12 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')

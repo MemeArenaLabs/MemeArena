@@ -6,5 +6,5 @@ export class CreateMemeDto {
   defense: number;
   criticChance: number;
   speed: number;
-  userId: number;
+  userId: string;
 }
