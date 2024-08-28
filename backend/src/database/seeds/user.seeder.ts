@@ -5,18 +5,21 @@ import { User } from '../../modules/user/user.entity';
 export default class UserSeeder implements Seeder {
   public async run(
     dataSource: DataSource,
-    factoryManager: SeederFactoryManager
-  ): Promise<any> {
-    const repository = dataSource.getRepository(User);
-    await repository.insert([
+    factoryManager: SeederFactoryManager,
+  ): Promise<void> {
+    const userRepository = dataSource.getRepository(User);
+
+    await userRepository.insert([
       {
-        username: 'user1',
-        walletAddress: '0x1234567890123456789012345678901234567890',
+        username: 'john_doe',
+        walletAddress: '0xJohnDoeWalletAddress',
       },
       {
-        username: 'user2',
-        walletAddress: '0x0987654321098765432109876543210987654321',
+        username: 'jane_doe',
+        walletAddress: '0xJaneDoeWalletAddress',
       },
     ]);
+
+    console.log('Users seeded successfully!');
   }
 }

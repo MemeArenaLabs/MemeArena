@@ -1,15 +1,14 @@
-import { runSeeders, Seeder, SeederFactoryManager } from 'typeorm-extension';
+import { runSeeders, Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
 import { typeOrmConfig } from '../../config/ormconfig';
 import UserSeeder from './user.seeder';
 import MemeSeeder from './meme.seeder';
+import TokenSeeder from './token.seeder';
 
 export default class InitialDatabaseSeed implements Seeder {
-  public async run(
-    dataSource: DataSource,
-  ): Promise<any> {
+  public async run(dataSource: DataSource): Promise<void> {
     await runSeeders(dataSource, {
-      seeds: [UserSeeder, MemeSeeder],
+      seeds: [TokenSeeder, UserSeeder, MemeSeeder],
     });
   }
 }
@@ -18,7 +17,8 @@ async function main() {
   const initialDataSource = new DataSource(typeOrmConfig);
   try {
     await initialDataSource.initialize();
-    await runSeeders(initialDataSource);
+    const seeder = new InitialDatabaseSeed();
+    await seeder.run(initialDataSource)
     console.log('Seeding complete!');
     process.exit(0);
   } catch (error) {

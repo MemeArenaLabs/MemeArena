@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// token.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Meme } from '../meme/meme.entity';
 
 @Entity()
 export class Token {
@@ -13,4 +15,7 @@ export class Token {
 
   @Column({ nullable: true })
   contractAddress: string;
+
+  @OneToMany(() => Meme, meme => meme.token)
+  memes: Meme[];
 }

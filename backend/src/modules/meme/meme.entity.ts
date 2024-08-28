@@ -1,4 +1,5 @@
-import { User } from '../../modules/user/user.entity';
+import { User } from '../user/user.entity';
+import { Token } from '../token/token.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
@@ -8,9 +9,6 @@ export class Meme {
 
   @Column()
   name: string;
-
-  @Column({ unique: true })
-  tokenId: string;
 
   @Column()
   hp: number;
@@ -29,4 +27,7 @@ export class Meme {
 
   @ManyToOne(() => User, user => user.memes)
   user: User;
+
+  @ManyToOne(() => Token, token => token.memes)
+  token: Token; 
 }

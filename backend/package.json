@@ -18,8 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed": "ts-node src/database/seeds/run-seed.ts",
-    "seed:clear": "ts-node src/database/seeds/clear.seeder.ts"
+    "seed:run": "ts-node src/database/seeds/run-seed.ts",
+    "seed:clear": "ts-node src/database/seeds/clear.seeder.ts",
+    "seed:drop": "ts-node src/database/seeds/drop.seeder.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
