@@ -1,0 +1,27 @@
+@startuml Battle
+actor PlayerA
+actor PlayerB
+actor Server
+
+PlayerA -> Server : FINDING
+PlayerB -> Server : FINDING
+Server -> PlayerA : JOINED
+Server -> PlayerB : JOINED
+
+PlayerA -> Server : PROPOSE_TEAM
+PlayerB -> Server : PROPOSE_TEAM
+Server -> PlayerA : TEAM_PROPOSED
+Server -> PlayerB : TEAM_PROPOSED
+Server -> PlayerA : START
+Server -> PlayerB : START
+
+loop Skills Proposal
+  PlayerA -> Server : PROPOSE_SKILL
+  PlayerB -> Server : PROPOSE_SKILL
+  Server -> PlayerA : RESOLVE_SKILLS
+  Server -> PlayerB : RESOLVE_SKILLS
+end
+
+Server -> PlayerA : FINISH
+Server -> PlayerB : FINISH
+@enduml
