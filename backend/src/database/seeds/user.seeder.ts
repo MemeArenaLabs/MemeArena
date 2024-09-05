@@ -11,8 +11,8 @@ export default class UserSeeder implements Seeder {
 
     await userRepository.insert([
       {
-        username: 'john_doe',
-        walletAddress: '0xJohnDoeWalletAddress',
+        username: 'cryptonahue',
+        walletAddress: '6xzWtYzuE9fNf4n6VbFKHjNZS9Gmr8pDfAGc8ngSEeSY',
       },
       {
         username: 'jane_doe',

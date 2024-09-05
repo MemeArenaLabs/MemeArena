@@ -1,34 +1,38 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
+} from '@nestjs/websockets';
+import { Socket } from 'socket.io';
 import { BattleService } from './battle.service';
-import { CreateBattleDto } from './dto/create-battle.dto';
-import { UpdateBattleDto } from './dto/update-battle.dto';
+import { ProposeTeamDto, ProposeSkillDto, FindOpponentDto } from './dto/battle.dto';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class BattleGateway {
   constructor(private readonly battleService: BattleService) {}
 
-  @SubscribeMessage('createBattle')
-  create(@MessageBody() createBattleDto: CreateBattleDto) {
-    return this.battleService.create(createBattleDto);
+  @SubscribeMessage('FINDING')
+  handleFinding(
+    @MessageBody() findOpponentDto: FindOpponentDto,
+    @ConnectedSocket() client: Socket
+  ): void {
+    this.battleService.findOpponent(client, findOpponentDto);
   }
 
-  @SubscribeMessage('findAllBattle')
-  findAll() {
-    return this.battleService.findAll();
+  @SubscribeMessage('PROPOSE_TEAM')
+  handleProposeTeam(
+    @MessageBody() proposeTeamDto: ProposeTeamDto,
+    @ConnectedSocket() client: Socket,
+  ): void {
+    this.battleService.proposeTeam(client, proposeTeamDto);
   }
 
-  @SubscribeMessage('findOneBattle')
-  findOne(@MessageBody() id: number) {
-    return this.battleService.findOne(id);
-  }
-
-  @SubscribeMessage('updateBattle')
-  update(@MessageBody() updateBattleDto: UpdateBattleDto) {
-    return this.battleService.update(updateBattleDto.id, updateBattleDto);
-  }
-
-  @SubscribeMessage('removeBattle')
-  remove(@MessageBody() id: number) {
-    return this.battleService.remove(id);
+  @SubscribeMessage('PROPOSE_SKILL')
+  handleProposeSkill(
+    @MessageBody() proposeSkillDto: ProposeSkillDto,
+    @ConnectedSocket() client: Socket,
+  ): void {
+    this.battleService.proposeSkill(client, proposeSkillDto);
   }
 }
