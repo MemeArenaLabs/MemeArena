@@ -1,7 +1,7 @@
-import { Meme } from '../meme/meme.entity';
+import { BattleSessionUser } from '../battle/battle.entity';
+import { Meme, UserMeme } from '../meme/meme.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -12,6 +12,9 @@ export class User {
   @Column()
   walletAddress: string;
 
-  @OneToMany(() => Meme, meme => meme.user)
-  memes: Meme[];
+  @OneToMany(() => UserMeme, (UserMeme) => UserMeme.user)
+  userMemes: UserMeme[];
+
+  @OneToMany(() => BattleSessionUser, (battleSessionUser) => battleSessionUser.user)
+  battleSessions: BattleSessionUser[];
 }
