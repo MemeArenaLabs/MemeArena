@@ -1,0 +1,47 @@
+{
+    "folders": [
+        {
+            "name": "Frontend",
+            "path": "./frontend",
+        },
+        {
+            "name": "Backend",
+            "path": "./backend",
+        },
+        {
+            "name": "Contracts",
+            "path": "./contracts",
+        },
+        {
+            "name": "Programs",
+            "path": "./programs",
+        },
+        {
+            "name": "Root",
+            "path": ".",
+        },
+    ],
+    "settings": {
+        "editor.tabSize": 2,
+        "prettier.tabWidth": 4,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[json]": {
+            "editor.defaultFormatter": "vscode.json-language-features",
+        },
+        "[typescriptreact]": {
+            "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+        },
+        "[typescript]": {
+            "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+        },
+    },
+    "extensions": {
+        "recommendations": [
+            "dsznajder.es7-react-js-snippets",
+            "dbaeumer.vscode-eslint",
+            "rvest.vs-code-prettier-eslint",
+            "xabikos.javascriptsnippets",
+            "styled-components.vscode-styled-components",
+        ],
+    },
+}
