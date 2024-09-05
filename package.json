@@ -1,5 +1,5 @@
 {
-  "name": "MemeArena",
+  "name": "meme-arena",
   "private": true,
   "scripts": {
     "build": "turbo build",
