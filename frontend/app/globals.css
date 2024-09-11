@@ -14,10 +14,6 @@
   }
 }
 
-html,
-body {
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
