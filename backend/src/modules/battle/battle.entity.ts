@@ -46,6 +46,9 @@ export class BattleSessionUserMeme {
 
   @ManyToOne(() => UserMeme, (userMeme) => userMeme.battleSessions)
   userMeme: UserMeme;
+
+  @Column({ type: 'int' })
+  position: number;
 }
 
 @Entity('battle_session_attacks_log')
