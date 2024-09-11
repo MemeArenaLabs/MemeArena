@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
-export default function Free() {
-  return (
-    <div>Free</div>
-  )
+export default function FreeTeamSelection() {
+  return <div>FreeTeamSelection</div>;
 }

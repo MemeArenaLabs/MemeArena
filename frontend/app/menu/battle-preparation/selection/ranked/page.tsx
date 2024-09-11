@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
-export default function Ranked() {
-  return (
-    <div>Ranked</div>
-  )
+export default function RankedTeamSelection() {
+  return <div>RankedTeamSelection</div>;
 }

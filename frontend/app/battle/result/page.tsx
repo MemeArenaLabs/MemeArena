@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Result() {
-  return <div>Result</div>;
+export default function BattleResult() {
+  return <div>BattleResult</div>;
 }
