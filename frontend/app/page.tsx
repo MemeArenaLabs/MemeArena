@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Button from "../components/Button";
+"use client";
 import Link from "next/link";
+import { Button } from "../components/Button";
 
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
       <section className="layout">
         <h2> Landing page</h2>
         <Link href={"/app"}>
-          <button className="btn">Launch App</button>
+          <Button>Launch App</Button>
         </Link>
       </section>
     </main>
