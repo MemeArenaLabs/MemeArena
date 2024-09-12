@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { MemeService } from './meme.service';
 import { CreateMemeDto } from './dto/create-meme.dto';
 import { UpdateMemeDto } from './dto/update-meme.dto';
@@ -6,7 +14,6 @@ import { UpdateMemeDto } from './dto/update-meme.dto';
 @Controller('meme')
 export class MemeController {
   constructor(private readonly memeService: MemeService) {}
-
 
   @Get()
   findAll() {

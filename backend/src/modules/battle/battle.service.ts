@@ -109,7 +109,7 @@ export class BattleService {
           }
           return user;
         });
-  
+
         this.activeBattles.set(dto.battleSessionId, usersInBattle);
 
         const allTeamsProposed = activeBattle.every(

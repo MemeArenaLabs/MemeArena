@@ -11,15 +11,14 @@ export class MemeService {
     @InjectRepository(Meme)
     private memeRepository: Repository<Meme>,
   ) {}
-  
+
   async create(createMemeDto: CreateMemeDto): Promise<Meme> {
     const meme = this.memeRepository.create(createMemeDto);
     return await this.memeRepository.save(meme);
   }
 
   async getMemesByUser(userId: string): Promise<Meme[]> {
-    return await this.memeRepository.find({
-    });
+    return await this.memeRepository.find({});
   }
 
   findAll() {

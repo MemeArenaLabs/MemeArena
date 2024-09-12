@@ -1,5 +1,11 @@
 import { Token } from '../token/token.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { User } from '../user/user.entity';
 import { BattleSessionUserMeme } from '../battle/battle.entity';
 
@@ -31,7 +37,7 @@ export class Meme {
 
   @ManyToOne(() => Token, (token) => token.memes)
   token: Token;
-  
+
   @OneToMany(() => UserMeme, (userMeme) => userMeme.meme)
   userMemes: UserMeme[];
 }
@@ -47,6 +53,9 @@ export class UserMeme {
   @ManyToOne(() => Meme, (meme) => meme.userMemes)
   meme: Meme;
 
-  @OneToMany(() => BattleSessionUserMeme, (battleSessionUserMeme) => battleSessionUserMeme.userMeme)
+  @OneToMany(
+    () => BattleSessionUserMeme,
+    (battleSessionUserMeme) => battleSessionUserMeme.userMeme,
+  )
   battleSessions: BattleSessionUserMeme[];
 }

@@ -1,10 +1,10 @@
-import { Socket } from "socket.io";
+import { Socket } from 'socket.io';
 
 export type UserInBattle = {
-    client: Socket;
-    userId: string;
-    userMemes: { userMemeId: string, position?: number }[];
-    proposed?: boolean
-}
+  client: Socket;
+  userId: string;
+  userMemes: { userMemeId: string; position?: number }[];
+  proposed?: boolean;
+};
 
-export type ActiveBattles = Map<string, UserInBattle[]>
+export type ActiveBattles = Map<string, UserInBattle[]>;
