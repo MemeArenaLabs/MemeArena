@@ -1,7 +1,3 @@
-export class ProposeTeamDto {
-    team: string[];
-  }
-  
   export class ProposeSkillDto {
     skillId: string;
   }
@@ -11,3 +7,8 @@ export class ProposeTeamDto {
     userMemeIds: string[];
   }
   
+  export class ProposeTeamDto {
+    userId: string;
+    battleSessionId: string;
+    team: { userMemeId: string, position: number }[];
+  }

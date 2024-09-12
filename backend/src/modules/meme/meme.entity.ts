@@ -12,6 +12,9 @@ export class Meme {
   name: string;
 
   @Column()
+  address: string;
+
+  @Column()
   hp: number;
 
   @Column()
