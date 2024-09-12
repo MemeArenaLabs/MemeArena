@@ -12,7 +12,7 @@ import { typeOrmConfig } from './config/ormconfig';
     UserModule,
     TokenModule,
     BattleModule,
-    MemeModule
+    MemeModule,
   ],
   controllers: [],
   providers: [],

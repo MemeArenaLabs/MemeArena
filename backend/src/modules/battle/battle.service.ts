@@ -109,7 +109,7 @@ export class BattleService {
           }
           return user;
         });
-  
+
         this.activeBattles.set(dto.battleSessionId, usersInBattle);
 
         const allTeamsProposed = activeBattle.every(
@@ -133,7 +133,7 @@ export class BattleService {
     const opponentId = this.activeBattles.get(client.id);
     if (opponentId) {
       // Resolver habilidades y enviar resultados a ambos jugadores
-      this.server.to(client.id).emit('RESOLVE_SKILLS', { result: 'resolved' });
+      this.server.to(client.id).emit('RESOLVED_SKILLS', { result: 'resolved' });
       // this.server.to(opponentId).emit('RESOLVE_SKILLS', { result: 'resolved' });
     }
   }
@@ -143,7 +143,7 @@ export class BattleService {
 
     if (opponentId) {
       // Enviar mensaje de fin de batalla a ambos jugadores
-      this.server.to(client.id).emit('FINISH');
+      this.server.to(client.id).emit('FINISHED');
       // this.server.to(opponentId).emit('FINISH');
 
       // Eliminar la batalla activa

@@ -6,7 +6,11 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { BattleService } from './battle.service';
-import { ProposeTeamDto, ProposeSkillDto, FindOpponentDto } from './dto/battle.dto';
+import {
+  ProposeTeamDto,
+  ProposeSkillDto,
+  FindOpponentDto,
+} from './dto/battle.dto';
 
 @WebSocketGateway({ cors: true })
 export class BattleGateway {
@@ -15,7 +19,7 @@ export class BattleGateway {
   @SubscribeMessage('FINDING')
   handleFinding(
     @MessageBody() findOpponentDto: FindOpponentDto,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ): void {
     this.battleService.findOpponent(client, findOpponentDto);
   }
