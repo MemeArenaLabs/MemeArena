@@ -26,7 +26,6 @@ export default class MemeSeeder implements Seeder {
             defense: 30,
             criticChance: 10,
             speed: 40,
-            user: user,
             token: token,
           },
           {
@@ -36,7 +35,6 @@ export default class MemeSeeder implements Seeder {
             defense: 40,
             criticChance: 15,
             speed: 35,
-            user: user,
             token: token,
           },
         ]);

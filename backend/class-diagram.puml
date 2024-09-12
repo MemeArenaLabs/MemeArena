@@ -1,6 +1,6 @@
 @startuml Class diagram
 
-class Player {
+class User {
   +String id
   +String username
   +String walletAddress
@@ -22,16 +22,16 @@ class Meme {
   +Int speed
 }
 
-class PlayerToken {
+class UserToken {
   +String id
-  +String playerId
+  +String userId
   +String tokenId
   +bigint balance
 }
 
-class PlayerMeme {
+class UserrMeme {
   +String id
-  +String playerId
+  +String userId
   +String memeId
 }
 
@@ -65,16 +65,16 @@ class BattleSession {
   +String status
 }
 
-class BattleSessionPlayer {
+class BattleSessionUser {
   +String id
   +String battleSessionid
-  +String playerId
+  +String userId
 }
 
-class BattleSessionPlayerMeme {
+class BattleSessionUserMeme {
    +String id
   +String battleSessionid
-  +String playerMemeId
+  +String userMemeId
 }
 
 class BattleSessionAttacksLog {
@@ -98,16 +98,16 @@ class MemeWithdrawLine {
   +Date createdAt
 }
 
-    Player "1" -- "*" PlayerToken : has
-    Player "1" -- "*" PlayerMeme : owns
-    Player "1" -- "*" BattleSessionPlayer : participates
-    Token "1" -- "*" PlayerToken : represents
-    Meme "1" -- "*" PlayerMeme : instance of
+    User "1" -- "*" UserToken : has
+    User "1" -- "*" UserMeme : owns
+    User "1" -- "*" BattleSessionUser : participates
+    Token "1" -- "*" UserToken : represents
+    Meme "1" -- "*" UserMeme : instance of
     Meme "1" -- "*" MemeSkills : has
     Skills "1" -- "*" MemeSkills : associated with
     SkillTypes "1" -- "*" Skills : categorizes
-    BattleSession "1" -- "*" BattleSessionPlayer : includes
-    BattleSession "1" -- "*" BattleSessionPlayerMeme : involves
+    BattleSession "1" -- "*" BattleSessionUser : includes
+    BattleSession "1" -- "*" BattleSessionUserMeme : involves
     BattleSession "1" -- "*" BattleSessionAttacksLog : records
     AttackResultId "1" -- "*" BattleSessionAttacksLog : describes
     Meme "1" -- "*" MemeStakingLine : stakes

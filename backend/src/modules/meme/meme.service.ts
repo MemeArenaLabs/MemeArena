@@ -19,7 +19,6 @@ export class MemeService {
 
   async getMemesByUser(userId: string): Promise<Meme[]> {
     return await this.memeRepository.find({
-      where: { user: { id: userId } },
     });
   }
 
