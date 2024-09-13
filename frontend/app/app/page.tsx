@@ -79,6 +79,7 @@ export default function MainApp() {
       userId: "user123",
       userMemeIds: ["meme1", "meme2", "meme3"],
     };
+    console.log("finding oponent...");
     findOpponent(findOpponentDto);
   };
 
@@ -122,15 +123,16 @@ export default function MainApp() {
           </div>
         </Modal>
       </section>
-      <section>
+      <section className="flex flex-col gap-2
+      items-center">
         <p>Connection status: {isConnected ? "Connected" : "Disconnected"}</p>
-        <button onClick={handleFindOpponent} disabled={!isConnected}>
+        <Button onClick={handleFindOpponent} disabled={!isConnected}>
           Find Opponent
-        </button>
+        </Button>
         {battleSessionId && (
           <>
-            <button onClick={handleProposeTeam}>Propose Team</button>
-            <button onClick={handleProposeSkill}>Propose Skill</button>
+            <Button onClick={handleProposeTeam}>Propose Team</Button>
+            <Button onClick={handleProposeSkill}>Propose Skill</Button>
           </>
         )}
       </section>

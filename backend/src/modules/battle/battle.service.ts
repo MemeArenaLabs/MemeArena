@@ -37,7 +37,6 @@ export class BattleService {
       userId,
       userMemes: userMemeIds.map((userMemeId) => ({ userMemeId })),
     });
-
     if (this.waitingUsers.length >= this.NUMBER_OF_PLAYERS) {
       const usersInBattle = this.waitingUsers.splice(0, this.NUMBER_OF_PLAYERS);
       const battleSessionId = `battle_${Date.now()}`;
@@ -45,7 +44,6 @@ export class BattleService {
       this.createBattleSession(battleSessionId, usersInBattle);
 
       usersInBattle.forEach(({ client }) => {
-        client.join(battleSessionId);
         client.emit('JOINED', { battleSessionId });
       });
     }
@@ -56,7 +54,7 @@ export class BattleService {
     usersInBattle: UserInBattle[],
   ): Promise<BattleSession> {
     const newBattleSession = new BattleSession();
-    newBattleSession.id = battleSessionId;
+    newBattleSession.battleId = battleSessionId;
     newBattleSession.status = 'PENDING';
     newBattleSession.createdAt = new Date();
 
