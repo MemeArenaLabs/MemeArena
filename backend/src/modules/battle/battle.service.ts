@@ -13,7 +13,7 @@ import {
   BattleSessionUserMeme,
 } from './battle.entity';
 import { Repository } from 'typeorm';
-import { ActiveBattles, UserInBattle } from './battle.type';
+import { activeBattle, ActiveBattles, UserInBattle } from './battle.type';
 import { UserMeme } from '../meme/meme.entity';
 import { User } from '../user/user.entity';
 
@@ -37,10 +37,32 @@ export class BattleService {
       userId,
       userMemes: userMemeIds.map((userMemeId) => ({ userMemeId })),
     });
+    client.emit('FINDING_OK');
+
     if (this.waitingUsers.length >= this.NUMBER_OF_PLAYERS) {
       const usersInBattle = this.waitingUsers.splice(0, this.NUMBER_OF_PLAYERS);
       const battleSessionId = `battle_${Date.now()}`;
-      this.activeBattles.set(battleSessionId, usersInBattle);
+
+      // Inicializar el estado de la batalla
+      const battleState: activeBattle = {
+        users: usersInBattle,
+        currentMemes: new Map(),
+        proposedSkills: new Map(),
+        defeatedMemes: new Map(),
+        battleSessionId,
+      };
+
+      // Inicializar el meme actual y los memes derrotados para cada jugador
+      usersInBattle.forEach((user) => {
+        const firstMeme = user.userMemes[0];
+        battleState.currentMemes.set(user.userId, {
+          userMemeId: firstMeme.userMemeId,
+          hp: 100, // O el HP real del meme
+        });
+        battleState.defeatedMemes.set(user.userId, new Set());
+      });
+
+      this.activeBattles.set(battleSessionId, battleState);
       this.createBattleSession(battleSessionId, usersInBattle);
 
       usersInBattle.forEach(({ client }) => {
