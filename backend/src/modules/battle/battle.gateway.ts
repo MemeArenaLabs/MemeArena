@@ -12,7 +12,7 @@ import {
   FindOpponentDto,
 } from './dto/battle.dto';
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway()
 export class BattleGateway {
   constructor(private readonly battleService: BattleService) {}
 
