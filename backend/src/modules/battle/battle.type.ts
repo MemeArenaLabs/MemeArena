@@ -1,5 +1,5 @@
-import { Socket } from 'socket.io';
 import { ProposeSkillDto } from './dto/battle.dto';
+import { WebSocket } from 'ws';
 
 export interface UserMemeState {
   userMemeId: string;
@@ -15,10 +15,10 @@ export interface ActiveBattle {
 }
 
 export type UserInBattle = {
-  client: Socket;
+  client: WebSocket;
   userId: string;
   userMemes: { userMemeId: string; position?: number }[];
   proposed?: boolean;
 };
 
-export type ActiveBattles = Map<string, ActiveBattle[]>;
+export type ActiveBattles = Map<string, ActiveBattle>;
