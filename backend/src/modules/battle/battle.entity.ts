@@ -6,7 +6,7 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { Meme, UserMeme } from '../meme/meme.entity';
+import { UserMeme } from '../meme/meme.entity';
 import { User } from '../user/user.entity';
 
 @Entity('battle_sessions')
@@ -74,15 +74,21 @@ export class BattleSessionAttacksLog {
   @CreateDateColumn({ type: 'timestamp' })
   timestamp: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   attackerId: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   receiverId: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   skillId: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  attackResultId: string;
+  @Column({ type: 'varchar', length: 50 })
+  actionType: string; // 'attack', 'switch', 'meme_died', etc.
+
+  @Column({ type: 'int', nullable: true })
+  damage: number;
+
+  @Column({ type: 'varchar', length: 50 })
+  battleSessionId: string;
 }
