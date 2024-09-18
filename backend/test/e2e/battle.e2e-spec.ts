@@ -49,17 +49,10 @@ describe('BattleGateway (e2e)', () => {
       console.error('Error en clientSocket1:', error);
     });
 
-    clientSocket1.on('close', (code, reason) => {
-      console.log(`clientSocket1 cerrado: Código ${code}, Razón: ${reason}`);
-    });
-
     clientSocket2.on('error', (error) => {
       console.error('Error en clientSocket2:', error);
     });
 
-    clientSocket2.on('close', (code, reason) => {
-      console.log(`clientSocket2 cerrado: Código ${code}, Razón: ${reason}`);
-    });
     let findingOkCount = 0;
     let joinedCount = 0;
 

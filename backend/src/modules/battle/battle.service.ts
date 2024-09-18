@@ -69,11 +69,12 @@ export class BattleService {
 
   async proposeTeam(client: WebSocket, dto: ProposeTeamDto): Promise<void> {
     const activeBattle = this.activeBattles.get(dto.battleSessionId);
-
+    console.log(activeBattle.users);
     if (activeBattle) {
       const userInBattle = activeBattle.users.find(
         (user) => user.userId === dto.userId,
       );
+      console.log(userInBattle);
       if (userInBattle) {
         userInBattle.userMemes = dto.team;
         userInBattle.proposed = true;
@@ -81,7 +82,7 @@ export class BattleService {
         const allTeamsProposed = activeBattle.users.every(
           (user) => user.proposed,
         );
-
+        console.log(activeBattle.users);
         if (allTeamsProposed) {
           activeBattle.users.forEach((user) => {
             user.client.send(

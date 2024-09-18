@@ -6,10 +6,12 @@ import { Loader2 } from "lucide-react";
 import useWebSocket from "@/lib/hooks/useWebSocket";
 import { DTOsType } from "@/lib/utils/dtosImporter";
 
+const getUserId = () => "user_ " + Math.floor(Math.random() * 10000);
+
 export default function MainApp() {
   const [isFinding, setIsFinding] = useState<boolean>(false);
-  const [dots, setDots] = useState<string>("");
   const [time, setTime] = useState<number>(0);
+  const [userId, setUserID] = useState(getUserId());
 
   const [battleSessionId, setBattleSessionId] = useState<string | null>(null);
   const { isConnected, lastMessage, findOpponent, proposeTeam, proposeSkill } =
@@ -20,9 +22,6 @@ export default function MainApp() {
     let timerInterval: NodeJS.Timeout;
 
     if (isFinding) {
-      dotsInterval = setInterval(() => {
-        setDots((prev) => (prev.length < 3 ? prev + "." : ""));
-      }, 500);
 
       timerInterval = setInterval(() => {
         setTime((prev) => prev + 1);
@@ -63,7 +62,6 @@ export default function MainApp() {
   const handleCloseModal = () => {
     setIsFinding(false);
     setTime(0);
-    setDots("");
   };
 
   const formatTime = (seconds: number): string => {
@@ -76,7 +74,7 @@ export default function MainApp() {
 
   const handleFindOpponent = () => {
     const findOpponentDto: DTOsType["FindOpponentDto"] = {
-      userId: "user123",
+      userId: userId,
       userMemeIds: ["meme1", "meme2", "meme3"],
     };
     console.log("finding oponent...");
@@ -84,15 +82,18 @@ export default function MainApp() {
   };
 
   const handleProposeTeam = () => {
+    console.log("proposing team...", battleSessionId);
     if (battleSessionId) {
       const proposeTeamDto: DTOsType["ProposeTeamDto"] = {
-        userId: "user123",
+        userId,
         battleSessionId,
         team: [
           { userMemeId: "meme1", position: 1 },
           { userMemeId: "meme2", position: 2 },
+          { userMemeId: "meme3", position: 3 },
         ],
       };
+      console.log("user123" + Date.now());
       proposeTeam(proposeTeamDto);
     }
   };
@@ -101,6 +102,8 @@ export default function MainApp() {
     if (battleSessionId) {
       const proposeSkillDto: DTOsType["ProposeSkillDto"] = {
         skillId: "skill1",
+        battleSessionId,
+        userId,
       };
       proposeSkill(proposeSkillDto);
     }
@@ -123,8 +126,10 @@ export default function MainApp() {
           </div>
         </Modal>
       </section>
-      <section className="flex flex-col gap-2
-      items-center">
+      <section
+        className="flex flex-col gap-2
+      items-center"
+      >
         <p>Connection status: {isConnected ? "Connected" : "Disconnected"}</p>
         <Button onClick={handleFindOpponent} disabled={!isConnected}>
           Find Opponent
