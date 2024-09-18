@@ -14,9 +14,19 @@
   }
 }
 
+/* debug Nahue */
+
+/* div {
+  border: solid 1px red;
+}
+ */
+/* debug Nahue */
+
 body {
   color: var(--foreground);
   background: var(--background);
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
 }
 
 * {
@@ -36,6 +46,35 @@ a {
   }
 }
 
-.layout {
-  @apply flex flex-col gap-2 items-center;
+
+.enemy {
+  animation: enemy-idle 0.6s steps(2) infinite;
 }
+
+.player {
+  animation: player-idle 0.4s steps(2) infinite;
+}
+
+@keyframes enemy-idle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes player-idle {
+  0%,
+  100% {
+    transform: translateY(0) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(-5deg);
+  } }
+
+  @font-face {
+    font-family: 'Monserrat';
+    src: url(/assets/fonts/monserrant/Montserrat-Regular.woff2) format('woff2');
+   }
