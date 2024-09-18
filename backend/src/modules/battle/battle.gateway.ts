@@ -21,7 +21,11 @@ export class BattleGateway implements OnGatewayConnection {
         case 'PROPOSE_TEAM':
           this.battleService.proposeTeam(client, payload);
           break;
-        // Añade otros casos según sea necesario
+
+        case 'PROPOSE_SKILL':
+          this.battleService.proposeSkill(client, payload);
+          break;
+
         default:
           client.send(
             JSON.stringify({ event: 'ERROR', data: 'Evento desconocido' }),
