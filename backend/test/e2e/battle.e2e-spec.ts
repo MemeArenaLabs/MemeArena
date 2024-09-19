@@ -174,7 +174,10 @@ describe('BattleGateway (e2e)', () => {
           data: {
             battleSessionId: message.data.battleSessionId,
             userId: 'user2',
-            team: ['meme3', 'meme4'],
+            team: [
+              { userMemeId: 'meme3', position: 1 },
+              { userMemeId: 'meme2', position: 2 },
+            ],
           },
         };
         clientSocket2.send(JSON.stringify(proposeTeamMessage));
