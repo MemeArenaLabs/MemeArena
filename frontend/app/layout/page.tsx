@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import PlayerInfo from "../../components/battleLayout/PlayerInfo";
 import Timer from "../../components/battleLayout/Timer";
 import GladiatorPositions from "../../components/battleLayout/GladiatorPositions";
-import BattleArea from "../../components/battleLayout/BattleArea";
+import BattleArena from "../../components/battleLayout/BattleArena";
 import SkillsGUI from "../../components/battleLayout/SkillsGUI";
 import { useGameState } from "../../hooks/useGameState";
 
@@ -21,42 +21,32 @@ const BattleInterface: React.FC = () => {
     }, 1000);
   };
 
+  console.log("gameState: " + gamePhase);
   return (
-    <>
-      <div
-        className="relative w-full h-screen bg-cover bg-center montserrat"
-        style={{ backgroundImage: "url('/assets/battle-layout/bg.jpg')" }}
-      >
-        <div className="absolute inset-0 flex flex-col p-4 max-w-[1280px] m-auto">
-          <div className="flex justify-between mb-4 items-center">
-            <PlayerInfo playerId={1} />
-            <Timer time={timeRemaining} />
-            <PlayerInfo playerId={2} />
-          </div>
-
-          <GladiatorPositions />
-
-          <BattleArea
-            currentTurn={currentTurn}
-            showAttackEffect={showAttackEffect}
-          />
-
-          <SkillsGUI onAttack={handleAttack} isActive={currentTurn === 1} />
-
-          <div>
-            <div>Current Phase: {gamePhase}</div>
-            <button
-              className="bg-slate-500 p-2"
-              onClick={() => setGamePhase("battle")}
-            >
-              Start Battle
-            </button>
-          </div>
+    <main className="relative flex items-center justify-center bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/battle-layout/bg.jpg')]">
+      {/* top bar gui */}
+      <div className="absolute top-0 w-full p-1">
+        <div className="flex justify-between mb-4 items-center">
+          <PlayerInfo playerId={1} />
+          <Timer time={timeRemaining} />
+          <PlayerInfo playerId={2} />
         </div>
+
+        <GladiatorPositions />
       </div>
 
-      {/* ... (styles) ... */}
-    </>
+      <div className="">
+        <BattleArena
+          currentTurn={currentTurn}
+          showAttackEffect={showAttackEffect}
+        />
+      </div>
+
+      {/* bottom bar gui */}
+      <div className="absolute bottom-0 w-full p-1">
+        <SkillsGUI onAttack={handleAttack} isActive={currentTurn === 1} />
+      </div>
+    </main>
   );
 };
 

@@ -2,12 +2,12 @@
 import React from 'react';
 import Image from 'next/image';
 
-interface BattleAreaProps {
+interface BattleArenaProps {
   currentTurn: 1 | 2;
   showAttackEffect?: boolean;
 }
 
-const BattleArea: React.FC<BattleAreaProps> = ({ currentTurn, showAttackEffect }) => {
+const BattleArena: React.FC<BattleArenaProps> = ({ currentTurn, showAttackEffect }) => {
   return (
     <div className="flex-grow flex h-[100%] justify-center">
       <div className="w-[567px] h-full flex justify-between items-center">
@@ -57,4 +57,4 @@ const BattleArea: React.FC<BattleAreaProps> = ({ currentTurn, showAttackEffect }
   );
 };
 
-export default BattleArea;
+export default BattleArena;

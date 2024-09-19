@@ -24,8 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-      // className={`${geistSans.variable} ${geistMono.variable}`}
-      className="min-h-screen"
+        // className={`${geistSans.variable} ${geistMono.variable}`}
+        className="min-h-screen relative flex montserrat"
       >
         {children}
       </body>
