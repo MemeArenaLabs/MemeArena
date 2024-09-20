@@ -12,7 +12,7 @@ export async function seedUserMemes(
   const userMemeRepository = dataSource.getRepository(UserMeme);
 
   for (const user of users) {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       const randomMeme = memes[Math.floor(Math.random() * memes.length)];
       const userMeme = userMemeRepository.create({
         user,

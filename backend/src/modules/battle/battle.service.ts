@@ -38,69 +38,81 @@ export class BattleService {
     private readonly memeService: MemeService,
   ) {}
 
-async findOpponent(client: WebSocket, findOpponentDto: FindOpponentDto): Promise<void> {
-  client.send(JSON.stringify({ event: 'FINDING_OK' }));
-  const { userId, userMemeIds } = findOpponentDto;
-  this.waitingUsers.push({
-    client,
-    userId,
-    userMemes: userMemeIds.map((userMemeId) => ({ userMemeId })),
-  });
-
-  if (this.waitingUsers.length >= this.NUMBER_OF_PLAYERS) {
-    const usersInBattle = this.waitingUsers.splice(0, this.NUMBER_OF_PLAYERS);
-    const battleSessionId = `battle_${Date.now()}`;
-    const activeBattle: ActiveBattle = {
-      users: usersInBattle,
-      memeStates: new Map(),
-      proposedSkills: new Map(),
-      defeatedMemes: new Map(),
-      battleSessionId,
-    };
-
-    const tokenIds = new Set<string>();
-    const tokenDataMap = await this.tokenService.fetchTokensData(Array.from(tokenIds));
-    const minMaxValues = await this.tokenService.calculateMinMaxValues(tokenDataMap);
-
-    for (const user of usersInBattle) {
-      const memeStates: UserMemeState[] = [];
-      for (const userMeme of user.userMemes) {
-        const userMemeDetails = await this.memeService.getUserMemeDetails(userMeme.userMemeId);
-        tokenIds.add(userMemeDetails.meme.token.id);
-        if (!userMemeDetails) {
-          throw new Error(`UserMeme no encontrado: ${userMeme.userMemeId}`);
-        }
-        const memeState = await this.tokenService.calculateMemeAttributes(
-          userMemeDetails,
-          tokenDataMap,
-          minMaxValues,
-        );
-        memeStates.push(memeState);
-      }
-      activeBattle.memeStates.set(user.userId, memeStates);
-      activeBattle.defeatedMemes.set(user.userId, new Set());
-
-      user.client.send(
-        JSON.stringify({ event: 'JOINED', data: { battleSessionId } }),
-      );
-    }
-    usersInBattle.forEach((user) => {
-      const memeState = activeBattle.memeStates.get(user.userId)[0];
-      activeBattle.currentMemes.set(user.userId, memeState);
+  async findOpponent(client: WebSocket, findOpponentDto: FindOpponentDto): Promise<void> {
+    client.send(JSON.stringify({ event: 'FINDING_OK' }));
+    const { userId, userMemeIds } = findOpponentDto;
+    
+    this.waitingUsers.push({
+      client,
+      userId,
+      userMemes: userMemeIds.map((userMemeId) => ({ userMemeId })),
     });
-
-    this.activeBattles.set(battleSessionId, activeBattle);
+  
+    // Verificamos si hay suficientes jugadores para comenzar la batalla
+    if (this.waitingUsers.length >= this.NUMBER_OF_PLAYERS) {
+      const usersInBattle = this.waitingUsers.splice(0, this.NUMBER_OF_PLAYERS);
+      const battleSessionId = `battle_${Date.now()}`;
+      
+      const activeBattle: ActiveBattle = {
+        users: usersInBattle,
+        memeStates: new Map(),
+        proposedSkills: new Map(),
+        defeatedMemes: new Map(),
+        currentMemes: new Map(),
+        battleSessionId,
+      };
+  
+      const tokenDataMap = await this.tokenService.fetchTokensData();
+      const minMaxValues = await this.memeService.calculateMinMaxValues(tokenDataMap);
+  
+      await Promise.all(
+        usersInBattle.map(async (user) => {
+          const memeStates: UserMemeState[] = await Promise.all(
+            user.userMemes.map(async (userMeme) => {
+              const userMemeDetails = await this.memeService.getUserMemeDetails(userMeme.userMemeId);
+              if (!userMemeDetails) {
+                throw new Error(`UserMeme no encontrado: ${userMeme.userMemeId}`);
+              }
+              return this.memeService.calculateMemeAttributes(
+                userMemeDetails,
+                tokenDataMap,
+                minMaxValues,
+              );
+            })
+          );
+  
+          activeBattle.memeStates.set(user.userId, memeStates);
+          activeBattle.defeatedMemes.set(user.userId, new Set());
+        })
+      );
+  
+      usersInBattle.forEach((user) => {
+        const memeState = activeBattle.memeStates.get(user.userId)[0];
+        activeBattle.currentMemes.set(user.userId, memeState);
+      });
+  
+      this.activeBattles.set(battleSessionId, activeBattle);
+  
+      usersInBattle.forEach((user) => {
+        user.client.send(
+          JSON.stringify({ event: 'JOINED', data: { battleSessionId } }),
+        );
+      });
+    }
   }
-}
+  
 
 
   async proposeTeam(client: WebSocket, dto: ProposeTeamDto): Promise<void> {
-    client.send(JSON.stringify({ event: 'PROPOSE_TEAM_OK' }));
     const activeBattle = this.activeBattles.get(dto.battleSessionId);
+    console.log({activeBattlesMap: this.activeBattles})
+    console.log({activeBattle})
     if (activeBattle) {
+      client.send(JSON.stringify({ event: 'PROPOSE_TEAM_OK' }));
       const userInBattle = activeBattle.users.find(
         (user) => user.userId === dto.userId,
       );
+      console.log({userInBattle})
       if (userInBattle) {
         userInBattle.userMemes = dto.team;
         userInBattle.proposed = true;
@@ -108,7 +120,7 @@ async findOpponent(client: WebSocket, findOpponentDto: FindOpponentDto): Promise
         const allTeamsProposed = activeBattle.users.every(
           (user) => user.proposed,
         );
-
+        console.log({allTeamsProposed})
         if (allTeamsProposed) {
           activeBattle.users.forEach((user) => {
             user.client.send(
@@ -125,6 +137,8 @@ async findOpponent(client: WebSocket, findOpponentDto: FindOpponentDto): Promise
           });
         }
       }
+    } else {
+      client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR' }));
     }
   }
   private async createBattleSession(

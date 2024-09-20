@@ -17,6 +17,7 @@ export interface UserMemeState {
   levelToken?: number; 
   element?: ELEMENTS;
   profession?: PROFESSIONS;
+  level: number;
 }
 export interface ActiveBattle {
   users: UserInBattle[];

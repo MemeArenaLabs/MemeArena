@@ -42,8 +42,6 @@ describe('BattleGateway (e2e)', () => {
     await app.close();
   });
 
-  // Tus pruebas anteriores...
-
   it('debe permitir que dos clientes propongan habilidades y resuelvan ataques', (done) => {
     clientSocket1 = new WebSocket('ws://localhost:3002');
     clientSocket2 = new WebSocket('ws://localhost:3002');
@@ -88,7 +86,6 @@ describe('BattleGateway (e2e)', () => {
         };
         clientSocket1.send(JSON.stringify(proposeTeamMessage));
       } else if (message.event === 'TEAM_PROPOSED') {
-        // Ahora podemos enviar el evento PROPOSE_SKILL
         const proposeSkillMessage = {
           event: 'PROPOSE_SKILL',
           data: {
@@ -134,7 +131,6 @@ describe('BattleGateway (e2e)', () => {
         };
         clientSocket2.send(JSON.stringify(proposeTeamMessage));
       } else if (message.event === 'TEAM_PROPOSED') {
-        // Ahora podemos enviar el evento PROPOSE_SKILL
         const proposeSkillMessage = {
           event: 'PROPOSE_SKILL',
           data: {
@@ -153,23 +149,13 @@ describe('BattleGateway (e2e)', () => {
       }
     });
 
-    // Manejadores de errores y cierre de sockets
     clientSocket1.on('error', (error) => {
       console.error('Error en clientSocket1:', error);
       done(error);
     });
-
-    clientSocket1.on('close', (code, reason) => {
-      console.log(`clientSocket1 cerrado: Código ${code}, Razón: ${reason}`);
-    });
-
     clientSocket2.on('error', (error) => {
       console.error('Error en clientSocket2:', error);
       done(error);
-    });
-
-    clientSocket2.on('close', (code, reason) => {
-      console.log(`clientSocket2 cerrado: Código ${code}, Razón: ${reason}`);
     });
   });
 });

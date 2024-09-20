@@ -19,8 +19,8 @@ import { MemeModule } from '../meme/meme.module';
       BattleSessionUserMeme,
       BattleSessionAttacksLog,
     ]),
-    TokenModule,
-    MemeModule
+    MemeModule,
+    TokenModule
   ],
   providers: [BattleGateway, BattleService],
 })
