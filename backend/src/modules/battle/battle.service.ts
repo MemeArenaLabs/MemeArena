@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Server, Socket } from 'socket.io';
-import { WebSocketServer } from '@nestjs/websockets';
+import axios from 'axios';
 import {
   ProposeTeamDto,
   ProposeSkillDto,
@@ -14,14 +13,18 @@ import {
   BattleSessionUserMeme,
 } from './battle.entity';
 import { Repository } from 'typeorm';
-import { ActiveBattle, ActiveBattles, UserInBattle } from './battle.type';
+import { ActiveBattle, ActiveBattles, UserInBattle, UserMemeState } from './battle.type';
 import { UserMeme } from '../meme/meme.entity';
 import { User } from '../user/user.entity';
+import { TokenService } from '../token/token.service';
+import { BASE_DAMAGE_ADDITION, BASE_DEFENSE_MULTIPLIER, CRITIC_MULTIPLIER, DAMAGE_LEVEL_MULTIPLIER, ELEMENTS_MODIFIER, MINIMUM_DAMAGE } from './battle.constants';
+import { MemeService } from '../meme/meme.service';
 
+const ATTACK_CODE = 'attack'
+const MEME_DIED_ACTION = 'meme_died'
+const SWITCH_ACTION = 'switch'
 @Injectable()
 export class BattleService {
-  @WebSocketServer() private server: Server;
-
   private waitingUsers: UserInBattle[] = [];
   private activeBattles: ActiveBattles = new Map();
   private NUMBER_OF_PLAYERS: number = 2;
@@ -31,45 +34,69 @@ export class BattleService {
     private readonly battleSessionRepository: Repository<BattleSession>,
     @InjectRepository(BattleSessionAttacksLog)
     private readonly battleSessionAttacksLogRepository: Repository<BattleSessionAttacksLog>,
+    private readonly tokenService: TokenService,
+    private readonly memeService: MemeService,
   ) {}
 
-  findOpponent(client: WebSocket, findOpponentDto: FindOpponentDto): void {
-    const { userId, userMemeIds } = findOpponentDto;
-    this.waitingUsers.push({
-      client,
-      userId,
-      userMemes: userMemeIds.map((userMemeId) => ({ userMemeId })),
-    });
-    client.send(JSON.stringify({ event: 'FINDING_OK' }));
-    if (this.waitingUsers.length >= this.NUMBER_OF_PLAYERS) {
-      const usersInBattle = this.waitingUsers.splice(0, this.NUMBER_OF_PLAYERS);
-      const battleSessionId = `battle_${Date.now()}`;
-      const activeBattle: ActiveBattle = {
-        users: usersInBattle,
-        currentMemes: new Map(),
-        proposedSkills: new Map(),
-        defeatedMemes: new Map(),
-        battleSessionId,
-      };
-      usersInBattle.forEach((user) => {
-        const firstMeme = user.userMemes[0];
-        activeBattle.currentMemes.set(user.userId, {
-          userMemeId: firstMeme.userMemeId,
-          hp: 100,
-        });
-        activeBattle.defeatedMemes.set(user.userId, new Set());
-        // Enviar el mensaje 'JOINED' a cada usuario
-        user.client.send(
-          JSON.stringify({ event: 'JOINED', data: { battleSessionId } }),
+async findOpponent(client: WebSocket, findOpponentDto: FindOpponentDto): Promise<void> {
+  client.send(JSON.stringify({ event: 'FINDING_OK' }));
+  const { userId, userMemeIds } = findOpponentDto;
+  this.waitingUsers.push({
+    client,
+    userId,
+    userMemes: userMemeIds.map((userMemeId) => ({ userMemeId })),
+  });
+
+  if (this.waitingUsers.length >= this.NUMBER_OF_PLAYERS) {
+    const usersInBattle = this.waitingUsers.splice(0, this.NUMBER_OF_PLAYERS);
+    const battleSessionId = `battle_${Date.now()}`;
+    const activeBattle: ActiveBattle = {
+      users: usersInBattle,
+      memeStates: new Map(),
+      proposedSkills: new Map(),
+      defeatedMemes: new Map(),
+      battleSessionId,
+    };
+
+    const tokenIds = new Set<string>();
+    const tokenDataMap = await this.tokenService.fetchTokensData(Array.from(tokenIds));
+    const minMaxValues = await this.tokenService.calculateMinMaxValues(tokenDataMap);
+
+    for (const user of usersInBattle) {
+      const memeStates: UserMemeState[] = [];
+      for (const userMeme of user.userMemes) {
+        const userMemeDetails = await this.memeService.getUserMemeDetails(userMeme.userMemeId);
+        tokenIds.add(userMemeDetails.meme.token.id);
+        if (!userMemeDetails) {
+          throw new Error(`UserMeme no encontrado: ${userMeme.userMemeId}`);
+        }
+        const memeState = await this.tokenService.calculateMemeAttributes(
+          userMemeDetails,
+          tokenDataMap,
+          minMaxValues,
         );
-      });
-      this.activeBattles.set(battleSessionId, activeBattle);
+        memeStates.push(memeState);
+      }
+      activeBattle.memeStates.set(user.userId, memeStates);
+      activeBattle.defeatedMemes.set(user.userId, new Set());
+
+      user.client.send(
+        JSON.stringify({ event: 'JOINED', data: { battleSessionId } }),
+      );
     }
+    usersInBattle.forEach((user) => {
+      const memeState = activeBattle.memeStates.get(user.userId)[0];
+      activeBattle.currentMemes.set(user.userId, memeState);
+    });
+
+    this.activeBattles.set(battleSessionId, activeBattle);
   }
+}
+
 
   async proposeTeam(client: WebSocket, dto: ProposeTeamDto): Promise<void> {
+    client.send(JSON.stringify({ event: 'PROPOSE_TEAM_OK' }));
     const activeBattle = this.activeBattles.get(dto.battleSessionId);
-
     if (activeBattle) {
       const userInBattle = activeBattle.users.find(
         (user) => user.userId === dto.userId,
@@ -126,21 +153,22 @@ export class BattleService {
     return this.battleSessionRepository.save(newBattleSession);
   }
 
-  removePlayerFromQueue(client: Socket): void {
-    this.waitingUsers = this.waitingUsers.filter(
-      (player) => player.userId !== client.id,
-    );
-  }
-
   getBattleSession(battleSessionId: string): ActiveBattle {
     return this.activeBattles.get(battleSessionId);
   }
-  async proposeSkill(client: Socket, dto: ProposeSkillDto): Promise<void> {
+
+  async proposeSkill(client: WebSocket, dto: ProposeSkillDto): Promise<void> {
+    client.send(JSON.stringify({ event: 'PROPOSE_SKILL_OK' }));
     const { battleSessionId, userId } = dto;
     const battleState = this.activeBattles.get(battleSessionId);
 
     if (!battleState) {
-      client.emit('ERROR', { message: 'Battle session not found' });
+      client.send(
+        JSON.stringify({
+          event: 'PROPOSE_SKILL_ERROR',
+          message: 'Battle session not found',
+        }),
+      );
       return;
     }
 
@@ -150,7 +178,9 @@ export class BattleService {
       const results = await this.resolveSkills(battleState);
 
       battleState.users.forEach((user) => {
-        user.client.emit('RESOLVED_SKILLS', results[user.userId]);
+        user.client.send(
+          JSON.stringify({ event: 'RESOLVED_SKILLS', data: results[user.userId] }),
+        );
       });
 
       const isBattleOver = this.checkBattleOver(battleState);
@@ -166,107 +196,133 @@ export class BattleService {
     const results = {};
     const proposedSkills = Array.from(battleState.proposedSkills.values());
 
-    // Limpiar las habilidades propuestas para la próxima ronda
     battleState.proposedSkills.clear();
 
-    // Obtener los usuarios y sus estados
-    const [skill1, skill2] = proposedSkills;
-    const user1 = battleState.users.find((u) => u.userId === skill1.userId);
-    const user2 = battleState.users.find((u) => u.userId === skill2.userId);
-
-    const user1MemeState = battleState.currentMemes.get(user1.userId);
-    const user2MemeState = battleState.currentMemes.get(user2.userId);
-
-    // Resolver ataques (simplificado, puedes ajustar según tu lógica)
-    const damageToUser2 = this
-      .calculateDamage
-      // skill1,
-      // user1MemeState,
-      // user2MemeState,
-      ();
-    user2MemeState.hp -= damageToUser2;
-
-    await this.logAttack(
-      battleState.battleSessionId,
-      user1.userId,
-      user2.userId,
-      skill1.skillId,
-      'attack',
-      damageToUser2,
-    );
-
-    let user2MemeDefeated = false;
-    if (user2MemeState.hp <= 0) {
-      user2MemeState.hp = 0;
-      user2MemeDefeated = true;
-      battleState.defeatedMemes
-        .get(user2.userId)
-        .add(user2MemeState.userMemeId);
-
-      await this.logAttack(
-        battleState.battleSessionId,
-        user2.userId,
-        null,
-        null,
-        'meme_died',
-        0,
-      );
+    const skillMemeMap = new Map<string, ProposeSkillDto>();
+    for (const skill of proposedSkills) {
+      skillMemeMap.set(skill.memeId, skill);
     }
+    const [userA, userB] = battleState.users;
+    const memeUserA = battleState.currentMemes.get(userA.userId)
+    const memeUserB = battleState.currentMemes.get(userB.userId)
 
-    if (!user2MemeDefeated) {
-      const damageToUser1 = this
-        .calculateDamage
-        // skill2,
-        // user2MemeState,
-        // user1MemeState,
-        ();
-      user1MemeState.hp -= damageToUser1;
+    const skill1 = skillMemeMap.get(memeUserA.userMemeId);
+    const skill2 = skillMemeMap.get(memeUserB.userMemeId);
 
-      await this.logAttack(
-        battleState.battleSessionId,
-        user2.userId,
-        user1.userId,
-        skill2.skillId,
-        'attack',
-        damageToUser1,
+    if(memeUserA.speed > memeUserB.speed){
+      const { defenderDefeated } = await this.calculateDamage(
+        battleState,
+        userA,
+        userB,
+        memeUserA,
+        memeUserB,
+        skill1.skillId,
       );
-
-      if (user1MemeState.hp <= 0) {
-        user1MemeState.hp = 0;
-        battleState.defeatedMemes
-          .get(user1.userId)
-          .add(user1MemeState.userMemeId);
-
-        await this.logAttack(
-          battleState.battleSessionId,
-          user1.userId,
-          null,
-          null,
-          'meme_died',
-          0,
+      if(!defenderDefeated){
+        await this.calculateDamage(
+          battleState,
+          userB,
+          userA,
+          memeUserB,
+          memeUserA,
+          skill2.skillId,
+        );
+      }
+    } else {
+      const { defenderDefeated } = await this.calculateDamage(
+        battleState,
+        userB,
+        userA,
+        memeUserB,
+        memeUserA,
+        skill2.skillId,
+      );
+      if(!defenderDefeated){
+        await this.calculateDamage(
+          battleState,
+          userA,
+          userB,
+          memeUserA,
+          memeUserB,
+          skill1.skillId,
         );
       }
     }
 
-    // Preparar los resultados para cada jugador
-    results[user1.userId] = {
-      opponentMemeHp: user2MemeState.hp,
-      ownMemeHp: user1MemeState.hp,
+    results[userA.userId] = {
+      opponentMemeHp: memeUserB.hp,
+      ownMemeHp: memeUserA.hp,
     };
 
-    results[user2.userId] = {
-      opponentMemeHp: user1MemeState.hp,
-      ownMemeHp: user2MemeState.hp,
+    results[userB.userId] = {
+      opponentMemeHp: memeUserA.hp,
+      ownMemeHp: memeUserB.hp,
     };
 
     return results;
   }
+// battle.service.ts
 
-  private calculateDamage(): number {
-    // Aquí puedes implementar tu lógica de cálculo de daño
-    // Por simplicidad, devolveremos un daño fijo
-    return 10; // Ajusta según sea necesario
+private async calculateDamage(
+  battleState: ActiveBattle,
+  userAttacker: UserInBattle,
+  userDefender: UserInBattle,
+  attacker: UserMemeState,
+  defender: UserMemeState,
+  skillId: string,
+): Promise<{ defenderDefeated: boolean }> {
+  const skill = this.getSkill(skillId);
+  const skillPower = skill.damage;
+
+  const levelToken = attacker.levelToken;
+
+  const elementModifier = ELEMENTS_MODIFIER[attacker.element][defender.element];
+
+  const isCriticalHit = Math.random() < attacker.criticChance;
+  const criticModifier = isCriticalHit ? CRITIC_MULTIPLIER : 1;
+
+  const damage =
+    ((DAMAGE_LEVEL_MULTIPLIER * levelToken + BASE_DAMAGE_ADDITION) *
+      skillPower *
+      (attacker.attack / (defender.defense * BASE_DEFENSE_MULTIPLIER) + 2) *
+      elementModifier *
+      criticModifier);
+
+  const finalDamage = Math.max(damage, MINIMUM_DAMAGE);
+
+  defender.hp -= finalDamage;
+
+  await this.logAttack(
+    battleState.battleSessionId,
+    userAttacker.userId,
+    userDefender.userId,
+    skillId,
+    ATTACK_CODE,
+    finalDamage,
+  );
+
+  let defenderDefeated = false;
+
+  if (defender.hp <= 0) {
+    defender.hp = 0;
+    defenderDefeated = true;
+    battleState.defeatedMemes
+      .get(userDefender.userId)
+      .add(defender.userMemeId);
+    await this.logAttack(
+      battleState.battleSessionId,
+      userDefender.userId,
+      null,
+      null,
+      MEME_DIED_ACTION,
+      0,
+    );
   }
+
+  return { defenderDefeated };
+}
+
+
 
   private async logAttack(
     battleSessionId: string,
@@ -288,54 +344,59 @@ export class BattleService {
     await this.battleSessionAttacksLogRepository.save(attackLog);
   }
 
-  private checkBattleOver(battleState: ActiveBattle): boolean {
+
+  private async checkBattleOver(battleState: ActiveBattle): Promise<boolean> {
     let battleOver = false;
-
-    battleState.users.forEach((user) => {
+  
+    for (const user of battleState.users) {
       const userMemeState = battleState.currentMemes.get(user.userId);
-
+  
       if (userMemeState.hp <= 0) {
-        // Verificar si el jugador tiene más memes disponibles
-        const remainingMemes = user.userMemes.filter(
-          (meme) =>
-            !battleState.defeatedMemes.get(user.userId).has(meme.userMemeId),
+        const defeatedMemes = battleState.defeatedMemes.get(user.userId);
+        defeatedMemes.add(userMemeState.userMemeId);
+  
+        const allMemes = battleState.memeStates.get(user.userId);
+        const remainingMemes = allMemes.filter(
+          (meme) => !defeatedMemes.has(meme.userMemeId)
         );
-
+  
         if (remainingMemes.length > 0) {
-          // Cambiar al siguiente meme
           const nextMeme = remainingMemes[0];
-          battleState.currentMemes.set(user.userId, {
-            userMemeId: nextMeme.userMemeId,
-            hp: 100, // O el HP real del meme
-          });
-
-          // Registrar el cambio de meme
-          this.logAttack(
+          battleState.currentMemes.set(user.userId, nextMeme);
+  
+          await this.logAttack(
             battleState.battleSessionId,
             user.userId,
             null,
             null,
-            'switch',
+            SWITCH_ACTION,
             0,
           );
         } else {
-          // El jugador no tiene más memes, la batalla ha terminado
           battleOver = true;
         }
       }
-    });
-
+    }
     return battleOver;
   }
+
 
   finishBattle(battleSessionId: string): void {
     const battleState = this.activeBattles.get(battleSessionId);
     if (battleState) {
       battleState.users.forEach((user) => {
-        user.client.emit('FINISHED', { message: 'Battle over' });
+        user.client.send(
+          JSON.stringify({ event: 'FINISHED', data: { message: 'Battle over' } }),
+        );
       });
 
       this.activeBattles.delete(battleSessionId);
     }
   }
+
+
+  getSkill(skillId: string) {
+    return { id:skillId, damage:10}
+  }
 }
+

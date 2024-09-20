@@ -18,28 +18,34 @@ export class Meme {
   name: string;
 
   @Column()
+  hpBase: number;
+
+  @Column()
+  attackBase: number;
+
+  @Column()
+  defenseBase: number;
+
+  @Column()
+  speedBase: number;
+
+  @Column()
+  element: string;
+
+  @Column()
+  profession: string; 
+
+  @Column({ nullable: true })
   address: string;
 
-  @Column()
-  hp: number;
-
-  @Column()
-  attack: number;
-
-  @Column()
-  defense: number;
-
-  @Column()
-  criticChance: number;
-
-  @Column()
-  speed: number;
-
-  @ManyToOne(() => Token, (token) => token.memes)
+  @ManyToOne(() => Token, (token) => token.memes, { eager: true })
   token: Token;
 
   @OneToMany(() => UserMeme, (userMeme) => userMeme.meme)
   userMemes: UserMeme[];
+
+  @OneToMany(() => Skill, (skill) => skill.meme)
+  skills: Skill[];
 }
 
 @Entity('user_memes')
@@ -53,9 +59,30 @@ export class UserMeme {
   @ManyToOne(() => Meme, (meme) => meme.userMemes)
   meme: Meme;
 
+  @Column()
+  tokensLocked: number; 
+
   @OneToMany(
     () => BattleSessionUserMeme,
     (battleSessionUserMeme) => battleSessionUserMeme.userMeme,
   )
   battleSessions: BattleSessionUserMeme[];
+}
+
+@Entity('skills')
+export class Skill{
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  damage: number;
+
+  @Column()
+  speed: number;
+
+  @ManyToOne(() => Meme, (meme) => meme.skills, { eager: true })
+  meme: Meme;
 }
