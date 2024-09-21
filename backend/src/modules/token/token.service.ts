@@ -14,20 +14,21 @@ export class TokenService {
     private readonly tokenRepository: Repository<Token>,
   ) {}
   async fetchTokensData(): Promise<Map<string, TokenData>> {
-    
     const tokenDataMap = new Map<string, TokenData>();
     const tokens = await this.tokenRepository.find({})
     for (const token of tokens) {
       try {
+        const randomVariation = + Math.random() * 100
+
         // const response = await axios.get(
         //   `https://api.dexscreener.com/latest/dex/tokens/${tokenId}`
         // );
         // const data = response.data.pairs[0];
         tokenDataMap.set(token.id, {
           tokenId: token.id,
-          marketCap: 1_000_000,
-          volume24h: 1_000_000,
-          liquidity: 1_000_000,
+          marketCap: 1_000_000 + randomVariation,
+          volume24h: 1_000_000 + randomVariation,
+          liquidity: 1_000_000 + randomVariation,
           dailyChange: 24,
         });
       } catch (error) {

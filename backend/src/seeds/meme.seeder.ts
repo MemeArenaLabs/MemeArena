@@ -17,12 +17,13 @@ export async function seedMemes(dataSource: DataSource, tokens: Token[]): Promis
   for (const token of tokens) {
     for (const element of elements) {
       for (const profession of professions) {
+        const randomVariation = + Math.random() * 10
         const meme = memeRepository.create({
           name: `${token.symbol} ${element} ${profession}`,
-          hpBase: 1000,
-          attackBase: 100,
-          defenseBase: 100,
-          speedBase: 100,
+          hpBase: 1000 + randomVariation,
+          attackBase: 100 + randomVariation,
+          defenseBase: 100 + randomVariation,
+          speedBase: 100 + randomVariation,
           element,
           profession,
           token,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMemeDto } from './dto/create-meme.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Meme, UserMeme } from './meme.entity';
+import { Meme, Skill, UserMeme } from './meme.entity';
 import { Repository } from 'typeorm';
 import { BaseStats, MinMaxValues, TokenData } from '../token/token.type';
 import { PROFESSIONS } from '../token/token.constants';
@@ -14,6 +14,8 @@ export class MemeService {
     private readonly memeRepository: Repository<Meme>,
     @InjectRepository(UserMeme)
     private readonly userMemeRepository: Repository<UserMeme>,
+    @InjectRepository(Skill)
+    private readonly skillRepository: Repository<Skill>,
   ) {}
 
   async create(createMemeDto: CreateMemeDto): Promise<Meme> {
@@ -25,6 +27,10 @@ export class MemeService {
     return await this.memeRepository.find({});
   }
 
+  async getMemeByUserMemeId(userMemeId: string): Promise<Meme> {
+    const userMeme: UserMeme = await this.userMemeRepository.findOne({where: {id: userMemeId}})
+    return userMeme.meme
+  }
 
   async getUserMemeDetails(userMemeId: string): Promise<UserMeme> {
     const userMeme = await this.userMemeRepository.findOne({
@@ -86,7 +92,9 @@ export class MemeService {
       marketCap: tokenData.marketCap,
       volume24h: tokenData.volume24h,
       liquidity: tokenData.liquidity,
-      level: levelToken
+      level: levelToken,
+      element: baseStats.element,
+      profession: baseStats.profession,
     };
   }
 
@@ -160,6 +168,10 @@ export class MemeService {
   private calculateLevelToken(tokensLocked: number): number {
     const TOKENS_PER_LEVEL = 1000;
     return Math.floor(tokensLocked / TOKENS_PER_LEVEL);
+  }
+
+  getSkill(skillId: string): Promise<Skill> {
+    return this.skillRepository.findOne({where: {id: skillId}})
   }
 
 

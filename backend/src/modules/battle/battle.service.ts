@@ -105,14 +105,11 @@ export class BattleService {
 
   async proposeTeam(client: WebSocket, dto: ProposeTeamDto): Promise<void> {
     const activeBattle = this.activeBattles.get(dto.battleSessionId);
-    console.log({activeBattlesMap: this.activeBattles})
-    console.log({activeBattle})
     if (activeBattle) {
       client.send(JSON.stringify({ event: 'PROPOSE_TEAM_OK' }));
       const userInBattle = activeBattle.users.find(
         (user) => user.userId === dto.userId,
       );
-      console.log({userInBattle})
       if (userInBattle) {
         userInBattle.userMemes = dto.team;
         userInBattle.proposed = true;
@@ -120,7 +117,6 @@ export class BattleService {
         const allTeamsProposed = activeBattle.users.every(
           (user) => user.proposed,
         );
-        console.log({allTeamsProposed})
         if (allTeamsProposed) {
           activeBattle.users.forEach((user) => {
             user.client.send(
@@ -214,7 +210,7 @@ export class BattleService {
 
     const skillMemeMap = new Map<string, ProposeSkillDto>();
     for (const skill of proposedSkills) {
-      skillMemeMap.set(skill.memeId, skill);
+      skillMemeMap.set(skill.userMemeId, skill);
     }
     const [userA, userB] = battleState.users;
     const memeUserA = battleState.currentMemes.get(userA.userId)
@@ -222,7 +218,6 @@ export class BattleService {
 
     const skill1 = skillMemeMap.get(memeUserA.userMemeId);
     const skill2 = skillMemeMap.get(memeUserB.userMemeId);
-
     if(memeUserA.speed > memeUserB.speed){
       const { defenderDefeated } = await this.calculateDamage(
         battleState,
@@ -262,7 +257,7 @@ export class BattleService {
         );
       }
     }
-
+    console.log('SKILLSSS QUE RESUELVEN')
     results[userA.userId] = {
       opponentMemeHp: memeUserB.hp,
       ownMemeHp: memeUserA.hp,
@@ -285,35 +280,36 @@ private async calculateDamage(
   defender: UserMemeState,
   skillId: string,
 ): Promise<{ defenderDefeated: boolean }> {
-  const skill = this.getSkill(skillId);
+  const skill = await this.memeService.getSkill(skillId);
   const skillPower = skill.damage;
+  console.log({attacker,defender, skill})
 
-  const levelToken = attacker.levelToken;
-
+  const levelToken = attacker.level;
   const elementModifier = ELEMENTS_MODIFIER[attacker.element][defender.element];
 
   const isCriticalHit = Math.random() < attacker.criticChance;
+  
   const criticModifier = isCriticalHit ? CRITIC_MULTIPLIER : 1;
-
+  console.log({criticModifier})
   const damage =
     ((DAMAGE_LEVEL_MULTIPLIER * levelToken + BASE_DAMAGE_ADDITION) *
       skillPower *
-      (attacker.attack / (defender.defense * BASE_DEFENSE_MULTIPLIER) + 2) *
+      (attacker.attack / (defender.defense * BASE_DEFENSE_MULTIPLIER) + BASE_DAMAGE_ADDITION) *
       elementModifier *
       criticModifier);
 
-  const finalDamage = Math.max(damage, MINIMUM_DAMAGE);
 
-  defender.hp -= finalDamage;
-
+  defender.hp -= damage;
+  console.log('LOGATTACK')
   await this.logAttack(
     battleState.battleSessionId,
     userAttacker.userId,
     userDefender.userId,
     skillId,
     ATTACK_CODE,
-    finalDamage,
+    damage,
   );
+  console.log('ENDLOGATTACK')
 
   let defenderDefeated = false;
 
@@ -354,7 +350,7 @@ private async calculateDamage(
     attackLog.skillId = skillId;
     attackLog.actionType = actionType;
     attackLog.damage = damage;
-
+    console.log({attackLog})
     await this.battleSessionAttacksLogRepository.save(attackLog);
   }
 
@@ -406,11 +402,6 @@ private async calculateDamage(
 
       this.activeBattles.delete(battleSessionId);
     }
-  }
-
-
-  getSkill(skillId: string) {
-    return { id:skillId, damage:10}
   }
 }
 

@@ -14,7 +14,6 @@ export interface UserMemeState {
   volume24h: number;
   liquidity: number;
   dailyChange?: number;
-  levelToken?: number; 
   element?: ELEMENTS;
   profession?: PROFESSIONS;
   level: number;
