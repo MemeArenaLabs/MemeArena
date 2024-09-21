@@ -300,7 +300,6 @@ private async calculateDamage(
 
 
   defender.hp -= damage;
-  console.log('LOGATTACK')
   await this.logAttack(
     battleState.battleSessionId,
     userAttacker.userId,
@@ -309,7 +308,6 @@ private async calculateDamage(
     ATTACK_CODE,
     damage,
   );
-  console.log('ENDLOGATTACK')
 
   let defenderDefeated = false;
 
