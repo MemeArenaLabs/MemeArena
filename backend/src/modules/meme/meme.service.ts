@@ -7,6 +7,7 @@ import { BaseStats, MinMaxValues, TokenData } from '../token/token.type';
 import { PROFESSIONS } from '../token/token.constants';
 import { ELEMENTS } from '../battle/battle.constants';
 import { UserMemeState } from '../battle/battle.type';
+import { UserService } from '../user/user.service';
 @Injectable()
 export class MemeService {
   constructor(
@@ -16,6 +17,7 @@ export class MemeService {
     private readonly userMemeRepository: Repository<UserMeme>,
     @InjectRepository(Skill)
     private readonly skillRepository: Repository<Skill>,
+    private readonly userService: UserService
   ) {}
 
   async create(createMemeDto: CreateMemeDto): Promise<Meme> {
@@ -173,6 +175,42 @@ export class MemeService {
   getSkill(skillId: string): Promise<Skill> {
     return this.skillRepository.findOne({where: {id: skillId}})
   }
-
-
+  async findUserMemesByWalletAddress(walletAddress: string): Promise<any[]> {
+    const user = await this.userService.findUserByWalletAddress(walletAddress);
+  
+    if (!user) {
+      throw new Error('User not found');
+    }
+  
+    const userMemes = await this.userMemeRepository.find({
+      where: { user: { id: user.id } },
+      relations: ['meme', 'meme.token', 'meme.skills'],
+    });
+  
+    return userMemes.map((userMeme) => ({
+      userMemeId: userMeme.id,
+      tokensLocked: userMeme.tokensLocked,
+      memeId: userMeme.meme.id,
+      name: userMeme.meme.name,
+      hpBase: userMeme.meme.hpBase,
+      attackBase: userMeme.meme.attackBase,
+      defenseBase: userMeme.meme.defenseBase,
+      speedBase: userMeme.meme.speedBase,
+      element: userMeme.meme.element,
+      profession: userMeme.meme.profession,
+      token: {
+        id: userMeme.meme.token.id,
+        symbol: userMeme.meme.token.symbol,
+        totalSupply: userMeme.meme.token.totalSupply,
+        contractAddress: userMeme.meme.token.contractAddress,
+      },
+      skills: userMeme.meme.skills.map((skill) => ({
+        skillId: skill.id,
+        name: skill.name,
+        damage: skill.damage,
+        speed: skill.speed,
+      })),
+    }));
+  }
+  
 }

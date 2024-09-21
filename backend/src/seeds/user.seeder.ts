@@ -4,14 +4,43 @@ import { User } from '../modules/user/user.entity';
 export async function seedUsers(dataSource: DataSource): Promise<User[]> {
   const userRepository = dataSource.getRepository(User);
 
-  const userNames = ['fran', 'nahue', 'mike', 'dave', 'lucho', 'raquel'];
+  const usersToInsert = [
+    {
+      name:'fran',
+      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+    },
+    {
+      name:'nahue',
+      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+    },
+    {
+      name:'mike',
+      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+    },
+    {
+      name:'dave',
+      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+    },
+    {
+      name:'raquel',
+      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+    },
+    {
+      name:'lucho1',
+      walletAddress: '7dY73Q3mbHj5VuDKnGXdWfu1Trpt1Nn9MmZ8ZdiM3nM5'
+    },
+    {
+      name:'lucho2',
+      walletAddress: '28er48xoHg7jxNfy6eT7gCcVCRZg8QzbPxkMRBhEjSMT'
+    }
+  ];
 
   const users: User[] = [];
 
-  for (const userName of userNames) {
+  for (const userToInsert of usersToInsert) {
     const user = userRepository.create({
-      username: userName,
-      walletAddress: `${userName}-wallet-address`,
+      username: userToInsert.name,
+      walletAddress: userToInsert.walletAddress,
     });
     await userRepository.save(user);
     users.push(user);
