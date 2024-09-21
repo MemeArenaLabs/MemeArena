@@ -101,6 +101,9 @@ export default function MainApp() {
     if (battleSessionId) {
       const proposeSkillDto: DTOsType["ProposeSkillDto"] = {
         skillId: "skill1",
+        battleSessionId: "",
+        userId: "",
+        userMemeId: ""
       };
       proposeSkill(proposeSkillDto);
     }

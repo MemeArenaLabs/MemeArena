@@ -21,6 +21,13 @@ export default function Home() {
         >
           Body
         </Modal>
+        <h1>Heading1 test 96</h1>
+        <h2>Heading2 test 64</h2>
+        <h3>Heading3 test 32</h3>
+        <p>paragraph test 16</p>
+        <p className="text-[14px]">paragraph test 14</p>
+        <p className="text-[12px]">paragraph test 12</p>
+        <p className="text-[10px]">paragraph test 10</p>
       </section>
     </main>
   );
