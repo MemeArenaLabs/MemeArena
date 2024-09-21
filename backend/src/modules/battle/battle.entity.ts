@@ -17,7 +17,7 @@ export class BattleSession {
   @Column({ type: 'varchar', length: 50 })
   battleId: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
   @Column({ type: 'varchar', length: 50 })
@@ -71,7 +71,7 @@ export class BattleSessionAttacksLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   timestamp: Date;
 
   @Column({ type: 'varchar', length: 255, nullable: true })

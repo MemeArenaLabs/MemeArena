@@ -1,6 +1,7 @@
 export class ProposeSkillDto {
   battleSessionId: string;
   userId: string;
+  userMemeId: string;
   skillId: string;
 }
 

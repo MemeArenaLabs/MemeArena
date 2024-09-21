@@ -1,34 +1,43 @@
+// token.service.ts
+
 import { Injectable } from '@nestjs/common';
-import { CreateTokenDto } from './dto/create-token.dto';
-import { UpdateTokenDto } from './dto/update-token.dto';
 import { Token } from './token.entity';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { TokenData } from './token.type';
+
 
 @Injectable()
 export class TokenService {
   constructor(
     @InjectRepository(Token)
-    private memeRepository: Repository<Token>,
+    private readonly tokenRepository: Repository<Token>,
   ) {}
+  async fetchTokensData(): Promise<Map<string, TokenData>> {
+    const tokenDataMap = new Map<string, TokenData>();
+    const tokens = await this.tokenRepository.find({})
+    for (const token of tokens) {
+      try {
+        const randomVariation = + Math.random() * 100
 
-  create(createTokenDto: CreateTokenDto) {
-    return 'This action adds a new token';
-  }
-
-  findAll() {
-    return `This action returns all token`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} token`;
-  }
-
-  update(id: number, updateTokenDto: UpdateTokenDto) {
-    return `This action updates a #${id} token`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} token`;
+        // const response = await axios.get(
+        //   `https://api.dexscreener.com/latest/dex/tokens/${tokenId}`
+        // );
+        // const data = response.data.pairs[0];
+        tokenDataMap.set(token.id, {
+          tokenId: token.id,
+          marketCap: 1_000_000 + randomVariation,
+          volume24h: 1_000_000 + randomVariation,
+          liquidity: 1_000_000 + randomVariation,
+          dailyChange: 24,
+        });
+      } catch (error) {
+        console.error('Error al obtener datos del token:', error);
+        throw new Error('No se pudieron obtener los datos del token');
+      }
+    }
+    return tokenDataMap;
   }
 }
+
+

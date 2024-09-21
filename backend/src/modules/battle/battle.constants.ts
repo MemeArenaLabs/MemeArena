@@ -1,0 +1,29 @@
+export const DAMAGE_LEVEL_MULTIPLIER = 2 / 5;
+export const BASE_DAMAGE_ADDITION = 2;
+export const BASE_DEFENSE_MULTIPLIER = 50;
+export const CRITIC_MULTIPLIER = 1.25;
+export const MINIMUM_DAMAGE = 5;
+
+export enum ELEMENTS {
+  WATER= 'WATER',
+  FIRE= 'FIRE',
+  PLANT= 'PLANT',
+}
+
+export const ELEMENTS_MODIFIER = {
+  [ELEMENTS.WATER]:{
+    [ELEMENTS.WATER]: 1,
+    [ELEMENTS.FIRE]: 1.25,
+    [ELEMENTS.PLANT]: 0.875
+  },
+  [ELEMENTS.FIRE]:{
+    [ELEMENTS.WATER]: 0.875,
+    [ELEMENTS.FIRE]: 1,
+    [ELEMENTS.PLANT]: 0.875
+  },
+  [ELEMENTS.PLANT]:{
+    [ELEMENTS.WATER]: 1.25,
+    [ELEMENTS.FIRE]: 0.875,
+    [ELEMENTS.PLANT]: 1
+  }
+}
