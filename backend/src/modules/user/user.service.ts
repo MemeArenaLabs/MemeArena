@@ -33,4 +33,8 @@ export class UserService {
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
+
+  async findUserByWalletAddress(walletAddress: string): Promise<User> {
+    return this.userRepository.findOne({ where: { walletAddress } });
+  }
 }

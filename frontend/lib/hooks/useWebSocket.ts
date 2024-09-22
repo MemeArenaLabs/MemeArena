@@ -53,7 +53,7 @@ const useWebSocket = (): WebSocketHookResult => {
     if (attemptRef.current < RECONNECT_ATTEMPTS) {
       reconnectTimeoutRef.current = setTimeout(() => {
         console.log(
-          `Attempting to reconnect... (Attempt ${attemptRef.current + 1})`,
+          `Attempting to reconnect... (Attempt ${attemptRef.current + 1})`
         );
         attemptRef.current += 1;
         connect();
@@ -83,21 +83,21 @@ const useWebSocket = (): WebSocketHookResult => {
     (dto: DTOsType["FindOpponentDto"]) => {
       sendMessage("FINDING", dto);
     },
-    [sendMessage],
+    [sendMessage]
   );
 
   const proposeTeam = useCallback(
     (dto: DTOsType["ProposeTeamDto"]) => {
       sendMessage("PROPOSE_TEAM", dto);
     },
-    [sendMessage],
+    [sendMessage]
   );
 
   const proposeSkill = useCallback(
     (dto: DTOsType["ProposeSkillDto"]) => {
       sendMessage("PROPOSE_SKILL", dto);
     },
-    [sendMessage],
+    [sendMessage]
   );
 
   return {

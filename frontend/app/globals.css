@@ -25,6 +25,19 @@ body {
   margin: 0;
 }
 
+h1 {
+  @apply font-bold text-[96px] leading-[110px];
+}
+h2 {
+  @apply font-bold text-[64px] leading-[72px];
+}
+h3 {
+  @apply font-bold text-[32px] leading-[40px];
+}
+p {
+  @apply font-bold text-base leading-[20px];
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -37,5 +50,5 @@ a {
 }
 
 .layout {
-  @apply flex flex-col gap-2 items-center;
+  @apply flex flex-col items-center;
 }

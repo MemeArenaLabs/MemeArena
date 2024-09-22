@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/Button";
 import { Modal } from "@/components/Modal";
-import { Loader2 } from "lucide-react";
 import useWebSocket from "@/lib/hooks/useWebSocket";
 import { DTOsType } from "@/lib/utils/dtosImporter";
+import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
 
 const getUserId = () => "user_ " + Math.floor(Math.random() * 10000);
 
@@ -104,6 +104,7 @@ export default function MainApp() {
         skillId: "skill1",
         battleSessionId,
         userId,
+        userMemeId: ""
       };
       proposeSkill(proposeSkillDto);
     }
@@ -122,7 +123,7 @@ export default function MainApp() {
         >
           <div className="flex flex-col items-center gap-4">
             <p className="text-lg">{formatTime(time)}</p>
-            <Loader2 className="animate-spin" />
+            <ProgressActivity className="animate-spin" />
           </div>
         </Modal>
       </section>
