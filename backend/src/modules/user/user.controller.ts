@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.entity';
 
 @Controller('users')
 export class UserController {
@@ -31,6 +32,11 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
+  }
+
+  @Get('wallet/:walletAddress')
+  async getUserMemesByWalletAddress(@Param('walletAddress') walletAddress: string): Promise<User> {
+    return this.userService.findUserByWalletAddress(walletAddress);
   }
 
   @Patch(':id')
