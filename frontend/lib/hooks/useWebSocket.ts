@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { DTOsType } from "@/lib/utils/dtosImporter";
+import {
+  FindOpponentDto,
+  ProposeSkillDto,
+  ProposeTeamDto,
+} from "@/types/server-types";
 
 // Define reconnectInterval and reconnectAttempts
 const RECONNECT_INTERVAL = 3000;
@@ -11,9 +15,9 @@ interface WebSocketHookResult {
   isConnected: boolean;
   lastMessage: any;
   sendMessage: (event: string, data: any) => void;
-  findOpponent: (dto: DTOsType["FindOpponentDto"]) => void;
-  proposeTeam: (dto: DTOsType["ProposeTeamDto"]) => void;
-  proposeSkill: (dto: DTOsType["ProposeSkillDto"]) => void;
+  findOpponent: (dto: FindOpponentDto) => void;
+  proposeTeam: (dto: ProposeTeamDto) => void;
+  proposeSkill: (dto: ProposeSkillDto) => void;
 }
 
 const useWebSocket = (): WebSocketHookResult => {
@@ -80,21 +84,21 @@ const useWebSocket = (): WebSocketHookResult => {
   }, []);
 
   const findOpponent = useCallback(
-    (dto: DTOsType["FindOpponentDto"]) => {
+    (dto: FindOpponentDto) => {
       sendMessage("FINDING", dto);
     },
     [sendMessage]
   );
 
   const proposeTeam = useCallback(
-    (dto: DTOsType["ProposeTeamDto"]) => {
+    (dto: ProposeTeamDto) => {
       sendMessage("PROPOSE_TEAM", dto);
     },
     [sendMessage]
   );
 
   const proposeSkill = useCallback(
-    (dto: DTOsType["ProposeSkillDto"]) => {
+    (dto: ProposeSkillDto) => {
       sendMessage("PROPOSE_SKILL", dto);
     },
     [sendMessage]

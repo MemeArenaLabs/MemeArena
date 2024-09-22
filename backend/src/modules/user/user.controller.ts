@@ -11,18 +11,16 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
+import { UserDetails } from './user.types';
 
 @Controller('users')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
-
 
   @Get()
   findAll() {
@@ -35,7 +33,9 @@ export class UserController {
   }
 
   @Get('wallet/:walletAddress')
-  async getUserMemesByWalletAddress(@Param('walletAddress') walletAddress: string): Promise<UserDetails> {
+  async getUserMemesByWalletAddress(
+    @Param('walletAddress') walletAddress: string,
+  ): Promise<UserDetails> {
     return this.userService.findUserByWalletAddress(walletAddress);
   }
 

@@ -1,18 +1,18 @@
-interface TokenDetails {
+export interface TokenDetails {
   id: string;
   symbol: string;
   totalSupply: number;
   contractAddress: string;
 }
 
-interface SkillDetails {
+export interface SkillDetails {
   skillId: string;
   name: string;
   damage: number;
   speed: number;
 }
 
-interface UserMemeDetails {
+export interface UserMemeDetails {
   userMemeId: string;
   tokensLocked: number;
   memeId: string;

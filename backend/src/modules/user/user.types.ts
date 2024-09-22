@@ -1,8 +1,8 @@
+import { UserMemeDetails } from '../meme/meme.types';
 
-
-interface UserDetails {
-  id: string,
-  walletAddress: string,
-  username: string,
-  userMemes: UserMemeDetails[]
+export interface UserDetails {
+  id: string;
+  walletAddress: string;
+  username: string;
+  userMemes: UserMemeDetails[];
 }

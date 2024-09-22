@@ -23,23 +23,39 @@
     ],
     "settings": {
         "editor.tabSize": 2,
-        "prettier.tabWidth": 4,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "[json]": {
-            "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true,
         },
-        "[typescriptreact]": {
-            "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+        "prettier.tabWidth": 2,
+        "prettier.singleQuote": true,
+        "prettier.semi": false,
+        "prettier.trailingComma": "es5",
+        "prettier.printWidth": 100,
+        "prettier.jsxSingleQuote": true,
+        "prettier.arrowParens": "avoid",
+        "[json]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+        },
+        "[jsonc]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+        },
+        "[javascript]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
         },
         "[typescript]": {
-            "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+        },
+        "[typescriptreact]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
         },
     },
     "extensions": {
         "recommendations": [
             "dsznajder.es7-react-js-snippets",
             "dbaeumer.vscode-eslint",
-            "rvest.vs-code-prettier-eslint",
+            "esbenp.prettier-vscode",
             "xabikos.javascriptsnippets",
             "styled-components.vscode-styled-components",
         ],
