@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/Button";
 import { Modal } from "@/components/Modal";
-import { Loader2 } from "lucide-react";
 import useWebSocket from "@/lib/hooks/useWebSocket";
 import { DTOsType } from "@/lib/utils/dtosImporter";
+import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
 
 export default function MainApp() {
   const [isFinding, setIsFinding] = useState<boolean>(false);
@@ -103,7 +103,7 @@ export default function MainApp() {
         skillId: "skill1",
         battleSessionId: "",
         userId: "",
-        userMemeId: ""
+        userMemeId: "",
       };
       proposeSkill(proposeSkillDto);
     }
@@ -122,12 +122,14 @@ export default function MainApp() {
         >
           <div className="flex flex-col items-center gap-4">
             <p className="text-lg">{formatTime(time)}</p>
-            <Loader2 className="animate-spin" />
+            <ProgressActivity className="animate-spin" />
           </div>
         </Modal>
       </section>
-      <section className="flex flex-col gap-2
-      items-center">
+      <section
+        className="flex flex-col gap-2
+      items-center"
+      >
         <p>Connection status: {isConnected ? "Connected" : "Disconnected"}</p>
         <Button onClick={handleFindOpponent} disabled={!isConnected}>
           Find Opponent

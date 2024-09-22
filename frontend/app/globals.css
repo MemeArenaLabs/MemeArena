@@ -50,5 +50,5 @@ a {
 }
 
 .layout {
-  @apply flex flex-col gap-2 items-center;
+  @apply flex flex-col items-center;
 }

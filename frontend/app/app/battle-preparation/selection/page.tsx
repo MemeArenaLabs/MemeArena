@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function Selection() {
-  return (
-    <div>Selection</div>
-  )
+  return <div>Selection</div>;
 }

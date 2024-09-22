@@ -3,16 +3,12 @@ import { ReactSVG } from "react-svg";
 
 interface IconProps {
   name: string;
-  size?: number;
-  className?: string;
+  className: string;
 }
 
-const SvgIcon: React.FC<IconProps> = ({ name, size = 24, className }) => {
+const SvgIcon: React.FC<IconProps> = ({ name, className }) => {
   return (
-    <div
-      style={{ width: `${size}px`, height: `${size}px` }}
-      className={`inline-block ${className || ""}`}
-    >
+    <div className={`inline-block ${className || ""}`}>
       <ReactSVG
         src={`/icons/${name}.svg`}
         beforeInjection={(svg) => {
@@ -20,7 +16,6 @@ const SvgIcon: React.FC<IconProps> = ({ name, size = 24, className }) => {
           svg.setAttribute("height", "100%");
           svg.setAttribute("fill", "currentColor");
         }}
-        wrapper="span"
         loading={() => (
           <span className="flex items-center justify-center w-full h-full bg-gray-200 animate-pulse"></span>
         )}
