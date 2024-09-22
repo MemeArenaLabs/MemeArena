@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "../components/Button";
 import { useState } from "react";
 import { Modal } from "../components/Modal";
+import SvgIcon from "@/lib/utils/SvgIcon";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,6 +42,11 @@ export default function Home() {
             <div className="h-20 w-20 bg-blue-70"></div>
             <div className="h-20 w-20 bg-light-blue"></div>
           </div>
+        </div>
+        <div className="flex gap-2 p-2 bg-[#444444]">
+          <SvgIcon name="all-for-one" size={50} className="text-yellow" />
+          <SvgIcon name="broken-heart" size={50} className="text-blue" />
+          <SvgIcon name="book-cover" size={50} className="text-red-600" />
         </div>
       </section>
     </main>
