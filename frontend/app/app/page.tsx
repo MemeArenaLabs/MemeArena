@@ -10,14 +10,14 @@ import {
   FindOpponentDto,
   ProposeSkillDto,
   ProposeTeamDto,
-  UserMeme,
+  UserDetails,
 } from "@/types/server-types";
 
 export default function MainApp() {
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const [time, setTime] = useState<number>(0);
   const [walletAddress, setWalletAddress] = useState<string>("");
-  const [userMemes, setUserMemes] = useState<UserMeme[]>();
+  const [userData, setUserData] = useState<UserDetails>();
   const [battleSessionId, setBattleSessionId] = useState<string | null>(null);
   const { isConnected, lastMessage, findOpponent, proposeTeam, proposeSkill } =
     useWebSocket();
@@ -39,6 +39,7 @@ export default function MainApp() {
       switch (lastMessage.event) {
         case "JOINED":
           setBattleSessionId(lastMessage.data.battleSessionId);
+          handleCloseModal();
           break;
         case "TEAM_PROPOSED":
           console.log("Teams proposed:", lastMessage.data.teams);
@@ -56,22 +57,26 @@ export default function MainApp() {
 
   useEffect(() => {
     if (walletAddress) {
-      async () => {
+      const call = async () => {
         const data = await getUserData(walletAddress);
-        setUserMemes(data);
+        console.log(data);
+        setUserData(data);
       };
+      call();
     }
   }, [walletAddress]);
 
   const handleFindBattle = () => {
     setIsFinding(true);
     setTime(0);
-    const findOpponentDto: FindOpponentDto = {
-      userId: userId,
-      userMemeIds: ["meme1", "meme2", "meme3"],
-    };
-    console.log("finding opponent...");
-    findOpponent(findOpponentDto);
+    if (userData) {
+      const findOpponentDto: FindOpponentDto = {
+        userId: userData.id,
+        userMemeIds: userData.userMemes.map((meme) => meme.userMemeId),
+      };
+      console.log("finding opponent...");
+      findOpponent(findOpponentDto);
+    }
   };
 
   const handleCloseModal = () => {
@@ -82,29 +87,29 @@ export default function MainApp() {
 
   const handleProposeTeam = () => {
     console.log("proposing team...", battleSessionId);
-    if (battleSessionId) {
+    if (battleSessionId && userData) {
       const proposeTeamDto: ProposeTeamDto = {
-        userId,
+        userId: userData.id,
         battleSessionId,
         team: [
-          { userMemeId: "meme1", position: 1 },
-          { userMemeId: "meme2", position: 2 },
-          { userMemeId: "meme3", position: 3 },
+          { userMemeId: userData.userMemes[0]?.userMemeId || "", position: 1 },
+          { userMemeId: userData.userMemes[1]?.userMemeId || "", position: 2 },
+          { userMemeId: userData.userMemes[2]?.userMemeId || "", position: 3 },
         ],
       };
-      console.log("user123" + Date.now());
       proposeTeam(proposeTeamDto);
     }
   };
 
   const handleProposeSkill = () => {
-    if (battleSessionId) {
+    if (battleSessionId && userData) {
       const proposeSkillDto: ProposeSkillDto = {
-        skillId: "skill1",
+        skillId: userData.userMemes[0]?.skills[0]?.skillId || "",
         battleSessionId,
-        userId,
-        userMemeId: "",
+        userId: userData.id,
+        userMemeId: userData.userMemes[0]?.userMemeId || "",
       };
+      console.log(proposeSkillDto);
       proposeSkill(proposeSkillDto);
     }
   };
@@ -127,7 +132,7 @@ export default function MainApp() {
         </div>
         <Button
           onClick={handleFindBattle}
-          disabled={!walletAddress || !isConnected || !userMemes}
+          disabled={!walletAddress || !isConnected || !userData}
         >
           Find battle
         </Button>

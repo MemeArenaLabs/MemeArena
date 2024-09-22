@@ -3,7 +3,13 @@ import {
   FindOpponentDto,
   ProposeTeamDto,
 } from "#/backend/src/modules/battle/dto/battle.dto";
-import { UserMeme } from "#/backend/src/modules/meme/meme.entity";
+import {
+  UserMemeDetails,
+  SkillDetails,
+  TokenDetails,
+} from "#/backend/src/modules/meme/meme.types";
+
+import { UserDetails } from "#/backend/src/modules/user/user.types";
 
 import { CreateMemeDto } from "#/backend/src/modules/meme/dto/create-meme.dto";
 
@@ -13,4 +19,4 @@ import { CreateUserDto } from "#/backend/src/modules/user/dto/create-user.dto";
 
 export type { ProposeSkillDto, FindOpponentDto, ProposeTeamDto };
 
-export type { UserMeme };
+export type { UserMemeDetails, SkillDetails, TokenDetails, UserDetails };

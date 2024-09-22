@@ -5,13 +5,14 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemeService } from '../meme/meme.service';
+import { UserDetails } from './user.types';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly memeService: MemeService
+    private readonly memeService: MemeService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -37,11 +38,13 @@ export class UserService {
   }
 
   async findUserByWalletAddress(walletAddress: string): Promise<UserDetails> {
-    const user = await this.userRepository.findOne({ where: { walletAddress } });
-    const userMemes = await this.memeService.findUserMemesByUserId(user.id)
+    const user = await this.userRepository.findOne({
+      where: { walletAddress },
+    });
+    const userMemes = await this.memeService.findUserMemesByUserId(user.id);
     return {
       ...user,
-      userMemes
-    }
+      userMemes,
+    };
   }
 }

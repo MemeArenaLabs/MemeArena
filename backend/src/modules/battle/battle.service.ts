@@ -233,7 +233,13 @@ export class BattleService {
         }
       }
     } catch (error) {
-      client.send(JSON.stringify({ event: 'PROPOSE_SKILL_ERROR' }));
+      console.log(error);
+      client.send(
+        JSON.stringify({
+          event: 'PROPOSE_SKILL_ERROR',
+          message: error.message,
+        }),
+      );
     }
   }
 
@@ -335,14 +341,15 @@ export class BattleService {
       elementModifier *
       criticModifier;
 
-    defender.hp -= damage;
+    const damageInt = Math.floor(damage);
+    defender.hp -= damageInt;
     await this.logAttack(
       battleState.battleSessionId,
       userAttacker.userId,
       userDefender.userId,
       skillId,
       ATTACK_CODE,
-      damage,
+      damageInt,
     );
 
     let defenderDefeated = false;
