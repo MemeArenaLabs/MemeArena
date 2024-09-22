@@ -6,7 +6,7 @@ import { Meme, Skill, UserMeme } from './meme.entity';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Meme, UserMeme, Skill]), UserModule],
+  imports: [TypeOrmModule.forFeature([Meme, UserMeme, Skill])],
   controllers: [MemeController],
   providers: [MemeService],
   exports: [MemeService],

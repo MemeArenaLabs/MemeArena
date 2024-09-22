@@ -10,8 +10,4 @@ import { UserMeme } from './meme.entity';
 export class MemeController {
   constructor(private readonly memeService: MemeService) {}
 
-  @Get('wallet/:walletAddress')
-  async getUserMemesByWalletAddress(@Param('walletAddress') walletAddress: string): Promise<UserMemeDetails[]> {
-    return this.memeService.findUserMemesByWalletAddress(walletAddress);
-  }
 }
