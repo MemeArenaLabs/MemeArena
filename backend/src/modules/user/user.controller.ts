@@ -35,7 +35,7 @@ export class UserController {
   }
 
   @Get('wallet/:walletAddress')
-  async getUserMemesByWalletAddress(@Param('walletAddress') walletAddress: string): Promise<User> {
+  async getUserMemesByWalletAddress(@Param('walletAddress') walletAddress: string): Promise<UserDetails> {
     return this.userService.findUserByWalletAddress(walletAddress);
   }
 

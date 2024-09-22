@@ -17,7 +17,6 @@ export class MemeService {
     private readonly userMemeRepository: Repository<UserMeme>,
     @InjectRepository(Skill)
     private readonly skillRepository: Repository<Skill>,
-    private readonly userService: UserService
   ) {}
 
   async create(createMemeDto: CreateMemeDto): Promise<Meme> {
@@ -175,6 +174,7 @@ export class MemeService {
   getSkill(skillId: string): Promise<Skill> {
     return this.skillRepository.findOne({where: {id: skillId}})
   }
+<<<<<<< Updated upstream
   async findUserMemesByWalletAddress(walletAddress: string): Promise<any[]> {
     const user = await this.userService.findUserByWalletAddress(walletAddress);
   
@@ -182,8 +182,12 @@ export class MemeService {
       throw new Error('User not found');
     }
   
+=======
+
+  async findUserMemesByUserId(userId: string): Promise<UserMemeDetails[]> {
+>>>>>>> Stashed changes
     const userMemes = await this.userMemeRepository.find({
-      where: { user: { id: user.id } },
+      where: { user: { id: userId } },
       relations: ['meme', 'meme.token', 'meme.skills'],
     });
   
