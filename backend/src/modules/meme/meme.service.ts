@@ -175,7 +175,8 @@ export class MemeService {
   getSkill(skillId: string): Promise<Skill> {
     return this.skillRepository.findOne({where: {id: skillId}})
   }
-  async findUserMemesByWalletAddress(walletAddress: string): Promise<any[]> {
+
+  async findUserMemesByWalletAddress(walletAddress: string): Promise<UserMemeDetails[]> {
     const user = await this.userService.findUserByWalletAddress(walletAddress);
   
     if (!user) {
