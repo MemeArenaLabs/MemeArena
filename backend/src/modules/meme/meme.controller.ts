@@ -12,7 +12,7 @@ export class MemeController {
 
 <<<<<<< Updated upstream
   @Get('wallet/:walletAddress')
-  async getUserMemesByWalletAddress(@Param('walletAddress') walletAddress: string): Promise<UserMeme[]> {
+  async getUserMemesByWalletAddress(@Param('walletAddress') walletAddress: string): Promise<UserMemeDetails[]> {
     return this.memeService.findUserMemesByWalletAddress(walletAddress);
   }
 =======
