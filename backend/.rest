@@ -14,3 +14,9 @@ Accept: application/json
 # Obtener los memes de un usuario específico
 GET http://localhost:3001/memes/wallet/7dY73Q3mbHj5VuDKnGXdWfu1Trpt1Nn9MmZ8ZdiM3nM5
 Accept: application/json
+
+###
+
+# Obtener el usuario
+GET http://localhost:3001/users/wallet/7dY73Q3mbHj5VuDKnGXdWfu1Trpt1Nn9MmZ8ZdiM3nM5
+Accept: application/json

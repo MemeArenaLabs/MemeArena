@@ -35,6 +35,6 @@ export class UserService {
   }
 
   async findUserByWalletAddress(walletAddress: string): Promise<User> {
-    return this.userRepository.findOne({ where: { walletAddress } });
+    return await this.userRepository.findOne({ where: { walletAddress } });
   }
 }
