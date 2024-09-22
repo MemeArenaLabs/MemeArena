@@ -34,7 +34,8 @@ h2 {
 h3 {
   @apply font-bold text-[32px] leading-[40px];
 }
-p {
+p,
+label {
   @apply font-bold text-base leading-[20px];
 }
 

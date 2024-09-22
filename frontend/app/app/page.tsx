@@ -3,33 +3,33 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/Button";
 import { Modal } from "@/components/Modal";
 import useWebSocket from "@/lib/hooks/useWebSocket";
-import { DTOsType } from "@/lib/utils/dtosImporter";
 import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
-
-const getUserId = () => "user_ " + Math.floor(Math.random() * 10000);
+import { formatTime } from "@/lib/utils/utils";
+import { getUserData } from "@/lib/utils/api-service";
+import {
+  FindOpponentDto,
+  ProposeSkillDto,
+  ProposeTeamDto,
+  UserMeme,
+} from "@/types/server-types";
 
 export default function MainApp() {
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const [time, setTime] = useState<number>(0);
-  const [userId, setUserID] = useState(getUserId());
-
+  const [walletAddress, setWalletAddress] = useState<string>("");
+  const [userMemes, setUserMemes] = useState<UserMeme[]>();
   const [battleSessionId, setBattleSessionId] = useState<string | null>(null);
   const { isConnected, lastMessage, findOpponent, proposeTeam, proposeSkill } =
     useWebSocket();
 
   useEffect(() => {
-    let dotsInterval: NodeJS.Timeout;
     let timerInterval: NodeJS.Timeout;
-
     if (isFinding) {
-
       timerInterval = setInterval(() => {
         setTime((prev) => prev + 1);
       }, 1000);
     }
-
     return () => {
-      clearInterval(dotsInterval);
       clearInterval(timerInterval);
     };
   }, [isFinding]);
@@ -54,37 +54,36 @@ export default function MainApp() {
     }
   }, [lastMessage]);
 
+  useEffect(() => {
+    if (walletAddress) {
+      async () => {
+        const data = await getUserData(walletAddress);
+        setUserMemes(data);
+      };
+    }
+  }, [walletAddress]);
+
   const handleFindBattle = () => {
     setIsFinding(true);
     setTime(0);
+    const findOpponentDto: FindOpponentDto = {
+      userId: userId,
+      userMemeIds: ["meme1", "meme2", "meme3"],
+    };
+    console.log("finding opponent...");
+    findOpponent(findOpponentDto);
   };
 
   const handleCloseModal = () => {
     setIsFinding(false);
     setTime(0);
-  };
-
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
-      .toString()
-      .padStart(2, "0")}`;
-  };
-
-  const handleFindOpponent = () => {
-    const findOpponentDto: DTOsType["FindOpponentDto"] = {
-      userId: userId,
-      userMemeIds: ["meme1", "meme2", "meme3"],
-    };
-    console.log("finding oponent...");
-    findOpponent(findOpponentDto);
+    // handle cancel find battle
   };
 
   const handleProposeTeam = () => {
     console.log("proposing team...", battleSessionId);
     if (battleSessionId) {
-      const proposeTeamDto: DTOsType["ProposeTeamDto"] = {
+      const proposeTeamDto: ProposeTeamDto = {
         userId,
         battleSessionId,
         team: [
@@ -100,21 +99,38 @@ export default function MainApp() {
 
   const handleProposeSkill = () => {
     if (battleSessionId) {
-      const proposeSkillDto: DTOsType["ProposeSkillDto"] = {
+      const proposeSkillDto: ProposeSkillDto = {
         skillId: "skill1",
         battleSessionId,
         userId,
-        userMemeId: ""
+        userMemeId: "",
       };
       proposeSkill(proposeSkillDto);
     }
   };
 
   return (
-    <main className="flex flex-col gap-6">
-      <section className="layout">
-        <h2>MainApp</h2>
-        <Button onClick={handleFindBattle}>Find battle</Button>
+    <main className="flex flex-col gap-8 items-center">
+      <h2>MainApp</h2>
+      <p>Web socket: {isConnected ? "Connected" : "Disconnected"}</p>
+      <section className="layout gap-4">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="walletAddress">Wallet Address:</label>
+          <input
+            id="walletAddress"
+            type="text"
+            value={walletAddress}
+            onChange={(e) => setWalletAddress(e.target.value)}
+            placeholder="Enter your wallet address"
+            className="p-2 border rounded-md w-96"
+          />
+        </div>
+        <Button
+          onClick={handleFindBattle}
+          disabled={!walletAddress || !isConnected || !userMemes}
+        >
+          Find battle
+        </Button>
 
         <Modal
           isOpen={isFinding}
@@ -127,14 +143,7 @@ export default function MainApp() {
           </div>
         </Modal>
       </section>
-      <section
-        className="flex flex-col gap-2
-      items-center"
-      >
-        <p>Connection status: {isConnected ? "Connected" : "Disconnected"}</p>
-        <Button onClick={handleFindOpponent} disabled={!isConnected}>
-          Find Opponent
-        </Button>
+      <section className="flex flex-col gap-2 items-center">
         {battleSessionId && (
           <>
             <Button onClick={handleProposeTeam}>Propose Team</Button>
