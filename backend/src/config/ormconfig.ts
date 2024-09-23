@@ -4,7 +4,8 @@ export const typeOrmConfig: any = {
   port: 5432,
   username: 'magaiba',
   password: 'magaiba',
-  database: 'nestdb',
+  database: 'meme-arena',
   synchronize: true,
   autoLoadEntities: true,
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
 };

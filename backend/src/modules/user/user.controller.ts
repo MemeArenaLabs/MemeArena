@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,7 +16,7 @@ import { MemeService } from 'src/modules/meme/meme.service';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly memeService: MemeService
+    private readonly memeService: MemeService,
   ) {}
 
   @Post()
@@ -20,7 +28,6 @@ export class UserController {
   getUserMemes(@Param('userId') userId: string) {
     return this.memeService.getMemesByUser(userId);
   }
-
 
   @Get()
   findAll() {

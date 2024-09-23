@@ -15,6 +15,9 @@ export class User {
   @OneToMany(() => UserMeme, (UserMeme) => UserMeme.user)
   userMemes: UserMeme[];
 
-  @OneToMany(() => BattleSessionUser, (battleSessionUser) => battleSessionUser.user)
+  @OneToMany(
+    () => BattleSessionUser,
+    (battleSessionUser) => battleSessionUser.user,
+  )
   battleSessions: BattleSessionUser[];
 }

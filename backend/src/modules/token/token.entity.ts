@@ -16,6 +16,6 @@ export class Token {
   @Column({ nullable: true })
   contractAddress: string;
 
-  @OneToMany(() => Meme, meme => meme.token)
+  @OneToMany(() => Meme, (meme) => meme.token)
   memes: Meme[];
 }

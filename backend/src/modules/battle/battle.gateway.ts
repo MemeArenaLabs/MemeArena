@@ -1,38 +1,37 @@
-import {
-  WebSocketGateway,
-  SubscribeMessage,
-  MessageBody,
-  ConnectedSocket,
-} from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import { BattleService } from './battle.service';
-import { ProposeTeamDto, ProposeSkillDto, FindOpponentDto } from './dto/battle.dto';
+// battle.gateway.ts
 
-@WebSocketGateway({ cors: true })
-export class BattleGateway {
+import { WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
+import { WebSocket } from 'ws';
+import { BattleService } from './battle.service';
+
+@WebSocketGateway()
+export class BattleGateway implements OnGatewayConnection {
   constructor(private readonly battleService: BattleService) {}
 
-  @SubscribeMessage('FINDING')
-  handleFinding(
-    @MessageBody() findOpponentDto: FindOpponentDto,
-    @ConnectedSocket() client: Socket
-  ): void {
-    this.battleService.findOpponent(client, findOpponentDto);
-  }
+  handleConnection(client: WebSocket) {
+    client.on('message', (data: string) => {
+      const message = JSON.parse(data);
+      const event = message.event;
+      const payload = message.data;
 
-  @SubscribeMessage('PROPOSE_TEAM')
-  handleProposeTeam(
-    @MessageBody() proposeTeamDto: ProposeTeamDto,
-    @ConnectedSocket() client: Socket,
-  ): void {
-    this.battleService.proposeTeam(client, proposeTeamDto);
-  }
+      switch (event) {
+        case 'FINDING':
+          this.battleService.findOpponent(client, payload);
+          break;
+        case 'PROPOSE_TEAM':
+          this.battleService.proposeTeam(client, payload);
+          break;
 
-  @SubscribeMessage('PROPOSE_SKILL')
-  handleProposeSkill(
-    @MessageBody() proposeSkillDto: ProposeSkillDto,
-    @ConnectedSocket() client: Socket,
-  ): void {
-    this.battleService.proposeSkill(client, proposeSkillDto);
+        case 'PROPOSE_SKILL':
+          this.battleService.proposeSkill(client, payload);
+          break;
+
+        default:
+          client.send(
+            JSON.stringify({ event: 'ERROR', data: 'Evento desconocido' }),
+          );
+          break;
+      }
+    });
   }
 }

@@ -1,5 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne } from 'typeorm';
-import { Meme, UserMeme } from '../meme/meme.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
+import { UserMeme } from '../meme/meme.entity';
 import { User } from '../user/user.entity';
 
 @Entity('battle_sessions')
@@ -10,13 +17,16 @@ export class BattleSession {
   @Column({ type: 'varchar', length: 50 })
   battleId: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
   @Column({ type: 'varchar', length: 50 })
   status: string;
 
-  @OneToMany(() => BattleSessionUser, (battleSessionUser) => battleSessionUser.battleSession)
+  @OneToMany(
+    () => BattleSessionUser,
+    (battleSessionUser) => battleSessionUser.battleSession,
+  )
   users: BattleSessionUser[];
 }
 
@@ -31,8 +41,10 @@ export class BattleSessionUser {
   @ManyToOne(() => BattleSession, (battleSession) => battleSession.users)
   battleSession: BattleSession;
 
-  //Varios memes por usuario
-  @OneToMany(() => BattleSessionUserMeme, (battleSessionUserMeme) => battleSessionUserMeme.battleSessionUser)
+  @OneToMany(
+    () => BattleSessionUserMeme,
+    (battleSessionUserMeme) => battleSessionUserMeme.battleSessionUser,
+  )
   memes: BattleSessionUserMeme[];
 }
 
@@ -41,7 +53,10 @@ export class BattleSessionUserMeme {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => BattleSessionUser, (battleSessionUser) => battleSessionUser.memes)
+  @ManyToOne(
+    () => BattleSessionUser,
+    (battleSessionUser) => battleSessionUser.memes,
+  )
   battleSessionUser: BattleSessionUser;
 
   @ManyToOne(() => UserMeme, (userMeme) => userMeme.battleSessions)
@@ -56,18 +71,24 @@ export class BattleSessionAttacksLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   timestamp: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   attackerId: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   receiverId: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   skillId: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  attackResultId: string;
+  @Column({ type: 'varchar', length: 50 })
+  actionType: string; // 'attack', 'switch', 'meme_died', etc.
+
+  @Column({ type: 'int', nullable: true })
+  damage: number;
+
+  @Column({ type: 'varchar', length: 50 })
+  battleSessionId: string;
 }
