@@ -1,6 +1,6 @@
 // components/SkillsGUI.tsx
 import React, { useState } from "react";
-import Image from "next/image";
+import { SkillCards } from "../gui/skill-cards";
 
 interface SkillsGUIProps {
   onAttack: () => void;
@@ -16,14 +16,10 @@ const SkillsGUI: React.FC<SkillsGUIProps> = ({ onAttack, isActive }) => {
     switch (activeTab) {
       case "attack":
         return (
-          <div className="flex space-x-2">
-            <button className="rounded" disabled={!isActive} onClick={onAttack}>
-              <Image
-                src="/assets/battle-layout/skills/Frame 6.png"
-                width={100}
-                height={100}
-                alt="Habilidad 1"
-              />
+          <div className="flex ">
+            <SkillCards />
+           {/*  <button className="rounded" disabled={!isActive} onClick={onAttack}>
+             
             </button>
             <button className="rounded" disabled={!isActive} onClick={onAttack}>
               <Image
@@ -40,7 +36,7 @@ const SkillsGUI: React.FC<SkillsGUIProps> = ({ onAttack, isActive }) => {
                 height={100}
                 alt="Habilidad 3"
               />
-            </button>
+            </button> */}
           </div>
         );
       case "team":
@@ -63,7 +59,7 @@ const SkillsGUI: React.FC<SkillsGUIProps> = ({ onAttack, isActive }) => {
   return (
     <div className="flex justify-between">
       <div className="">
-        <div className="flex justify-between mb-4">
+        <div className="flex justify-between mb-20">
           <button
             className={`px-4 py-2 rounded ${activeTab === "attack" ? "bg-black text-white font-bold" : "bg-black opacity-50 text-white font-bold"}`}
             onClick={() => setActiveTab("attack")}
@@ -84,7 +80,7 @@ const SkillsGUI: React.FC<SkillsGUIProps> = ({ onAttack, isActive }) => {
           </button>
         </div>
 
-        <div className="mb-4">{renderTabContent()}</div>
+        <div>{renderTabContent()}</div>
       </div>
       <div className="flex items-end ">
         <div className="">
