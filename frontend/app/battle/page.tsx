@@ -1,8 +1,6 @@
-import React from 'react'
+import React from "react";
 
 export default function Battle() {
-  return (
-    <div>Battle</div>
-  )
+  return <div>Battle</div>;
 }
 

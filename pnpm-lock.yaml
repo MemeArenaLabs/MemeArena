@@ -138,9 +138,9 @@ importers:
 
   frontend:
     dependencies:
-      lucide-react:
-        specifier: ^0.439.0
-        version: 0.439.0(react@18.3.1)
+      '@nine-thirty-five/material-symbols-react':
+        specifier: ^1.10.0
+        version: 1.10.0(react@18.3.1)
       next:
         specifier: 14.2.6
         version: 14.2.6(react-dom@18.3.1)(react@18.3.1)
@@ -1400,6 +1400,14 @@ packages:
     dependencies:
       eslint-scope: 5.1.1
     dev: true
+
+  /@nine-thirty-five/material-symbols-react@1.10.0(react@18.3.1):
+    resolution: {integrity: sha512-/sLTy0dyVC9kakxf4xzxcB7pGaTjG5gRYFDA5lPcN6JEFqZvxZqQEcRuYqWdiZuWG+cxeLEnMZRNoiVIHFq8UA==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      react: 18.3.1
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -6595,14 +6603,6 @@ packages:
       yallist: 4.0.0
     optional: true
 
-  /lucide-react@0.439.0(react@18.3.1):
-    resolution: {integrity: sha512-PafSWvDTpxdtNEndS2HIHxcNAbd54OaqSYJO90/b63rab2HWYqDbH194j0i82ZFdWOAcf0AHinRykXRRK2PJbw==}
-    peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
-    dependencies:
-      react: 18.3.1
-    dev: false
-
   /macos-release@2.5.1:
     resolution: {integrity: sha512-DXqXhEM7gW59OjZO8NIjBCz9AQ1BEMrfiOAl4AYByHCtVHRF4KoGNO8mqQeM8lRCtQe/UnJ4imO/d2HdkKsd+A==}
     engines: {node: '>=6'}
@@ -6721,6 +6721,8 @@ packages:
   /mimic-response@3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
     engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
 
   /min-indent@1.0.1:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}

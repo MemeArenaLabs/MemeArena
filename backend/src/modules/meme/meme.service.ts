@@ -7,6 +7,8 @@ import { BaseStats, MinMaxValues, TokenData } from '../token/token.type';
 import { PROFESSIONS } from '../token/token.constants';
 import { ELEMENTS } from '../battle/battle.constants';
 import { UserMemeState } from '../battle/battle.type';
+import { UserService } from '../user/user.service';
+import { UserMemeDetails } from './meme.types';
 @Injectable()
 export class MemeService {
   constructor(
@@ -28,8 +30,10 @@ export class MemeService {
   }
 
   async getMemeByUserMemeId(userMemeId: string): Promise<Meme> {
-    const userMeme: UserMeme = await this.userMemeRepository.findOne({where: {id: userMemeId}})
-    return userMeme.meme
+    const userMeme: UserMeme = await this.userMemeRepository.findOne({
+      where: { id: userMemeId },
+    });
+    return userMeme.meme;
   }
 
   async getUserMemeDetails(userMemeId: string): Promise<UserMeme> {
@@ -45,8 +49,6 @@ export class MemeService {
     return userMeme;
   }
 
-
-
   async calculateMemeAttributes(
     userMeme: UserMeme,
     tokenDataMap: Map<string, TokenData>,
@@ -60,7 +62,7 @@ export class MemeService {
       tokenData.marketCap,
       minMaxValues.minMarketCap,
       minMaxValues.maxMarketCap,
-      0.5
+      0.5,
     );
 
     const attack = this.calculateAttribute(
@@ -68,7 +70,7 @@ export class MemeService {
       tokenData.volume24h,
       minMaxValues.minVolume24h,
       minMaxValues.maxVolume24h,
-      1
+      1,
     );
 
     const defense = this.calculateAttribute(
@@ -76,7 +78,7 @@ export class MemeService {
       tokenData.liquidity,
       minMaxValues.minLiquidity,
       minMaxValues.maxLiquidity,
-      1
+      1,
     );
 
     const criticChance = tokenData.dailyChange / 2;
@@ -103,7 +105,7 @@ export class MemeService {
     tokenValue: number,
     minValue: number,
     maxValue: number,
-    multiplier: number
+    multiplier: number,
   ): number {
     const normalizedValue = (tokenValue - minValue) / (maxValue - minValue);
     return baseValue + normalizedValue * baseValue * multiplier;
@@ -112,11 +114,13 @@ export class MemeService {
   private async getMemeBaseStats(memeId: string): Promise<BaseStats> {
     const meme = await this.memeRepository.findOne({ where: { id: memeId } });
     if (!meme) {
-      throw new Error(`No se encontraron datos base para el meme con id: ${memeId}`);
+      throw new Error(
+        `No se encontraron datos base para el meme con id: ${memeId}`,
+      );
     }
-  
+
     let { hpBase, attackBase, defenseBase, speedBase } = meme;
-  
+
     switch (meme.profession) {
       case PROFESSIONS.ROGUE:
         attackBase *= 1.1;
@@ -131,7 +135,7 @@ export class MemeService {
         hpBase *= 1.1;
         break;
     }
-  
+
     return {
       hpBase,
       attackBase,
@@ -150,11 +154,19 @@ export class MemeService {
     return meme;
   }
 
-  async calculateMinMaxValues(tokenDataMap: Map<string, TokenData>): Promise<MinMaxValues> {
-    const marketCaps = Array.from(tokenDataMap.values()).map((data) => data.marketCap);
-    const volume24hs = Array.from(tokenDataMap.values()).map((data) => data.volume24h);
-    const liquidities = Array.from(tokenDataMap.values()).map((data) => data.liquidity);
-  
+  async calculateMinMaxValues(
+    tokenDataMap: Map<string, TokenData>,
+  ): Promise<MinMaxValues> {
+    const marketCaps = Array.from(tokenDataMap.values()).map(
+      (data) => data.marketCap,
+    );
+    const volume24hs = Array.from(tokenDataMap.values()).map(
+      (data) => data.volume24h,
+    );
+    const liquidities = Array.from(tokenDataMap.values()).map(
+      (data) => data.liquidity,
+    );
+
     return {
       minMarketCap: Math.min(...marketCaps),
       maxMarketCap: Math.max(...marketCaps),
@@ -171,8 +183,38 @@ export class MemeService {
   }
 
   getSkill(skillId: string): Promise<Skill> {
-    return this.skillRepository.findOne({where: {id: skillId}})
+    return this.skillRepository.findOne({ where: { id: skillId } });
   }
 
+  async findUserMemesByUserId(userId: string): Promise<UserMemeDetails[]> {
+    const userMemes = await this.userMemeRepository.find({
+      where: { user: { id: userId } },
+      relations: ['meme', 'meme.token', 'meme.skills'],
+    });
 
+    return userMemes.map((userMeme) => ({
+      userMemeId: userMeme.id,
+      tokensLocked: userMeme.tokensLocked,
+      memeId: userMeme.meme.id,
+      name: userMeme.meme.name,
+      hpBase: userMeme.meme.hpBase,
+      attackBase: userMeme.meme.attackBase,
+      defenseBase: userMeme.meme.defenseBase,
+      speedBase: userMeme.meme.speedBase,
+      element: userMeme.meme.element,
+      profession: userMeme.meme.profession,
+      token: {
+        id: userMeme.meme.token.id,
+        symbol: userMeme.meme.token.symbol,
+        totalSupply: userMeme.meme.token.totalSupply,
+        contractAddress: userMeme.meme.token.contractAddress,
+      },
+      skills: userMeme.meme.skills.map((skill) => ({
+        skillId: skill.id,
+        name: skill.name,
+        damage: skill.damage,
+        speed: skill.speed,
+      })),
+    }));
+  }
 }

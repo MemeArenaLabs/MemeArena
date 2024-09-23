@@ -10,23 +10,16 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { MemeService } from 'src/modules/meme/meme.service';
+import { User } from './user.entity';
+import { UserDetails } from './user.types';
 
 @Controller('users')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly memeService: MemeService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
-  }
-
-  @Get(':userId/memes')
-  getUserMemes(@Param('userId') userId: string) {
-    return this.memeService.getMemesByUser(userId);
   }
 
   @Get()
@@ -37,6 +30,13 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
+  }
+
+  @Get('wallet/:walletAddress')
+  async getUserMemesByWalletAddress(
+    @Param('walletAddress') walletAddress: string,
+  ): Promise<UserDetails> {
+    return this.userService.findUserByWalletAddress(walletAddress);
   }
 
   @Patch(':id')

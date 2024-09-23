@@ -1,5 +1,5 @@
 "use client";
-import { X } from "lucide-react";
+import { Close } from "@nine-thirty-five/material-symbols-react/outlined";
 import { ReactNode, useEffect, useRef } from "react";
 
 interface ModalProps {
@@ -65,7 +65,7 @@ export function Modal({
           </div>
           <div className="flex items-center">
             <button onClick={handleClose} className="cursor-pointer">
-              <X />
+              <Close className="w-8 h-8"/>
             </button>
           </div>
         </div>

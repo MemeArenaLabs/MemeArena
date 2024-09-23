@@ -44,7 +44,8 @@ h2 {
 h3 {
   @apply font-bold text-[32px] leading-[40px];
 }
-p {
+p,
+label {
   @apply font-bold text-base leading-[20px];
 }
 
@@ -59,9 +60,8 @@ a {
   }
 }
 
-
-.enemy {
-  animation: enemy-idle 0.6s steps(2) infinite;
+.layout {
+  @apply flex flex-col items-center;
 }
 
 .player {
