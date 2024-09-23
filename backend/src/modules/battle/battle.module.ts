@@ -10,6 +10,7 @@ import {
 } from './battle.entity';
 import { TokenModule } from '../token/token.module';
 import { MemeModule } from '../meme/meme.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { MemeModule } from '../meme/meme.module';
       BattleSessionAttacksLog,
     ]),
     MemeModule,
-    TokenModule
+    TokenModule,
+    UserModule
   ],
   providers: [BattleGateway, BattleService],
 })

@@ -31,6 +31,7 @@ import {
   MINIMUM_DAMAGE,
 } from './battle.constants';
 import { MemeService } from '../meme/meme.service';
+import { UserService } from '../user/user.service';
 
 const ATTACK_CODE = 'attack';
 const MEME_DIED_ACTION = 'meme_died';
@@ -48,6 +49,7 @@ export class BattleService {
     private readonly battleSessionAttacksLogRepository: Repository<BattleSessionAttacksLog>,
     private readonly tokenService: TokenService,
     private readonly memeService: MemeService,
+    private readonly userService: UserService,
   ) {}
 
   async findOpponent(
@@ -64,7 +66,6 @@ export class BattleService {
         userMemes: userMemeIds.map((userMemeId) => ({ userMemeId })),
       });
 
-      // Verificamos si hay suficientes jugadores para comenzar la batalla
       if (this.waitingUsers.length >= this.NUMBER_OF_PLAYERS) {
         const usersInBattle = this.waitingUsers.splice(
           0,
@@ -117,10 +118,23 @@ export class BattleService {
         });
 
         this.activeBattles.set(battleSessionId, activeBattle);
-
+        const opponentDetails = await Promise.all(
+          usersInBattle.map(async (user, index) => {
+            const opponent: UserInBattle = usersInBattle[(index + 1) % this.NUMBER_OF_PLAYERS];
+            const userOpponent = await this.userService.findOne(opponent.userId)
+            const opponentDetails = await this.userService.findUserByWalletAddress(userOpponent.walletAddress);
+            return { userId: user.userId, opponent: opponentDetails };
+          })
+        );
         usersInBattle.forEach((user) => {
+          const opponentData = opponentDetails.find((data) => data.userId === user.userId)?.opponent;
           user.client.send(
-            JSON.stringify({ event: 'JOINED', data: { battleSessionId } }),
+            JSON.stringify({
+              event: 'JOINED', data: {
+                battleSessionId,
+                opponent: opponentData
+              }
+            }),
           );
         });
       }
@@ -227,7 +241,8 @@ export class BattleService {
           );
         });
 
-        const isBattleOver = this.checkBattleOver(battleState);
+        const isBattleOver = await this.checkBattleOver(battleState);
+        console.log({ isBattleOver })
         if (isBattleOver) {
           this.finishBattle(battleState.battleSessionId);
         }
@@ -395,10 +410,10 @@ export class BattleService {
 
   private async checkBattleOver(battleState: ActiveBattle): Promise<boolean> {
     let battleOver = false;
-
     for (const user of battleState.users) {
+      console.log('------userID', user.userId)
       const userMemeState = battleState.currentMemes.get(user.userId);
-
+      console.log({ userMemeState })
       if (userMemeState.hp <= 0) {
         const defeatedMemes = battleState.defeatedMemes.get(user.userId);
         defeatedMemes.add(userMemeState.userMemeId);
@@ -407,7 +422,8 @@ export class BattleService {
         const remainingMemes = allMemes.filter(
           (meme) => !defeatedMemes.has(meme.userMemeId),
         );
-
+        console.log({ allMemes })
+        console.log({ remainingMemes })
         if (remainingMemes.length > 0) {
           const nextMeme = remainingMemes[0];
           battleState.currentMemes.set(user.userId, nextMeme);
