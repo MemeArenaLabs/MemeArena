@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "../components/Button";
-import SvgIcon from "@/lib/utils/SvgIcon";
+import SvgIcon from "@/utils/SvgIcon";
 import { Close, Info } from "@nine-thirty-five/material-symbols-react/outlined";
 
 export default function Home() {
