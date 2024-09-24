@@ -7,6 +7,7 @@ export interface TokenData {
   volume24h: number;
   liquidity: number;
   dailyChange: number;
+  trade24h: number;
 }
 
 export interface BaseStats {

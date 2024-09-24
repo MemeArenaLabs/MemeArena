@@ -16,20 +16,21 @@ export class TokenService {
     const tokenDataMap = new Map<string, TokenData>();
     const tokens = await this.tokenRepository.find({});
 
-    // Crear un array de promesas para las llamadas a la API
     const tokenPromises = tokens.map(async (token) => {
       try {
         const { data } = await axios.get(
           `https://api.dexscreener.com/latest/dex/tokens/${token.contractAddress}`
         );
+        
         const pairData = data?.pairs[0];
-        const { marketCap, volume, liquidity } = pairData;
+        const { marketCap, volume, liquidity, priceChange, txns } = pairData;
         return {
           tokenId: token.id,
           marketCap,
           volume24h: volume.h24,
           liquidity: liquidity.usd,
-          dailyChange: 24,
+          dailyChange: priceChange.h24,
+          trade24h: txns.h24.buys,
         };
       } catch (error) {
         console.error(`Error al obtener datos del token ${token.symbol}:`, error);
@@ -37,10 +38,8 @@ export class TokenService {
       }
     });
 
-    // Ejecutar todas las promesas en paralelo
     const tokenDataArray = await Promise.all(tokenPromises);
 
-    // Almacenar los resultados en el mapa
     tokenDataArray.forEach((tokenData, index) => {
       tokenDataMap.set(tokens[index].id, tokenData);
     });
