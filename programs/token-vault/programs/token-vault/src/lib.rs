@@ -1,16 +1,41 @@
+#![allow(clippy::result_large_err)]
+
 use anchor_lang::prelude::*;
+
+mod constants;
+mod errors;
+mod instructions;
+mod state;
+
 
 declare_id!("91zLvqJCwF6gQjSJzkj1rXxHsRuu1ZD1gzMzp8VAdL5n");
 
+
 #[program]
 pub mod token_vault {
+    pub use super::instructions::*;
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        msg!("Greetings from: {:?}", ctx.program_id);
-        Ok(())
+    pub fn create_amm(ctx: Context<CreateAmm>, id: Pubkey, fee: u16) -> Result<()> {
+        instructions::create_amm(ctx, id, fee)
+    }
+
+    pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
+        instructions::create_pool(ctx)
+    }
+
+    pub fn deposit_liquidity(
+        ctx: Context<DepositLiquidity>,
+        amount_a: u64,
+        amount_b: u64,
+    ) -> Result<()> {
+        instructions::deposit_liquidity(ctx, amount_a, amount_b)
+    }
+
+    pub fn withdraw_liquidity(ctx: Context<WithdrawLiquidity>, amount: u64) -> Result<()> {
+        instructions::withdraw_liquidity(ctx, amount)
     }
 }
 
-#[derive(Accounts)]
-pub struct Initialize {}
+// #[derive(Accounts)]
+// pub struct Initialize {}
