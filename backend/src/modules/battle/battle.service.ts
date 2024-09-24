@@ -361,14 +361,14 @@ export class BattleService {
     let defenderDefeat: BattleSessionAttacksLog;
     const elementModifier =
       ELEMENTS_MODIFIER[attacker.element][defender.element];
-
     const isCriticalHit = Math.random() < attacker.criticChance;
 
     const criticModifier = isCriticalHit ? CRITIC_MULTIPLIER : 1;
+    
     const damage =
-      (DAMAGE_LEVEL_MULTIPLIER * levelToken + BASE_DAMAGE_ADDITION) *
+      (((DAMAGE_LEVEL_MULTIPLIER * levelToken + BASE_DAMAGE_ADDITION) *
       skillPower *
-      (attacker.attack / (defender.defense * BASE_DEFENSE_MULTIPLIER) +
+      (attacker.attack / defender.defense)) / BASE_DEFENSE_MULTIPLIER +
         BASE_DAMAGE_ADDITION) *
       elementModifier *
       criticModifier;

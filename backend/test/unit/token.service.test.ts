@@ -80,7 +80,8 @@ describe('TokenService', () => {
       marketCap: expect.any(Number),
       volume24h: expect.any(Number),
       liquidity: expect.any(Number),
-      dailyChange: 24,
+      dailyChange: expect.any(Number),
+      trade24h: expect.any(Number),
     });
   });
 });

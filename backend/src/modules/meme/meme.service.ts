@@ -81,8 +81,8 @@ export class MemeService {
       1,
     );
 
-    const criticChance = tokenData.dailyChange / 2;
-    const speed = baseStats.speedBase;
+    const criticChance = tokenData.dailyChange > 0 ? 0.1 + tokenData.dailyChange / 2: 0;
+    const speed = tokenData.trade24h;
 
     return {
       userMemeId: userMeme.id,
