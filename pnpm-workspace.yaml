@@ -2,4 +2,7 @@ packages:
   - "frontend/"
   - "backend/"
   - "packages/*"
-  - "programs"
+  - "programs/game-token-stake/*"
+  - "programs/nft-mint/*"
+  - "programs/token-vault/*"
+
