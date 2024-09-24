@@ -12,6 +12,23 @@ export default function Home() {
           <Button>Launch App</Button>
         </Link>
         <div>
+
+
+        <div className="relative w-full h-7  overflow-hidden">
+      <div className="absolute inset-0 flex">
+        <div className="absolute  h-7  w-[100px] left-6 bg-dark-blue flex items-center justify-center transform -skew-x-12">
+          <p className="font-bold text-yellow  transform skew-x-12">ATTACK</p>
+        </div>
+        
+        <div className="absolute   h-7  w-[100px] left-32 bg-dark-blue-80 flex items-center justify-center transform -skew-x-12">
+          <p className="font-bold text-white transform skew-x-12">TEAM</p>
+        </div>
+        
+        
+      </div>
+    </div>                      
+        <button className="boton-attack">Attack!</button>
+        <button className ="gui-attack-button">Attack</button>
           <h1>Heading1 test 96</h1>
           <h2>Heading2 test 64</h2>
           <h3>Heading3 test 32</h3>

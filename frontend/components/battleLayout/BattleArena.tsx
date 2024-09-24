@@ -9,25 +9,27 @@ interface BattleArenaProps {
 
 const BattleArena: React.FC<BattleArenaProps> = ({ currentTurn, showAttackEffect }) => {
   return (
-    <div className="flex-grow flex h-[100%] justify-center">
-      <div className="w-[567px] h-full flex justify-between items-center">
-        <div className="">
+    <div className="">
+      <div className="w-full flex justify-center gap-[250px]">
+        <div className="grid justify-end">
           <Image
             className={`relative player z-40 ${currentTurn === 1 ? 'border-2 border-yellow-400' : ''}`}
             src="/assets/battle-layout/gladiators/magaiba.png"
-            width={200}
-            height={200}
+            width={151}
+            height={170}
             alt="Jugador"
           />
           <Image
             className="mt-[-30px] animate-pulse z-0"
             src="/assets/battle-layout/gui-gladiators/shadow-gladiators.png"
-            width={200}
+            width={151}
             height={50}
             alt="Sombra jugador"
           />
         </div>
-        <div className="">
+
+
+        <div className=" justify-center">
           {showAttackEffect && (
             <Image
               className="absolute z-40"
@@ -40,14 +42,14 @@ const BattleArena: React.FC<BattleArenaProps> = ({ currentTurn, showAttackEffect
           <Image
             className={`relative enemy z-30 ${currentTurn === 2 ? 'border-2 border-yellow-400' : ''}`}
             src="/assets/battle-layout/gladiators/bonk.png"
-            width={200}
-            height={200}
+            width={164}
+            height={180}
             alt="Enemigo"
           />
           <Image
             className="mt-[-30px] enemy z-0"
             src="/assets/battle-layout/gui-gladiators/shadow-gladiators.png"
-            width={200}
+            width={164}
             height={50}
             alt="Sombra enemigo"
           />

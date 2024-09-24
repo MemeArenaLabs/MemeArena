@@ -23,7 +23,7 @@ export const usePlayerInfo = (playerId: number) => {
               id: playerId,
               name: playerId === 1 ? "Magaibero22" : "Opponent",
               hp: playerId === 1 ? 70 : 60,
-              market: "▲15%"
+              market: playerId === 1 ?  "15" : "15",
             });
           }, 1000); // Simula un retraso de red de 1 segundo
         });

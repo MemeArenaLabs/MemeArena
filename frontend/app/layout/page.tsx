@@ -23,7 +23,7 @@ const BattleInterface: React.FC = () => {
 
   console.log("gameState: " + gamePhase);
   return (
-    <main className="relative flex items-center justify-center bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/battle-layout/bg.jpg')]">
+    <main className="relative flex items-center justify-center bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/battle-layout/bg/flame-bg.png')]">
       {/* top bar gui */}
       <div className="absolute top-0 w-full p-1">
         <div className="flex justify-between mb-4 items-center">

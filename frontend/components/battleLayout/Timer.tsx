@@ -13,7 +13,7 @@ const Timer: React.FC<TimerProps> = ({ time }) => {
   };
 
   return (
-    <div className="text-black bg-white opacity-75 p-2 rounded text-2xl font-bold animate-pulse">
+    <div className=" bg-[#05345A] bg-opacity-[44%] p-2 rounded text-2xl font-bold text-white">
       {formatTime(time)}
     </div>
   );

@@ -20,6 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={` ${montserrat.className} font-montserrat`}>
       <body className="min-h-screen p-2">{children}</body>
-    </html>
+                  </html>
   );
 }

@@ -21,46 +21,79 @@ const PlayerInfo: React.FC<PlayerInfoProps> = ({ playerId }) => {
     <div>
       <Image 
         src={`/assets/battle-layout/user-avatars/${isOpponent ? 'Frame 17.png' : 'image.png'}`} 
-        width={50} 
-        height={50} 
+        width={42} 
+        height={42} 
         alt={`Avatar jugador ${playerId}`} 
       />
     </div>
   );
 
+  const hpBarElement = (
+    <div className="w-[143px] h-3 bg-white  overflow-hidden">
+      <div 
+        className="h-full bg-red-500 "
+        style={{ width: `${hp}%` }}
+      ></div>
+    </div>
+  );
+
   const infoElement = (
-    <div className={isOpponent ? "text-right" : ""}>
+    <div className={`${isOpponent ? "text-right" : ""} w-full`}>
       <div className="font-bold text-[16px]">{name}</div>
-      <div className="font-bold text-[12px]">
-        HP: {'█'.repeat(hp / 10)}<span className="text-red-500">{'█'.repeat(10 - hp / 10)}</span>
+      <div className={`${isOpponent ? "flex-row-reverse" : ""} font-bold text-[12px] flex  items-center gap-2`}>
+        <span>HP</span>
+        {hpBarElement}
+      </div>    
+    </div>
+  );
+
+  const marketElementLeft = (
+    <div className="bg-dark-blue-80 clip-path-polygon-left-market p-2 text-right w-[92px] ml-[-14px]">
+      <div className="text-[12px]">Market</div>
+      <div className="text-[16px] text-[#FF3E3E] font-medium flex justify-end items-center gap-1">
+       <div><Image
+            src="/icons/market-down.svg"
+            width={13}
+            height={10.5}
+            alt="Market Down"
+          /></div>
+       <div>{market}%</div>
       </div>
     </div>
   );
 
-  const marketElement = (
-    <div className={`grid content-between ${isOpponent ? "text-left" : "text-right"}`}>
-      <div className="font-bold text-sm">Market:</div>
-      <div>{market}</div>
+  const marketElementRight = (
+    <div className="bg-dark-blue-80 clip-path-polygon-right-market p-2 text-left w-[92px] mr-[-14px]">
+      <div className="text-[12px]">Market</div>
+      <div className="text-[16px] text-[#07F81F] font-medium flex justify-start items-center gap-1">
+      <div><Image
+            src="/icons/market-up.svg"
+            width={13}
+            height={10.5}
+            alt="Market Up"
+          /></div>
+       <div>{market}%</div>
+      </div>
     </div>
   );
 
   return (
-    <div className="text-white bg-black bg-opacity-75 p-2 min-w-[336px] justify-between rounded flex">
+    <div className="text-white min-w-[336px] flex">
       {isOpponent ? (
         <>
-          {marketElement}
-          <div className="flex gap-2">
+          {marketElementRight}
+          <div className="flex gap-2 bg-dark-blue-80 min-w-[226px] w-full items-center clip-path-polygon-right-gui-info-player p-2">
             {infoElement}
             {avatarElement}
           </div>
         </>
       ) : (
         <>
-          <div className="flex gap-2">
+          <div className="flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full clip-path-polygon-left-gui-info-player p-2">
             {avatarElement}
             {infoElement}
           </div>
-          {marketElement}
+          {marketElementLeft}
         </>
       )}
     </div>
