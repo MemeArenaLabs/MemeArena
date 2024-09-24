@@ -1,16 +1,65 @@
 use anchor_lang::prelude::*;
+use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 
 declare_id!("FU3grTvP5yB6L8Cz68Hyn9tdiexVV5LUBhvLyMcwR1gN");
 
 #[program]
-pub mod game_token_stake {
+pub mod battle {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        msg!("Greetings from: {:?}", ctx.program_id);
+    // User deposits tokens into the escrow
+    pub fn deposit_tokens(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.player_token_account.to_account_info(),
+            to: ctx.accounts.escrow_token_account.to_account_info(),
+            authority: ctx.accounts.player.to_account_info(),
+        };
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        token::transfer(CpiContext::new(cpi_program, cpi_accounts), amount)?;
+
+        Ok(())
+    }
+
+    // Backend determines the winner and distributes tokens
+    pub fn declare_winner(ctx: Context<DeclareWinner>, winner: Pubkey) -> Result<()> {
+        let total_tokens = ctx.accounts.escrow_token_account.amount;
+
+        // Transfer all tokens to the winner's token account
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.escrow_token_account.to_account_info(),
+            to: ctx.accounts.winner_token_account.to_account_info(),
+            authority: ctx.accounts.program_authority.to_account_info(),
+        };
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        token::transfer(CpiContext::new(cpi_program, cpi_accounts), total_tokens)?;
+
         Ok(())
     }
 }
 
 #[derive(Accounts)]
-pub struct Initialize {}
+pub struct Deposit<'info> {
+    #[account(mut)]
+    pub player: Signer<'info>,
+    #[account(mut)]
+    pub player_token_account: Account<'info, TokenAccount>,
+    #[account(mut)]
+    pub escrow_token_account: Account<'info, TokenAccount>,
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct DeclareWinner<'info> {
+    /// The backend authority that must sign the transaction
+    #[account(
+        signer,  // This ensures only the authorized signer can call this function
+        mut
+    )]
+    pub program_authority: AccountInfo<'info>,  // Backend-controlled account
+    #[account(mut)]
+    pub escrow_token_account: Account<'info, TokenAccount>,
+    #[account(mut)]
+    pub winner_token_account: Account<'info, TokenAccount>,
+    pub token_program: Program<'info, Token>,
+}
+
