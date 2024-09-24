@@ -12,7 +12,10 @@ module.exports = {
         "dark-blue": {
           DEFAULT: "#002448",
           80: "#002448CC", // 80% opacity
+          70: "#05345AB3", // 70% opacity
           50: "#00244880", // 50% opacity
+         
+
         },
         blue: {
           DEFAULT: "#1F1A8C",
