@@ -1,9 +1,9 @@
 use anchor_lang::prelude::*;
 
-declare_id!("FsKghr9zdSV1EG6MCNVsKhhBfVBk1qUEzTKKxWfj1PMa");
+declare_id!("91zLvqJCwF6gQjSJzkj1rXxHsRuu1ZD1gzMzp8VAdL5n");
 
 #[program]
-pub mod programs {
+pub mod token_vault {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
