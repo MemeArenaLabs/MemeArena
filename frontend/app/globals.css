@@ -14,14 +14,6 @@
   }
 }
 
-/* debug Nahue */
-
-/*  div {
-  border: solid 0.1px red;
-} 
- */
-/* debug Nahue */
-
 body {
   color: var(--foreground);
   background: var(--background);
@@ -85,69 +77,62 @@ a {
   }
   50% {
     transform: translateY(-2px) rotate(-5deg);
-  } }
+  }
+}
 
-  @font-face {
-    font-family: 'Monserrat';
-    src: url(/assets/fonts/monserrant/Montserrat-Regular.woff2) format('woff2');
-   }
+@font-face {
+  font-family: "Monserrat";
+  src: url(/assets/fonts/monserrant/Montserrat-Regular.woff2) format("woff2");
+}
 
-
-   
-   .boton-attack {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #ffffff;
-    background-color: #ffcc00;
-    border: 2px solid #ff9900;
-    border-radius: 5px;
-    box-shadow: 0 4px 0 #cc7a00;
-    cursor: pointer;
-    transition: all 0.1s ease;
+.boton-attack {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: #ffcc00;
+  border: 2px solid #ff9900;
+  border-radius: 5px;
+  box-shadow: 0 4px 0 #cc7a00;
+  cursor: pointer;
+  transition: all 0.1s ease;
 }
 
 .boton-attack:hover {
-    background-color: #ffdd33;
+  background-color: #ffdd33;
 }
 
 .boton-attack:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 #cc7a00;
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #cc7a00;
 }
 
-
-
-
-
-
 .clip-path-polygon-left {
-  clip-path: polygon(0% 0, 100% 0, 82% 100%, 0% 100%); 
+  clip-path: polygon(0% 0, 100% 0, 82% 100%, 0% 100%);
 }
 
 .clip-path-polygon-center {
-  clip-path: polygon(18% 0, 100% 0, 82% 100%, 0% 100%); 
+  clip-path: polygon(18% 0, 100% 0, 82% 100%, 0% 100%);
 }
 
 .clip-path-polygon-right {
-  clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%); 
+  clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%);
 }
-
 
 .clip-path-polygon-left-gui-info-player {
-  clip-path: polygon(0% 0, 100% 0, 93% 100%, 0% 100%); 
+  clip-path: polygon(0% 0, 100% 0, 93% 100%, 0% 100%);
 }
 
-.clip-path-polygon-left-market{
-  clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%); 
+.clip-path-polygon-left-market {
+  clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
 .clip-path-polygon-right-gui-info-player {
-  clip-path: polygon(7% 0, 100% 0, 100% 100%, 0% 100%); 
+  clip-path: polygon(7% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
 .clip-path-polygon-right-market {
-  clip-path: polygon(0% 0, 100% 0, 75% 100%, 0% 100%); 
+  clip-path: polygon(0% 0, 100% 0, 75% 100%, 0% 100%);
 }
