@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { UserDetails } from "@/types/server-types";
 
 interface Position {
   src: string;
@@ -25,7 +26,11 @@ const positions: Position[] = [
   },
 ];
 
-export default function OpponentGladiators(): JSX.Element {
+export default function OpponentGladiators({
+  opponentData,
+}: {
+  opponentData?: UserDetails;
+}): JSX.Element {
   return (
     <div className="flex justify-end gap-2">
       {positions.map((position, index) => (

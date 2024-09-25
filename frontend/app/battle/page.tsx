@@ -12,8 +12,6 @@ export default function Battle() {
   const { isConnected, lastMessage } = useWebSocket();
   const { battleSessionId, userData, opponentData } = useBattle();
 
-  const [memeInBattle, setMemeInBattle] = useState();
-
   return (
     <main className="relative flex items-center justify-center bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/battle-layout/bg/flame-bg.png')]">
       <div className="absolute top-0 w-full p-1">

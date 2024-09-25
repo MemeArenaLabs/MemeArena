@@ -43,8 +43,10 @@ export default function BattlePreparation() {
       <div className="flex flex-col gap-2 text-center">
         <p>Your Team:</p>
         <div className="flex gap-4">
-          {userData?.userMemes.map(({ name }) => (
-            <p className="text-[12px]">{name}</p>
+          {userData?.userMemes.map(({ name, userMemeId }) => (
+            <p className="text-[12px]" key={userMemeId}>
+              {name}
+            </p>
           ))}
         </div>
       </div>

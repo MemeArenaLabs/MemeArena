@@ -15,7 +15,8 @@ export default function FindBattle() {
   const [time, setTime] = useState<number>(0);
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const { isConnected, lastMessage, findOpponent } = useWebSocket();
-  const { setUserData, userData, setBattleSessionId } = useBattle();
+  const { setUserData, setOpponentData, userData, setBattleSessionId } =
+    useBattle();
   const router = useRouter();
 
   useEffect(() => {
@@ -31,7 +32,8 @@ export default function FindBattle() {
 
   useEffect(() => {
     if (lastMessage?.event === "JOINED") {
-      setBattleSessionId(lastMessage.data.battleSessionId);
+      setBattleSessionId(lastMessage?.data?.battleSessionId);
+      setOpponentData(lastMessage?.data?.opponent);
       router.push("/battle/preparation");
       handleCloseModal();
     }

@@ -3,12 +3,12 @@ import { UserDetails } from "@/types/server-types";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface BattleContextType {
-  battleSessionId: string | null;
-  setBattleSessionId: (id: string | null) => void;
-  userData: UserDetails | null;
-  setUserData: (data: UserDetails | null) => void;
-  opponentData: UserDetails | null;
-  setOpponentData: (data: UserDetails | null) => void;
+  battleSessionId?: string;
+  setBattleSessionId: (id: string) => void;
+  userData?: UserDetails;
+  setUserData: (data: UserDetails) => void;
+  opponentData?: UserDetails;
+  setOpponentData: (data: UserDetails) => void;
 }
 
 const BattleContext = createContext<BattleContextType | undefined>(undefined);
@@ -26,9 +26,9 @@ interface BattleProviderProps {
 }
 
 export const BattleProvider: React.FC<BattleProviderProps> = ({ children }) => {
-  const [battleSessionId, setBattleSessionId] = useState<string | null>(null);
-  const [userData, setUserData] = useState<UserDetails | null>(null);
-  const [opponentData, setOpponentData] = useState<UserDetails | null>(null);
+  const [battleSessionId, setBattleSessionId] = useState<string>();
+  const [userData, setUserData] = useState<UserDetails>();
+  const [opponentData, setOpponentData] = useState<UserDetails>();
 
   const value = {
     battleSessionId,

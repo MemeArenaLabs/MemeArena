@@ -1,8 +1,10 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Timer from "./Timer";
 import OpponentGladiators from "./OpponentGladiators";
+import { useBattle } from "@/context/BattleProvider";
+import { UserDetails } from "@/types/server-types";
 
 interface PlayerInfo {
   name: string;
@@ -31,65 +33,77 @@ const opponent: PlayerInfo = {
 };
 
 export default function TopBarGUI() {
+  const [userInitHp, setUserInitHp] = useState();
+  const [opponentInitHp, setOpponentInitHp] = useState();
+  const { userData, opponentData } = useBattle();
+
+  useEffect(() => {}, []);
+
   return (
     <div className="flex justify-between mb-4 items-start">
       <div className="text-white min-w-[336px] flex">
-        <PlayerPanel player={user} />
+        <PlayerPanel player={userData} />
         <MarketPanel market={market1} />
       </div>
       <Timer time={12} />
       <div className="text-white min-w-[336px] flex flex-col gap-2">
         <div className="flex">
           <MarketPanel market={market2} isReversed />
-          <PlayerPanel player={opponent} isReversed />
+          <PlayerPanel player={opponentData} isReversed />
         </div>
-        <OpponentGladiators />
+        <OpponentGladiators opponentData={opponentData} />
       </div>
     </div>
   );
 }
 
-const PlayerPanel: React.FC<{ player: PlayerInfo; isReversed?: boolean }> = ({
-  player,
-  isReversed = false,
-}) => (
-  <div
-    className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${isReversed ? "clip-path-polygon-right-gui-info-player" : "clip-path-polygon-left-gui-info-player"} p-2`}
-  >
-    {!isReversed && (
-      <Image
-        src={player.avatar}
-        width={42}
-        height={42}
-        alt={`Avatar ${player.name}`}
-      />
-    )}
+const PlayerPanel: React.FC<{
+  player: UserDetails | undefined;
+  isReversed?: boolean;
+}> = ({ player, isReversed = false }) => {
+  if (!player) {
+    return <div>Loading...</div>;
+  }
+
+  return (
     <div
-      className={`w-full flex flex-col gap-[2px] ${isReversed ? "text-right" : ""}`}
+      className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${isReversed ? "clip-path-polygon-right-gui-info-player" : "clip-path-polygon-left-gui-info-player"} p-2`}
     >
-      <p>{player.name}</p>
+      {!isReversed && (
+        <Image
+          src="/assets/battle-layout/user-avatars/Frame 17.png"
+          width={42}
+          height={42}
+          alt={`Avatar ${player?.username}`}
+        />
+      )}
       <div
-        className={`font-bold text-[12px] flex items-center gap-2 ${isReversed ? "flex-row-reverse" : ""}`}
+        className={`w-full flex flex-col gap-[2px] ${isReversed ? "text-right" : ""}`}
       >
-        <p className="text-[14px]">HP</p>
-        <div className="w-[143px] h-3 bg-white overflow-hidden">
-          <div
-            className="h-full bg-red-500"
-            style={{ width: `${player.hp}%` }}
-          ></div>
+        <p>{player.username}</p>
+        <div
+          className={`font-bold text-[12px] flex items-center gap-2 ${isReversed ? "flex-row-reverse" : ""}`}
+        >
+          <p className="text-[14px]">HP</p>
+          <div className="w-[143px] h-3 bg-white overflow-hidden">
+            {/* <div
+              className="h-full bg-red-500"
+              style={{ width: `${player?.hp}%` }}
+            ></div> */}
+          </div>
         </div>
       </div>
+      {isReversed && (
+        <Image
+          src="/assets/battle-layout/user-avatars/image.png"
+          width={42}
+          height={42}
+          alt={`Avatar ${player.username}`}
+        />
+      )}
     </div>
-    {isReversed && (
-      <Image
-        src={player.avatar}
-        width={42}
-        height={42}
-        alt={`Avatar ${player.name}`}
-      />
-    )}
-  </div>
-);
+  );
+};
 
 const MarketPanel: React.FC<{ market: MarketInfo; isReversed?: boolean }> = ({
   market,
