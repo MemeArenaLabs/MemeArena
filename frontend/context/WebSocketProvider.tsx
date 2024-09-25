@@ -1,17 +1,24 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+"use client";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ReactNode,
+} from "react";
 import {
   FindOpponentDto,
   ProposeSkillDto,
   ProposeTeamDto,
 } from "@/types/server-types";
 
-// Define reconnectInterval and reconnectAttempts
 const RECONNECT_INTERVAL = 3000;
 const RECONNECT_ATTEMPTS = Infinity;
-
 const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL || "";
 
-interface WebSocketHookResult {
+interface WebSocketContextType {
   isConnected: boolean;
   lastMessage: any;
   sendMessage: (event: string, data: any) => void;
@@ -20,7 +27,25 @@ interface WebSocketHookResult {
   proposeSkill: (dto: ProposeSkillDto) => void;
 }
 
-const useWebSocket = (): WebSocketHookResult => {
+const WebSocketContext = createContext<WebSocketContextType | undefined>(
+  undefined
+);
+
+export const useWebSocket = () => {
+  const context = useContext(WebSocketContext);
+  if (!context) {
+    throw new Error("useWebSocket must be used within a WebSocketProvider");
+  }
+  return context;
+};
+
+interface WebSocketProviderProps {
+  children: ReactNode;
+}
+
+export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
+  children,
+}) => {
   const [isConnected, setIsConnected] = useState(false);
   const [lastMessage, setLastMessage] = useState<any>(null);
   const wsRef = useRef<WebSocket | null>(null);
@@ -104,7 +129,7 @@ const useWebSocket = (): WebSocketHookResult => {
     [sendMessage]
   );
 
-  return {
+  const value = {
     isConnected,
     lastMessage,
     sendMessage,
@@ -112,6 +137,10 @@ const useWebSocket = (): WebSocketHookResult => {
     proposeTeam,
     proposeSkill,
   };
-};
 
-export default useWebSocket;
+  return (
+    <WebSocketContext.Provider value={value}>
+      {children}
+    </WebSocketContext.Provider>
+  );
+};

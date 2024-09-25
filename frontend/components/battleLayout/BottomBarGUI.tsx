@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import SkillCard from "../gui/SkillCard";
+import { ProposeSkillDto } from "@/types/server-types";
+import { useWebSocket } from "@/context/WebSocketProvider";
+import { useBattle } from "@/context/BattleProvider";
 
 type MenuTab = "attack" | "team";
 
@@ -12,11 +15,52 @@ interface TabButtonProps {
   className: string;
 }
 
-const skills = ["skill 1", "skill 2", "skill 3", "skill 4"];
-const team = ["Gladiator 1", "Gladiator 2", "Gladiator 3"];
-
 export default function BottomBarGUI() {
   const [activeTab, setActiveTab] = useState<MenuTab>("attack");
+  const [selectedSkillId, setSelectedSkillId] = useState<string | null>(null);
+  const [selectedMemeId, setSelectedMemeId] = useState<string | null>(null);
+
+  const { proposeSkill } = useWebSocket();
+  const { battleSessionId, userData } = useBattle();
+
+  const currentMeme = userData?.userMemes[0];
+  const skills = currentMeme?.skills || [];
+
+  const handleSkillClick = (skillId: string) => {
+    setSelectedSkillId(skillId === selectedSkillId ? null : skillId);
+  };
+
+  const handleMemeClick = (memeId: string) => {
+    setSelectedMemeId(memeId === selectedMemeId ? null : memeId);
+  };
+
+  const handleAction = () => {
+    if (!battleSessionId || !userData) {
+      console.log("No battleSessionId or userData");
+      return;
+    }
+
+    if (activeTab === "attack" && selectedSkillId) {
+      const proposeSkillDto: ProposeSkillDto = {
+        skillId: selectedSkillId,
+        battleSessionId,
+        userId: userData.id,
+        userMemeId: currentMeme?.userMemeId || "",
+      };
+      console.log(proposeSkillDto);
+      proposeSkill(proposeSkillDto);
+    } else if (activeTab === "team" && selectedMemeId) {
+      // const swapMemeDto: SwapMemeDto = {
+      //   newMemeId: selectedMemeId,
+      //   battleSessionId,
+      //   userId: userData.id,
+      // };
+      // console.log(swapMemeDto);
+      // swapMeme(swapMemeDto);
+    } else {
+      console.log("No selected skill or meme");
+    }
+  };
 
   return (
     <div className="flex justify-between">
@@ -36,18 +80,41 @@ export default function BottomBarGUI() {
           />
         </div>
         <div className="flex gap-1">
-          {/* TODO: change from SkillCard to TeamCard */}
-          {(activeTab === "attack" ? skills : team).map((item, index) => (
-            <SkillCard key={index} skillName={item} />
-          ))}
+          {activeTab === "attack"
+            ? skills.map((skill) => (
+                <SkillCard
+                  key={skill.skillId}
+                  skillName={skill.name}
+                  isSelected={skill.skillId === selectedSkillId}
+                  onClick={() => handleSkillClick(skill.skillId)}
+                />
+              ))
+            : userData?.userMemes.map((meme) => (
+                <SkillCard
+                  key={meme.userMemeId}
+                  skillName={meme.name}
+                  isSelected={meme.userMemeId === selectedMemeId}
+                  onClick={() => handleMemeClick(meme.userMemeId)}
+                />
+              ))}
         </div>
       </div>
       <div className="flex items-end w-[156px]">
         <div className="w-full">
           <ActionButton
-            label="ATTACK!"
-            icon="/icons/battered-axe.svg"
-            className="bg-yellow text-black w-full max-h-[48px] mb-2 gap-2"
+            label={activeTab === "attack" ? "ATTACK!" : "SWAP"}
+            icon={
+              activeTab === "attack" ? "/icons/battered-axe.svg" : undefined
+            }
+            className={`${
+              activeTab === "attack"
+                ? "bg-yellow text-black"
+                : "bg-light-blue text-black"
+            } w-full max-h-[48px] mb-2 gap-2`}
+            onClick={handleAction}
+            disabled={
+              activeTab === "attack" ? !selectedSkillId : !selectedMemeId
+            }
           />
           <ActionButton
             label="SKIP"
@@ -77,13 +144,25 @@ const TabButton: React.FC<TabButtonProps> = ({
   </button>
 );
 
-const ActionButton: React.FC<{
+interface ActionButtonProps {
   label: string;
   icon?: string;
   className: string;
-}> = ({ label, icon, className }) => (
+  onClick?: () => void;
+  disabled?: boolean;
+}
+
+const ActionButton: React.FC<ActionButtonProps> = ({
+  label,
+  icon,
+  className,
+  onClick,
+  disabled = false,
+}) => (
   <button
-    className={`flex justify-center items-center font-bold px-4 py-2 ${className}`}
+    className={`flex justify-center items-center font-bold px-4 py-2 ${className} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+    onClick={onClick}
+    disabled={disabled}
   >
     {icon && <Image src={icon} width={20} height={20} alt={label} />}
     {label}
