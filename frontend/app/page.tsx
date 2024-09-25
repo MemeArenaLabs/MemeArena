@@ -36,7 +36,7 @@ export default function Home() {
         <div className="flex flex-col gap-2 p-2 bg-[#444444]">
           <p>Game Icons</p>
           <div className="flex gap-2">
-            <SvgIcon name="all-for-one" className="text-yellow h-10 w-10" />
+            <SvgIcon name="all-for-one" className="text-red-500 h-10 w-10" />
             <SvgIcon name="broken-heart" className="text-blue h-8 w-8" />
             <SvgIcon name="book-cover" className="text-red-600 h-10 w-10" />
           </div>
@@ -44,8 +44,8 @@ export default function Home() {
         <div className="flex flex-col gap-2 p-2 bg-[#444444]">
           <p>Material symbols</p>
           <div className="flex gap-2">
-            <Close className="h-7 w-7" />
-            <Info className="h-7 w-7" />
+            <Close className="h-7 w-7 text-yellow" />
+            <Info className="h-7 w-7 text-blue-70" />
           </div>
         </div>
       </section>
