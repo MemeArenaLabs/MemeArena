@@ -4,34 +4,25 @@ import { ProposeSkillDto } from "@/types/server-types";
 import { Button } from "@/components/Button";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { useBattle } from "@/context/BattleProvider";
+import TopBarGUI from "@/components/battleLayout/TopBarGUI";
+import BattleArena from "@/components/battleLayout/BattleArena";
+import BottomBarGUI from "@/components/battleLayout/BottomBarGUI";
 
 export default function Battle() {
-  const { isConnected, lastMessage, findOpponent, proposeTeam, proposeSkill } =
-    useWebSocket();
+  const { isConnected, lastMessage } = useWebSocket();
   const { battleSessionId, userData, opponentData } = useBattle();
 
   const [memeInBattle, setMemeInBattle] = useState();
 
-  const handleProposeSkill = () => {
-    if (battleSessionId && userData) {
-      const proposeSkillDto: ProposeSkillDto = {
-        skillId: userData.userMemes[0]?.skills[0]?.skillId || "",
-        battleSessionId,
-        userId: userData.id,
-        userMemeId: userData.userMemes[0]?.userMemeId || "",
-      };
-      console.log(proposeSkillDto);
-      proposeSkill(proposeSkillDto);
-    } else {
-      console.log("No battleSessionId or userData");
-    }
-  };
-
   return (
-    <main className="flex flex-col gap-8 items-center">
-      <h2>Battle</h2>
-      <Button onClick={handleProposeSkill}>Propose Skill</Button>
+    <main className="relative flex items-center justify-center bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/battle-layout/bg/flame-bg.png')]">
+      <div className="absolute top-0 w-full p-1">
+        <TopBarGUI />
+      </div>
+      <BattleArena />
+      <div className="absolute bottom-0 w-full p-1">
+        <BottomBarGUI />
+      </div>
     </main>
   );
 }
-

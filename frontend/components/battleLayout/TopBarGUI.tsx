@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Timer from "./Timer";
-import GladiatorPositions from "./GladiatorPositions";
+import OpponentGladiators from "./OpponentGladiators";
 
 interface PlayerInfo {
   name: string;
@@ -18,14 +18,14 @@ interface MarketInfo {
 const market1: MarketInfo = { changePct: 15, isUp: false };
 const market2: MarketInfo = { changePct: 15, isUp: true };
 
-const player1: PlayerInfo = {
-  name: "P1name",
+const user: PlayerInfo = {
+  name: "User",
   hp: 70,
   avatar: "/assets/battle-layout/user-avatars/image.png",
 };
 
-const player2: PlayerInfo = {
-  name: "P2name",
+const opponent: PlayerInfo = {
+  name: "Opponent",
   hp: 70,
   avatar: "/assets/battle-layout/user-avatars/Frame 17.png",
 };
@@ -34,16 +34,16 @@ export default function TopBarGUI() {
   return (
     <div className="flex justify-between mb-4 items-start">
       <div className="text-white min-w-[336px] flex">
-        <PlayerPanel player={player1} />
+        <PlayerPanel player={user} />
         <MarketPanel market={market1} />
       </div>
       <Timer time={12} />
       <div className="text-white min-w-[336px] flex flex-col gap-2">
         <div className="flex">
           <MarketPanel market={market2} isReversed />
-          <PlayerPanel player={player2} isReversed />
+          <PlayerPanel player={opponent} isReversed />
         </div>
-        <GladiatorPositions />
+        <OpponentGladiators />
       </div>
     </div>
   );

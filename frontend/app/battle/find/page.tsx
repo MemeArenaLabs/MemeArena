@@ -30,7 +30,6 @@ export default function FindBattle() {
   }, [walletAddress]);
 
   useEffect(() => {
-    console.log(lastMessage);
     if (lastMessage?.event === "JOINED") {
       setBattleSessionId(lastMessage.data.battleSessionId);
       router.push("/battle/preparation");
@@ -58,7 +57,6 @@ export default function FindBattle() {
         userId: userData.id,
         userMemeIds: userData.userMemes.map((meme) => meme.userMemeId),
       };
-      console.log("finding opponent...");
       findOpponent(findOpponentDto);
     } else {
       console.log("No userData");

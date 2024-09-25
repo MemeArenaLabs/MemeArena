@@ -25,19 +25,19 @@ const positions: Position[] = [
   },
 ];
 
-export default function GladiatorPositions(): JSX.Element {
+export default function OpponentGladiators(): JSX.Element {
   return (
     <div className="flex justify-end gap-2">
       {positions.map((position, index) => (
-        <GladiatorPosition key={index} {...position} />
+        <Gladiator key={index} {...position} />
       ))}
     </div>
   );
 }
 
-interface GladiatorPositionProps extends Position {}
+interface OpponentGladiatorsProps extends Position {}
 
-const GladiatorPosition: React.FC<GladiatorPositionProps> = ({
+const Gladiator: React.FC<OpponentGladiatorsProps> = ({
   src,
   alt,
   isDead = false,
