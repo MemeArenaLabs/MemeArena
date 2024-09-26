@@ -128,6 +128,13 @@ export class BattleService {
         );
         usersInBattle.forEach((user) => {
           const opponentData = opponentDetails.find((data) => data.userId === user.userId)?.opponent;
+          opponentData.userMemes = opponentData.userMemes.map( meme => {
+            console.log({meme})
+            return {
+              ...meme,
+              ...activeBattle.memeStates.get(opponentData.id).find(memeState => meme.userMemeId === memeState.userMemeId)
+            }
+          })
           user.client.send(
             JSON.stringify({
               event: 'JOINED', data: {
@@ -266,6 +273,10 @@ export class BattleService {
     battleState.proposedSkills.clear();
 
     const skillMemeMap = new Map<string, ProposeSkillDto>();
+
+    for (const skill of proposedSkills) {
+      skillMemeMap.set(skill.userMemeId, skill);
+    }
 
     const [userA, userB] = battleState.users;
     const memeUserA = battleState.currentMemes.get(userA.userId);
