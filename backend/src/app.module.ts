@@ -5,6 +5,7 @@ import { BattleModule } from './modules/battle/battle.module';
 import { MemeModule } from './modules/meme/meme.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/ormconfig';
+import { SolanaModule } from './modules/solana/solana.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { typeOrmConfig } from './config/ormconfig';
     TokenModule,
     BattleModule,
     MemeModule,
+    SolanaModule,
   ],
   controllers: [],
   providers: [],
