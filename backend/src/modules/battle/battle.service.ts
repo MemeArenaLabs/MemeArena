@@ -330,14 +330,14 @@ export class BattleService {
       const opponentChange = memeChanges.find(mc => mc.userId === opponentUser.userId);
 
       results[user.userId] = {
-        myMeme,
-        opponentMeme,
         battleLogs,
-        memeDefeated: userChange.memeDefeated,
-        opponentMemeDefeated: opponentChange.memeDefeated,
         memeChanged: userChange.newMeme ? true : false,
+        memeDefeated: userChange.memeDefeated,
+        myMeme,
         newMeme: userChange.newMeme || null,
+        opponentMeme,
         opponentMemeChanged: opponentChange.newMeme ? true : false,
+        opponentMemeDefeated: opponentChange.memeDefeated,
         opponentNewMeme: opponentChange.newMeme || null,
       };
     });
@@ -374,7 +374,7 @@ export class BattleService {
       criticModifier;
 
     const damageInt = Math.floor(damage);
-    defender.hp -= damageInt;
+    defender.currentHp -= damageInt;
     const attackerLog = await this.logAttack(
       battleState.battleSessionId,
       userAttacker.userId,
@@ -385,8 +385,8 @@ export class BattleService {
     );
     attackLogs.push(attackerLog)
 
-    if (defender.hp <= 0) {
-      defender.hp = 0;
+    if (defender.currentHp <= 0) {
+      defender.currentHp = 0;
       defenderDefeated = true
       battleState.defeatedMemes
         .get(userDefender.userId)
