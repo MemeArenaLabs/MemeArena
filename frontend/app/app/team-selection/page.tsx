@@ -6,7 +6,6 @@ export default function TeamSelection() {
   return (
     <main className="flex flex-col bg-gray-900 text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
       <div className="flex flex-grow">
-      
         <div className="pt-2 pl-2 ">
           {/* User CTA profile */}
           <div className="pb-2 flex items-center">
@@ -31,7 +30,7 @@ export default function TeamSelection() {
             </div>
           </div>
 
-  {/* Left side and Center - Characters */}
+          {/* Left side and Center - Characters */}
           <div className="flex">
             <div>
               <div className="space-y-2 overflow-y-auto max-w-[78px] max-h-[271px]">
@@ -324,23 +323,26 @@ export default function TeamSelection() {
       {/* Bottom - Button Bar */}
       <div className="px-2 pb-2">
         <div className="flex">
-          <button className="clip-path-buttom-bar-left min-w-[186px] h-[40px] bg-dark-blue hover:bg-dark-blue hover:text-yellow text-white font-bold py-2 flex pl-4  items-center mr-[-20px]">
+          <button className="clip-path-buttom-bar-left min-w-[186px] h-[40px] bg-dark-blue hover:bg-dark-blue hover:text-yellow text-yellow font-bold py-2 flex pl-4  items-center mr-[-20px]">
             <span className="mr-2 text-white">
-              <SvgIcon name="barbute" className="text-white h-5 w-5 " />
+              <SvgIcon name="barbute" className="text-yellow h-5 w-5 " />
             </span>{" "}
             Gladiators
           </button>
           <button className="clip-path-buttom-bar-center min-w-[186px] h-[40px] bg-dark-blue-50 hover:bg-dark-blue hover:text-yellow  text-white font-bold py-2  flex justify-center items-center mr-[-20px]">
             <span className="mr-2">
               {" "}
-              <SvgIcon name="all-for-one" className="text-white h-5 w-5 " />
+              <SvgIcon
+                name="all-for-one"
+                className="w h-5 w-5 "
+              />
             </span>{" "}
             Teams
           </button>
           <button className="clip-path-buttom-bar-center min-w-[186px] h-[40px] bg-dark-blue-50 hover:bg-dark-blue hover:text-yellow text-white font-bold py-2 flex justify-center items-center mr-[-20px]">
             <span className="mr-2">
-              {" "}
-              <SvgIcon name="hand-money" className="text-white h-5 w-5 " />
+            {" "}
+              <SvgIcon name="hand-money" className="h-5 w-5 " />
             </span>{" "}
             Stake
           </button>
