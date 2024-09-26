@@ -16,6 +16,7 @@ import { Repository } from 'typeorm';
 import {
   ActiveBattle,
   ActiveBattles,
+  MemeBattleStatus,
   UserInBattle,
   UserMemeState,
 } from './battle.type';
@@ -329,28 +330,81 @@ export class BattleService {
         battleLogs.push(...attackLogs)
       }
     }
-    const { battleOver, memeChanges } = await this.checkBattleOver(battleState);
+    const { battleOver } = await this.checkBattleOver(battleState);
 
-    battleState.users.forEach((user) => {
-      const opponentUser = battleState.users.find(u => u.userId !== user.userId);
-      const myMeme = battleState.currentMemes.get(user.userId);
-      const opponentMeme = battleState.currentMemes.get(opponentUser.userId);
+    for (const user of battleState.users) {
+      const userId = user.userId;
+      const opponentUser = battleState.users.find(u => u.userId !== userId);
 
-      const userChange = memeChanges.find(mc => mc.userId === user.userId);
-      const opponentChange = memeChanges.find(mc => mc.userId === opponentUser.userId);
+      const userMemesStates = battleState.memeStates.get(userId);
+      const currentMeme = battleState.currentMemes.get(userId);
+      const defeatedMemes = battleState.defeatedMemes.get(userId);
+
+      const userMemes = userMemesStates.map(memeState => {
+        let status: MemeBattleStatus;
+        if (defeatedMemes.has(memeState.userMemeId)) {
+          status = MemeBattleStatus.Defeated;
+        } else if (memeState.userMemeId === currentMeme.userMemeId) {
+          status = MemeBattleStatus.Active;
+        } else {
+          status = MemeBattleStatus.Bench;
+        }
+  
+        return {
+          userMemeId: memeState.userMemeId,
+          memeId: memeState.userMemeId,
+          hp: memeState.hp,
+          attack: memeState.attack,
+          defense: memeState.defense,
+          speed: memeState.speed,
+          element: memeState.element,
+          level: memeState.level,
+          status,
+        };
+      });
+
+      const userData = {
+        id: userId,
+        userMemes,
+      };
+
+
+      const opponentUserMemes = userMemesStates.map(memeState => {
+        let status: 'ACTIVE' | 'BENCH' | 'DEFEATED';
+        if (defeatedMemes.has(memeState.userMemeId)) {
+          status = 'DEFEATED';
+        } else if (memeState.userMemeId === currentMeme.userMemeId) {
+          status = 'ACTIVE';
+        } else {
+          status = 'BENCH';
+        }
+  
+        return {
+          userMemeId: memeState.userMemeId,
+          memeId: memeState.userMemeId,
+          hp: memeState.hp,
+          attack: memeState.attack,
+          defense: memeState.defense,
+          speed: memeState.speed,
+          element: memeState.element,
+          level: memeState.level,
+          skills: [],
+          status,
+        };
+      });
+
+      const opponentData = {
+        id: opponentUser.userId,
+        opponentUserMemes
+      }
 
       results[user.userId] = {
+        battleSessionId: battleState.battleSessionId,
         battleLogs,
-        memeChanged: userChange.newMeme ? true : false,
-        memeDefeated: userChange.memeDefeated,
-        myMeme,
-        newMeme: userChange.newMeme || null,
-        opponentMeme,
-        opponentMemeChanged: opponentChange.newMeme ? true : false,
-        opponentMemeDefeated: opponentChange.memeDefeated,
-        opponentNewMeme: opponentChange.newMeme || null,
+        userData,
+        opponentData,
       };
-    });
+    };
 
     return { battleOver, results };
   }
@@ -455,13 +509,12 @@ export class BattleService {
     return attackLog;
   }
 
-  private async checkBattleOver(battleState: ActiveBattle): Promise<{ battleOver: boolean; memeChanges: { userId: string; memeDefeated: boolean; newMeme?: UserMemeState }[], logs: BattleSessionAttacksLog[] }> {
+  private async checkBattleOver(battleState: ActiveBattle): Promise<{ battleOver: boolean, logs: BattleSessionAttacksLog[] }> {
     let battleOver = false;
     const memeChanges = [];
     const logs: BattleSessionAttacksLog[] = []
     for (const user of battleState.users) {
       const userMemeState = battleState.currentMemes.get(user.userId);
-
       if (userMemeState.hp <= 0) {
         const defeatedMemes = battleState.defeatedMemes.get(user.userId);
         defeatedMemes.add(userMemeState.userMemeId);
@@ -489,21 +542,10 @@ export class BattleService {
             memeDefeated: true,
             newMeme: nextMeme,
           });
-        } else {
-          battleOver = true;
-          memeChanges.push({
-            userId: user.userId,
-            memeDefeated: true,
-          });
         }
-      } else {
-        memeChanges.push({
-          userId: user.userId,
-          memeDefeated: false,
-        });
-      }
+      } 
     }
-    return { battleOver, memeChanges, logs };
+    return { battleOver, logs };
   }
 
   finishBattle(battleSessionId: string): void {

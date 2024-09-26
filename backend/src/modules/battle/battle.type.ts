@@ -38,3 +38,10 @@ export type UserInBattle = {
 export type ActiveBattles = Map<string, ActiveBattle>;
 
 
+export enum MemeBattleStatus {
+  Active = 'ACTIVE',
+  Bench ='BENCH',
+  Defeated = 'DEFEATED'
+}
+
+
