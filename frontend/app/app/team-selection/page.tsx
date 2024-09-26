@@ -326,31 +326,28 @@ export default function TeamSelection() {
           <button className="clip-path-buttom-bar-left min-w-[186px] h-[40px] bg-dark-blue hover:bg-dark-blue hover:text-yellow text-yellow font-bold py-2 flex pl-4  items-center mr-[-20px]">
             <span className="mr-2 text-white">
               <SvgIcon name="barbute" className="text-yellow h-5 w-5 " />
-            </span>{" "}
+            </span>
             Gladiators
           </button>
           <button className="clip-path-buttom-bar-center min-w-[186px] h-[40px] bg-dark-blue-50 hover:bg-dark-blue hover:text-yellow  text-white font-bold py-2  flex justify-center items-center mr-[-20px]">
             <span className="mr-2">
-              {" "}
               <SvgIcon
                 name="all-for-one"
                 className="w h-5 w-5 "
               />
-            </span>{" "}
+            </span>
             Teams
           </button>
           <button className="clip-path-buttom-bar-center min-w-[186px] h-[40px] bg-dark-blue-50 hover:bg-dark-blue hover:text-yellow text-white font-bold py-2 flex justify-center items-center mr-[-20px]">
             <span className="mr-2">
-            {" "}
               <SvgIcon name="hand-money" className="h-5 w-5 " />
-            </span>{" "}
+            </span>
             Stake
           </button>
           <button className="clip-path-buttom-bar-right w-full h-[40px] bg-yellow  ow-500 hover:bg-yellow-600 text-black flex justify-center hover:opacity-85 font-bold py-2">
             <span className="mr-2">
-              {" "}
               <SvgIcon name="crossed-swords" className="text-black h-5 w-5 " />
-            </span>{" "}
+            </span>
             FIGHT!
           </button>
         </div>
