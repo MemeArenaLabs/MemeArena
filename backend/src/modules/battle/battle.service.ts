@@ -19,7 +19,7 @@ import {
   UserInBattle,
   UserMemeState,
 } from './battle.type';
-import { UserMeme } from '../meme/meme.entity';
+import { SkillType, UserMeme } from '../meme/meme.entity';
 import { User } from '../user/user.entity';
 import { TokenService } from '../token/token.service';
 import {
@@ -262,20 +262,19 @@ export class BattleService {
     const results = {};
     const proposedSkills = Array.from(battleState.proposedSkills.values());
     let battleLogs: BattleSessionAttacksLog[] = [];
-    let memeBDefeated = false;
 
     battleState.proposedSkills.clear();
 
     const skillMemeMap = new Map<string, ProposeSkillDto>();
-    for (const skill of proposedSkills) {
-      skillMemeMap.set(skill.userMemeId, skill);
-    }
+
     const [userA, userB] = battleState.users;
     const memeUserA = battleState.currentMemes.get(userA.userId);
     const memeUserB = battleState.currentMemes.get(userB.userId);
 
     const skill1 = skillMemeMap.get(memeUserA.userMemeId);
     const skill2 = skillMemeMap.get(memeUserB.userMemeId);
+
+
     if (memeUserA.speed > memeUserB.speed) {
       const { attackLogs, defenderDefeated } = await this.calculateDamage(
         battleState,
@@ -283,7 +282,7 @@ export class BattleService {
         userB,
         memeUserA,
         memeUserB,
-        skill1.skillId,
+        skill1,
       );
       battleLogs.push(...attackLogs)
       if (!defenderDefeated) {
@@ -293,7 +292,7 @@ export class BattleService {
           userA,
           memeUserB,
           memeUserA,
-          skill2.skillId,
+          skill2,
         );
         battleLogs.push(...attackLogs)
       }
@@ -304,7 +303,7 @@ export class BattleService {
         userA,
         memeUserB,
         memeUserA,
-        skill2.skillId,
+        skill2,
       );
       battleLogs.push(...attackLogs)
       if (!defenderDefeated) {
@@ -314,7 +313,7 @@ export class BattleService {
           userB,
           memeUserA,
           memeUserB,
-          skill1.skillId,
+          skill1,
         );
         battleLogs.push(...attackLogs)
       }
@@ -330,14 +329,14 @@ export class BattleService {
       const opponentChange = memeChanges.find(mc => mc.userId === opponentUser.userId);
 
       results[user.userId] = {
-        myMeme,
-        opponentMeme,
         battleLogs,
-        memeDefeated: userChange.memeDefeated,
-        opponentMemeDefeated: opponentChange.memeDefeated,
         memeChanged: userChange.newMeme ? true : false,
+        memeDefeated: userChange.memeDefeated,
+        myMeme,
         newMeme: userChange.newMeme || null,
+        opponentMeme,
         opponentMemeChanged: opponentChange.newMeme ? true : false,
+        opponentMemeDefeated: opponentChange.memeDefeated,
         opponentNewMeme: opponentChange.newMeme || null,
       };
     });
@@ -351,14 +350,34 @@ export class BattleService {
     userDefender: UserInBattle,
     attacker: UserMemeState,
     defender: UserMemeState,
-    skillId: string,
+    skillDto: ProposeSkillDto,
   ): Promise<{ attackLogs: BattleSessionAttacksLog[], defenderDefeated: boolean }> {
-    const skill = await this.memeService.getSkill(skillId);
-    const skillPower = skill.damage;
-    const levelToken = attacker.level;
+    const skill = await this.memeService.getSkill(skillDto.skillId);
     const attackLogs: BattleSessionAttacksLog[] = [];
     let defenderDefeated = false;
     let defenderDefeat: BattleSessionAttacksLog;
+    if(skill.skillType === SkillType.SWITCH){
+      const newMeme = battleState.memeStates.get(userAttacker.userId).find(
+        (meme) => meme.userMemeId === skillDto.newUserMemeId,
+      );
+
+      battleState.currentMemes.set(userAttacker.userId, newMeme);
+
+      const switchLog = await this.logAttack(
+        battleState.battleSessionId,
+        userAttacker.userId,
+        null,
+        skill.id,
+        SWITCH_ACTION,
+        0,
+      );
+      attackLogs.push(switchLog);
+
+      return { attackLogs, defenderDefeated: false };
+    }
+
+    const skillPower = skill.damage;
+    const levelToken = attacker.level;
     const elementModifier =
       ELEMENTS_MODIFIER[attacker.element][defender.element];
     const isCriticalHit = Math.random() < attacker.criticChance;
@@ -374,19 +393,19 @@ export class BattleService {
       criticModifier;
 
     const damageInt = Math.floor(damage);
-    defender.hp -= damageInt;
+    defender.currentHp -= damageInt;
     const attackerLog = await this.logAttack(
       battleState.battleSessionId,
       userAttacker.userId,
       userDefender.userId,
-      skillId,
+      skillDto.skillId,
       ATTACK_CODE,
       damageInt,
     );
     attackLogs.push(attackerLog)
 
-    if (defender.hp <= 0) {
-      defender.hp = 0;
+    if (defender.currentHp <= 0) {
+      defender.currentHp = 0;
       defenderDefeated = true
       battleState.defeatedMemes
         .get(userDefender.userId)

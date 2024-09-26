@@ -3,6 +3,7 @@ export class ProposeSkillDto {
   userId: string;
   userMemeId: string;
   skillId: string;
+  newUserMemeId?: string;
 }
 
 export class FindOpponentDto {

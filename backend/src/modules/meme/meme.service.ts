@@ -87,6 +87,7 @@ export class MemeService {
     return {
       userMemeId: userMeme.id,
       hp,
+      currentHp: hp,
       attack,
       defense,
       criticChance,
