@@ -343,15 +343,15 @@ export class BattleService {
       results[user.userId] = {
         battleSessionId: battleState.battleSessionId,
         battleLogs,
-        userData: this.getInBattleDate(userId, battleState),
-        opponentData:  this.getInBattleDate(opponentUser.userId, battleState),
+        userData: this.getUserBattleData(userId, battleState),
+        opponentData:  this.getUserBattleData(opponentUser.userId, battleState),
       };
     };
 
     return { battleOver, results };
   }
 
-  private getInBattleDate(userId: string, battleState: ActiveBattle){
+  private getUserBattleData(userId: string, battleState: ActiveBattle){
     const userMemesStates = battleState.memeStates.get(userId);
     const currentMeme = battleState.currentMemes.get(userId);
     const defeatedMemes = battleState.defeatedMemes.get(userId);
@@ -367,15 +367,16 @@ export class BattleService {
       }
 
       return {
-        userMemeId: memeState.userMemeId,
-        memeId: memeState.userMemeId,
-        hp: memeState.hp,
         attack: memeState.attack,
         defense: memeState.defense,
-        speed: memeState.speed,
         element: memeState.element,
+        currentHp: memeState.currentHp,
+        hp: memeState.hp,
         level: memeState.level,
+        memeId: memeState.userMemeId,
+        speed: memeState.speed,
         status,
+        userMemeId: memeState.userMemeId,
       };
     });
 
