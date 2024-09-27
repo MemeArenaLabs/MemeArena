@@ -1,56 +1,21 @@
 import { SkillType } from "src/modules/meme/meme.entity";
-import { MemeBattleStatus } from "../battle.type";
+import { MemeBattleStatus, UserMemeState } from "../battle.type";
+import { UserMemeDetails } from "src/modules/meme/meme.types";
+import { UserDetails } from "src/modules/user/user.types";
 
-export class JoinedResponseDto {
+export interface JoinedResponseDto {
   battleSessionId: string;
   opponent: OpponentDto;
 }
 
-export class OpponentDto {
+export interface OpponentDto {
   id: string;
-  username: string;
   walletAddress: string;
+  username: string;
   userMemes: UserMemeDto[];
 }
 
-export class UserMemeDto {
-  userMemeId: string;
-  tokensLocked: number;
-  memeId: string;
-  name: string;
-  hpBase: number;
-  attackBase: number;
-  defenseBase: number;
-  speedBase: number;
-  element: string;
-  profession: string;
-  currentHp: number;
-  attack: number;
-  defense: number;
-  speed: number;
-  level: number;
-  criticChance: number;
-  marketCap: number;
-  volume24h: number;
-  liquidity: number;
-  token: TokenDto;
-  skills: SkillDto[];
-}
-
-export class TokenDto {
-  id: string;
-  symbol: string;
-  totalSupply: string;
-  contractAddress: string;
-}
-
-export class SkillDto {
-  skillId: string;
-  name: string;
-  damage: number;
-  speed: number;
-  type: SkillType;
-}
+export type UserMemeDto = UserMemeDetails & UserMemeState
 
 export class TeamProposedResponseDto {
   teams: TeamDto[];
@@ -63,7 +28,7 @@ export class TeamDto {
 
 export class UserMemePositionDto {
   userMemeId: string;
-  position: number;
+  position?: number;
 }
 
 
