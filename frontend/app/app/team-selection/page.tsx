@@ -316,6 +316,21 @@ export default function TeamSelection() {
                 </div>
               </div>
             </div>
+            <div className="flex justify-end p-2">
+              <div>
+                <div className="flex justify-end">
+                  <p className="text-[20px] text-light-blue py-2 ">STAKED</p>
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <p className="font-normal text-xs">458,288,852.58</p>
+                  <p className="text-xs">MAGAIBA</p>
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <p className="font-normal text-xs">12</p>
+                  <p className="text-xs">USD</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -331,10 +346,7 @@ export default function TeamSelection() {
           </button>
           <button className="clip-path-buttom-bar-center min-w-[186px] h-[40px] bg-dark-blue-50 hover:bg-dark-blue hover:text-yellow  text-white font-bold py-2  flex justify-center items-center mr-[-20px]">
             <span className="mr-2">
-              <SvgIcon
-                name="all-for-one"
-                className="w h-5 w-5 "
-              />
+              <SvgIcon name="all-for-one" className="w h-5 w-5 " />
             </span>
             Teams
           </button>
