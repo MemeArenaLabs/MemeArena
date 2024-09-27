@@ -18,6 +18,7 @@ export interface UserMemeState {
   speed: number;
   userMemeId: string;
   volume24h: number;
+  status?: string
 }
 export interface ActiveBattle {
   battleSessionId: string;
