@@ -33,6 +33,7 @@ import {
 } from './battle.constants';
 import { MemeService } from '../meme/meme.service';
 import { UserService } from '../user/user.service';
+import { JoinedResponseDto, OpponentDto, ResolvedSkillsResponseDto, TeamProposedResponseDto } from './dto/battle.response.dto';
 
 const ATTACK_CODE = 'attack';
 const MEME_DIED_ACTION = 'meme_died';
@@ -136,12 +137,13 @@ export class BattleService {
               ...activeBattle.memeStates.get(opponentData.id).find(memeState => meme.userMemeId === memeState.userMemeId)
             }
           })
+          const response: JoinedResponseDto = {
+            battleSessionId,
+            opponent: opponentData as OpponentDto
+          }
           user.client.send(
             JSON.stringify({
-              event: 'JOINED', data: {
-                battleSessionId,
-                opponent: opponentData
-              }
+              event: 'JOINED', data: response
             }),
           );
         });
@@ -167,16 +169,17 @@ export class BattleService {
             (user) => user.proposed,
           );
           if (allTeamsProposed) {
+            const response: TeamProposedResponseDto = {
+              teams: activeBattle.users.map((u) => ({
+                userId: u.userId,
+                team: u.userMemes,
+              })),
+            }
             activeBattle.users.forEach((user) => {
               user.client.send(
                 JSON.stringify({
                   event: 'TEAM_PROPOSED',
-                  data: {
-                    teams: activeBattle.users.map((u) => ({
-                      userId: u.userId,
-                      team: u.userMemes,
-                    })),
-                  },
+                  data: response,
                 }),
               );
             });
@@ -241,10 +244,11 @@ export class BattleService {
         const { battleOver, results } = await this.resolveSkills(battleState);
 
         battleState.users.forEach((user) => {
+          const response: ResolvedSkillsResponseDto = results[user.userId]
           user.client.send(
             JSON.stringify({
               event: 'RESOLVED_SKILLS',
-              data: results[user.userId],
+              data: response,
             }),
           );
         });
