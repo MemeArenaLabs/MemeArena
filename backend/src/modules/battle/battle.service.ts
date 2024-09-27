@@ -16,10 +16,11 @@ import { Repository } from 'typeorm';
 import {
   ActiveBattle,
   ActiveBattles,
+  MemeBattleStatus,
   UserInBattle,
   UserMemeState,
 } from './battle.type';
-import { UserMeme } from '../meme/meme.entity';
+import { SkillType, UserMeme } from '../meme/meme.entity';
 import { User } from '../user/user.entity';
 import { TokenService } from '../token/token.service';
 import {
@@ -128,6 +129,13 @@ export class BattleService {
         );
         usersInBattle.forEach((user) => {
           const opponentData = opponentDetails.find((data) => data.userId === user.userId)?.opponent;
+          opponentData.userMemes = opponentData.userMemes.map( meme => {
+            console.log({meme})
+            return {
+              ...meme,
+              ...activeBattle.memeStates.get(opponentData.id).find(memeState => meme.userMemeId === memeState.userMemeId)
+            }
+          })
           user.client.send(
             JSON.stringify({
               event: 'JOINED', data: {
@@ -262,20 +270,23 @@ export class BattleService {
     const results = {};
     const proposedSkills = Array.from(battleState.proposedSkills.values());
     let battleLogs: BattleSessionAttacksLog[] = [];
-    let memeBDefeated = false;
 
     battleState.proposedSkills.clear();
 
     const skillMemeMap = new Map<string, ProposeSkillDto>();
+
     for (const skill of proposedSkills) {
       skillMemeMap.set(skill.userMemeId, skill);
     }
+
     const [userA, userB] = battleState.users;
     const memeUserA = battleState.currentMemes.get(userA.userId);
     const memeUserB = battleState.currentMemes.get(userB.userId);
 
     const skill1 = skillMemeMap.get(memeUserA.userMemeId);
     const skill2 = skillMemeMap.get(memeUserB.userMemeId);
+
+
     if (memeUserA.speed > memeUserB.speed) {
       const { attackLogs, defenderDefeated } = await this.calculateDamage(
         battleState,
@@ -283,7 +294,7 @@ export class BattleService {
         userB,
         memeUserA,
         memeUserB,
-        skill1.skillId,
+        skill1,
       );
       battleLogs.push(...attackLogs)
       if (!defenderDefeated) {
@@ -293,7 +304,7 @@ export class BattleService {
           userA,
           memeUserB,
           memeUserA,
-          skill2.skillId,
+          skill2,
         );
         battleLogs.push(...attackLogs)
       }
@@ -304,7 +315,7 @@ export class BattleService {
         userA,
         memeUserB,
         memeUserA,
-        skill2.skillId,
+        skill2,
       );
       battleLogs.push(...attackLogs)
       if (!defenderDefeated) {
@@ -314,33 +325,86 @@ export class BattleService {
           userB,
           memeUserA,
           memeUserB,
-          skill1.skillId,
+          skill1,
         );
         battleLogs.push(...attackLogs)
       }
     }
-    const { battleOver, memeChanges } = await this.checkBattleOver(battleState);
+    const { battleOver } = await this.checkBattleOver(battleState);
 
-    battleState.users.forEach((user) => {
-      const opponentUser = battleState.users.find(u => u.userId !== user.userId);
-      const myMeme = battleState.currentMemes.get(user.userId);
-      const opponentMeme = battleState.currentMemes.get(opponentUser.userId);
+    for (const user of battleState.users) {
+      const userId = user.userId;
+      const opponentUser = battleState.users.find(u => u.userId !== userId);
 
-      const userChange = memeChanges.find(mc => mc.userId === user.userId);
-      const opponentChange = memeChanges.find(mc => mc.userId === opponentUser.userId);
+      const userMemesStates = battleState.memeStates.get(userId);
+      const currentMeme = battleState.currentMemes.get(userId);
+      const defeatedMemes = battleState.defeatedMemes.get(userId);
+
+      const userMemes = userMemesStates.map(memeState => {
+        let status: MemeBattleStatus;
+        if (defeatedMemes.has(memeState.userMemeId)) {
+          status = MemeBattleStatus.Defeated;
+        } else if (memeState.userMemeId === currentMeme.userMemeId) {
+          status = MemeBattleStatus.Active;
+        } else {
+          status = MemeBattleStatus.Bench;
+        }
+  
+        return {
+          userMemeId: memeState.userMemeId,
+          memeId: memeState.userMemeId,
+          hp: memeState.hp,
+          attack: memeState.attack,
+          defense: memeState.defense,
+          speed: memeState.speed,
+          element: memeState.element,
+          level: memeState.level,
+          status,
+        };
+      });
+
+      const userData = {
+        id: userId,
+        userMemes,
+      };
+
+
+      const opponentUserMemes = userMemesStates.map(memeState => {
+        let status: 'ACTIVE' | 'BENCH' | 'DEFEATED';
+        if (defeatedMemes.has(memeState.userMemeId)) {
+          status = 'DEFEATED';
+        } else if (memeState.userMemeId === currentMeme.userMemeId) {
+          status = 'ACTIVE';
+        } else {
+          status = 'BENCH';
+        }
+  
+        return {
+          userMemeId: memeState.userMemeId,
+          memeId: memeState.userMemeId,
+          hp: memeState.hp,
+          attack: memeState.attack,
+          defense: memeState.defense,
+          speed: memeState.speed,
+          element: memeState.element,
+          level: memeState.level,
+          skills: [],
+          status,
+        };
+      });
+
+      const opponentData = {
+        id: opponentUser.userId,
+        opponentUserMemes
+      }
 
       results[user.userId] = {
-        myMeme,
-        opponentMeme,
+        battleSessionId: battleState.battleSessionId,
         battleLogs,
-        memeDefeated: userChange.memeDefeated,
-        opponentMemeDefeated: opponentChange.memeDefeated,
-        memeChanged: userChange.newMeme ? true : false,
-        newMeme: userChange.newMeme || null,
-        opponentMemeChanged: opponentChange.newMeme ? true : false,
-        opponentNewMeme: opponentChange.newMeme || null,
+        userData,
+        opponentData,
       };
-    });
+    };
 
     return { battleOver, results };
   }
@@ -351,14 +415,34 @@ export class BattleService {
     userDefender: UserInBattle,
     attacker: UserMemeState,
     defender: UserMemeState,
-    skillId: string,
+    skillDto: ProposeSkillDto,
   ): Promise<{ attackLogs: BattleSessionAttacksLog[], defenderDefeated: boolean }> {
-    const skill = await this.memeService.getSkill(skillId);
-    const skillPower = skill.damage;
-    const levelToken = attacker.level;
+    const skill = await this.memeService.getSkill(skillDto.skillId);
     const attackLogs: BattleSessionAttacksLog[] = [];
     let defenderDefeated = false;
     let defenderDefeat: BattleSessionAttacksLog;
+    if(skill.skillType === SkillType.SWITCH){
+      const newMeme = battleState.memeStates.get(userAttacker.userId).find(
+        (meme) => meme.userMemeId === skillDto.newUserMemeId,
+      );
+
+      battleState.currentMemes.set(userAttacker.userId, newMeme);
+
+      const switchLog = await this.logAttack(
+        battleState.battleSessionId,
+        userAttacker.userId,
+        null,
+        skill.id,
+        SWITCH_ACTION,
+        0,
+      );
+      attackLogs.push(switchLog);
+
+      return { attackLogs, defenderDefeated: false };
+    }
+
+    const skillPower = skill.damage;
+    const levelToken = attacker.level;
     const elementModifier =
       ELEMENTS_MODIFIER[attacker.element][defender.element];
     const isCriticalHit = Math.random() < attacker.criticChance;
@@ -374,19 +458,19 @@ export class BattleService {
       criticModifier;
 
     const damageInt = Math.floor(damage);
-    defender.hp -= damageInt;
+    defender.currentHp -= damageInt;
     const attackerLog = await this.logAttack(
       battleState.battleSessionId,
       userAttacker.userId,
       userDefender.userId,
-      skillId,
+      skillDto.skillId,
       ATTACK_CODE,
       damageInt,
     );
     attackLogs.push(attackerLog)
 
-    if (defender.hp <= 0) {
-      defender.hp = 0;
+    if (defender.currentHp <= 0) {
+      defender.currentHp = 0;
       defenderDefeated = true
       battleState.defeatedMemes
         .get(userDefender.userId)
@@ -425,13 +509,12 @@ export class BattleService {
     return attackLog;
   }
 
-  private async checkBattleOver(battleState: ActiveBattle): Promise<{ battleOver: boolean; memeChanges: { userId: string; memeDefeated: boolean; newMeme?: UserMemeState }[], logs: BattleSessionAttacksLog[] }> {
+  private async checkBattleOver(battleState: ActiveBattle): Promise<{ battleOver: boolean, logs: BattleSessionAttacksLog[] }> {
     let battleOver = false;
     const memeChanges = [];
     const logs: BattleSessionAttacksLog[] = []
     for (const user of battleState.users) {
       const userMemeState = battleState.currentMemes.get(user.userId);
-
       if (userMemeState.hp <= 0) {
         const defeatedMemes = battleState.defeatedMemes.get(user.userId);
         defeatedMemes.add(userMemeState.userMemeId);
@@ -459,21 +542,10 @@ export class BattleService {
             memeDefeated: true,
             newMeme: nextMeme,
           });
-        } else {
-          battleOver = true;
-          memeChanges.push({
-            userId: user.userId,
-            memeDefeated: true,
-          });
         }
-      } else {
-        memeChanges.push({
-          userId: user.userId,
-          memeDefeated: false,
-        });
-      }
+      } 
     }
-    return { battleOver, memeChanges, logs };
+    return { battleOver, logs };
   }
 
   finishBattle(battleSessionId: string): void {

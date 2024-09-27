@@ -9,6 +9,12 @@ import {
 import { User } from '../user/user.entity';
 import { BattleSessionUserMeme } from '../battle/battle.entity';
 
+
+export enum SkillType {
+  DAMAGE = 'DAMAGE',
+  SWITCH = 'SWITCH',
+}
+
 @Entity()
 export class Meme {
   @PrimaryGeneratedColumn('uuid')
@@ -82,6 +88,9 @@ export class Skill{
 
   @Column()
   speed: number;
+
+  @Column()
+  skillType: SkillType;
 
   @ManyToOne(() => Meme, (meme) => meme.skills, { eager: true })
   meme: Meme;
