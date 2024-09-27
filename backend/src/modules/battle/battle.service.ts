@@ -33,6 +33,7 @@ import {
 } from './battle.constants';
 import { MemeService } from '../meme/meme.service';
 import { UserService } from '../user/user.service';
+import { JoinedResponseDto, OpponentDto, ResolvedSkillsResponseDto, TeamProposedResponseDto } from './dto/battle.response.dto';
 
 const ATTACK_CODE = 'attack';
 const MEME_DIED_ACTION = 'meme_died';
@@ -136,12 +137,13 @@ export class BattleService {
               ...activeBattle.memeStates.get(opponentData.id).find(memeState => meme.userMemeId === memeState.userMemeId)
             }
           })
+          const response: JoinedResponseDto = {
+            battleSessionId,
+            opponent: opponentData as OpponentDto
+          }
           user.client.send(
             JSON.stringify({
-              event: 'JOINED', data: {
-                battleSessionId,
-                opponent: opponentData
-              }
+              event: 'JOINED', data: response
             }),
           );
         });
@@ -167,26 +169,27 @@ export class BattleService {
             (user) => user.proposed,
           );
           if (allTeamsProposed) {
+            const response: TeamProposedResponseDto = {
+              teams: activeBattle.users.map((u) => ({
+                userId: u.userId,
+                team: u.userMemes,
+              })),
+            }
             activeBattle.users.forEach((user) => {
               user.client.send(
                 JSON.stringify({
                   event: 'TEAM_PROPOSED',
-                  data: {
-                    teams: activeBattle.users.map((u) => ({
-                      userId: u.userId,
-                      team: u.userMemes,
-                    })),
-                  },
+                  data: response,
                 }),
               );
             });
           }
         }
       } else {
-        client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR' }));
+        client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR', data: { message: 'Battle not found'} }));
       }
     } catch (error) {
-      client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR' }));
+      client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR', data: {message: error.message} }));
     }
   }
   private async createBattleSession(
@@ -241,10 +244,11 @@ export class BattleService {
         const { battleOver, results } = await this.resolveSkills(battleState);
 
         battleState.users.forEach((user) => {
+          const response: ResolvedSkillsResponseDto = results[user.userId]
           user.client.send(
             JSON.stringify({
               event: 'RESOLVED_SKILLS',
-              data: results[user.userId],
+              data: response,
             }),
           );
         });
@@ -336,77 +340,49 @@ export class BattleService {
       const userId = user.userId;
       const opponentUser = battleState.users.find(u => u.userId !== userId);
 
-      const userMemesStates = battleState.memeStates.get(userId);
-      const currentMeme = battleState.currentMemes.get(userId);
-      const defeatedMemes = battleState.defeatedMemes.get(userId);
-
-      const userMemes = userMemesStates.map(memeState => {
-        let status: MemeBattleStatus;
-        if (defeatedMemes.has(memeState.userMemeId)) {
-          status = MemeBattleStatus.Defeated;
-        } else if (memeState.userMemeId === currentMeme.userMemeId) {
-          status = MemeBattleStatus.Active;
-        } else {
-          status = MemeBattleStatus.Bench;
-        }
-  
-        return {
-          userMemeId: memeState.userMemeId,
-          memeId: memeState.userMemeId,
-          hp: memeState.hp,
-          attack: memeState.attack,
-          defense: memeState.defense,
-          speed: memeState.speed,
-          element: memeState.element,
-          level: memeState.level,
-          status,
-        };
-      });
-
-      const userData = {
-        id: userId,
-        userMemes,
-      };
-
-
-      const opponentUserMemes = userMemesStates.map(memeState => {
-        let status: 'ACTIVE' | 'BENCH' | 'DEFEATED';
-        if (defeatedMemes.has(memeState.userMemeId)) {
-          status = 'DEFEATED';
-        } else if (memeState.userMemeId === currentMeme.userMemeId) {
-          status = 'ACTIVE';
-        } else {
-          status = 'BENCH';
-        }
-  
-        return {
-          userMemeId: memeState.userMemeId,
-          memeId: memeState.userMemeId,
-          hp: memeState.hp,
-          attack: memeState.attack,
-          defense: memeState.defense,
-          speed: memeState.speed,
-          element: memeState.element,
-          level: memeState.level,
-          skills: [],
-          status,
-        };
-      });
-
-      const opponentData = {
-        id: opponentUser.userId,
-        opponentUserMemes
-      }
-
       results[user.userId] = {
         battleSessionId: battleState.battleSessionId,
         battleLogs,
-        userData,
-        opponentData,
+        userData: this.getInBattleDate(userId, battleState),
+        opponentData:  this.getInBattleDate(opponentUser.userId, battleState),
       };
     };
 
     return { battleOver, results };
+  }
+
+  private getInBattleDate(userId: string, battleState: ActiveBattle){
+    const userMemesStates = battleState.memeStates.get(userId);
+    const currentMeme = battleState.currentMemes.get(userId);
+    const defeatedMemes = battleState.defeatedMemes.get(userId);
+
+    const userMemes = userMemesStates.map(memeState => {
+      let status: MemeBattleStatus;
+      if (defeatedMemes.has(memeState.userMemeId)) {
+        status = MemeBattleStatus.Defeated;
+      } else if (memeState.userMemeId === currentMeme.userMemeId) {
+        status = MemeBattleStatus.Active;
+      } else {
+        status = MemeBattleStatus.Bench;
+      }
+
+      return {
+        userMemeId: memeState.userMemeId,
+        memeId: memeState.userMemeId,
+        hp: memeState.hp,
+        attack: memeState.attack,
+        defense: memeState.defense,
+        speed: memeState.speed,
+        element: memeState.element,
+        level: memeState.level,
+        status,
+      };
+    });
+
+    return {
+      id: userId,
+      userMemes,
+    };
   }
 
   private async calculateDamage(
