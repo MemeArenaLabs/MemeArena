@@ -215,6 +215,7 @@ export class MemeService {
         name: skill.name,
         damage: skill.damage,
         speed: skill.speed,
+        type: skill.skillType,
       })),
     }));
   }
