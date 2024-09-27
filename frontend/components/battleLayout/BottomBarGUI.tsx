@@ -5,6 +5,7 @@ import SkillCard from "../gui/SkillCard";
 import { ProposeSkillDto } from "@/types/server-types";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { useBattle } from "@/context/BattleProvider";
+import SvgIcon, { IconProps } from "@/utils/SvgIcon";
 
 type MenuTab = "attack" | "team";
 
@@ -24,7 +25,8 @@ export default function BottomBarGUI() {
   const { battleSessionId, userData } = useBattle();
 
   const currentMeme = userData?.userMemes[0];
-  const skills = currentMeme?.skills || [];
+  const skills =
+    currentMeme?.skills?.filter(({ type }) => type !== "SWITCH") || [];
 
   const handleSkillClick = (skillId: string) => {
     setSelectedSkillId(skillId === selectedSkillId ? null : skillId);
@@ -50,13 +52,15 @@ export default function BottomBarGUI() {
       console.log(proposeSkillDto);
       proposeSkill(proposeSkillDto);
     } else if (activeTab === "team" && selectedMemeId) {
-      // const swapMemeDto: SwapMemeDto = {
-      //   newMemeId: selectedMemeId,
+      // const swapMemeDto: ProposeSkillDto = {
+      //   skillId: skills.find(({ type }) => type === "SWITCH")?.skillId ?? "",
       //   battleSessionId,
       //   userId: userData.id,
+      //   userMemeId: currentMeme?.userMemeId || "",
+      //   newUserMemeId: selectedMemeId,
       // };
       // console.log(swapMemeDto);
-      // swapMeme(swapMemeDto);
+      // proposeSkill(swapMemeDto);
     } else {
       console.log("No selected skill or meme");
     }
@@ -104,13 +108,16 @@ export default function BottomBarGUI() {
           <ActionButton
             label={activeTab === "attack" ? "ATTACK!" : "SWAP"}
             icon={
-              activeTab === "attack" ? "/icons/battered-axe.svg" : undefined
+              activeTab === "attack" ? (
+                // "/icons/battered-axe.svg"
+                <SvgIcon name="battered-axe" className="w-5 h-5" />
+              ) : (
+                <SvgIcon name="avoidance" className="w-5 h-5" />
+              )
             }
-            className={`${
-              activeTab === "attack"
-                ? "bg-yellow text-black"
-                : "bg-light-blue text-black"
-            } w-full max-h-[48px] mb-2 gap-2`}
+            className={`
+             bg-yellow text-black
+           w-full max-h-[48px] mb-2 gap-2`}
             onClick={handleAction}
             disabled={
               activeTab === "attack" ? !selectedSkillId : !selectedMemeId
@@ -146,7 +153,7 @@ const TabButton: React.FC<TabButtonProps> = ({
 
 interface ActionButtonProps {
   label: string;
-  icon?: string;
+  icon?: React.ReactNode;
   className: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -164,7 +171,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     onClick={onClick}
     disabled={disabled}
   >
-    {icon && <Image src={icon} width={20} height={20} alt={label} />}
+    {icon && icon}
+    {/* <Image src={icon} width={20} height={20} alt={label} /> */}
     {label}
   </button>
 );
