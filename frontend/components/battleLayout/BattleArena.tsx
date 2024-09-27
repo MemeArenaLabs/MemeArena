@@ -1,62 +1,62 @@
-// components/BattleArea.tsx
-import React from 'react';
-import Image from 'next/image';
+"use client";
+import React from "react";
+import Image from "next/image";
 
-interface BattleArenaProps {
-  currentTurn: 1 | 2;
-  showAttackEffect?: boolean;
+interface PlayerProps {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  isReversed?: boolean;
 }
 
-const BattleArena: React.FC<BattleArenaProps> = ({ currentTurn, showAttackEffect }) => {
+const players = [
+  {
+    src: "/assets/battle-layout/gladiators/magaiba.png",
+    width: 151,
+    height: 170,
+    alt: "Player 1",
+  },
+  {
+    src: "/assets/battle-layout/gladiators/bonk.png",
+    width: 164,
+    height: 180,
+    alt: "Player 2",
+    isReversed: true,
+  },
+];
+
+export default function BattleArena() {
   return (
-    <div className="">
-      <div className="w-full flex justify-center gap-[250px]">
-        <div className="grid justify-end">
-          <Image
-            className={`relative player z-40 ${currentTurn === 1 ? 'border-2 border-yellow-400' : ''}`}
-            src="/assets/battle-layout/gladiators/magaiba.png"
-            width={151}
-            height={170}
-            alt="Jugador"
-          />
-          <Image
-            className="mt-[-30px] animate-pulse z-0"
-            src="/assets/battle-layout/gui-gladiators/shadow-gladiators.png"
-            width={151}
-            height={50}
-            alt="Sombra jugador"
-          />
-        </div>
-
-
-        <div className=" justify-center">
-          {showAttackEffect && (
-            <Image
-              className="absolute z-40"
-              width={190}
-              height={190}
-              src="/assets/battle-layout/skills-effects/punch.gif"
-              alt="Efecto de ataque"
-            />
-          )}
-          <Image
-            className={`relative enemy z-30 ${currentTurn === 2 ? 'border-2 border-yellow-400' : ''}`}
-            src="/assets/battle-layout/gladiators/bonk.png"
-            width={164}
-            height={180}
-            alt="Enemigo"
-          />
-          <Image
-            className="mt-[-30px] enemy z-0"
-            src="/assets/battle-layout/gui-gladiators/shadow-gladiators.png"
-            width={164}
-            height={50}
-            alt="Sombra enemigo"
-          />
-        </div>
-      </div>
+    <div className="w-full flex justify-center gap-[250px]">
+      {players.map((player, index) => (
+        <Player key={index} {...player} />
+      ))}
     </div>
   );
-};
+}
 
-export default BattleArena;
+const Player: React.FC<PlayerProps> = ({
+  src,
+  width,
+  height,
+  alt,
+  isReversed = false,
+}) => (
+  <div className={`grid ${isReversed ? "justify-start" : "justify-end"}`}>
+    <Image
+      className={`relative z-10`}
+      src={src}
+      width={width}
+      height={height}
+      alt={alt}
+    />
+    <Image
+      className={`mt-[-30px] ${isReversed ? "" : "animate-pulse"} z-0`}
+      src="/assets/battle-layout/gui-gladiators/shadow-gladiators.png"
+      width={width}
+      height={50}
+      alt={`Shadow of ${alt}`}
+    />
+  </div>
+);

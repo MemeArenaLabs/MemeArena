@@ -4,36 +4,44 @@ import { ProposeSkillDto } from './dto/battle.dto';
 import { WebSocket } from 'ws';
 
 export interface UserMemeState {
-  userMemeId: string;
-  hp: number;
   attack: number;
-  defense: number;
   criticChance: number;
-  speed: number;
-  marketCap: number;
-  volume24h: number;
-  liquidity: number;
+  currentHp: number;
   dailyChange?: number;
+  defense: number;
   element?: ELEMENTS;
-  profession?: PROFESSIONS;
+  hp: number;
   level: number;
+  liquidity: number;
+  marketCap: number;
+  profession?: PROFESSIONS;
+  speed: number;
+  userMemeId: string;
+  volume24h: number;
 }
 export interface ActiveBattle {
-  users: UserInBattle[];
+  battleSessionId: string;
   currentMemes?: Map<string, UserMemeState>; // userId => UserMemeState (meme actual)
+  defeatedMemes: Map<string, Set<string>>; // userId => Set of defeated userMemeIds
   memeStates: Map<string, UserMemeState[]>; // userId => UserMemeState[] (todos los memes)
   proposedSkills: Map<string, ProposeSkillDto>; // userId => ProposeSkillDto
-  defeatedMemes: Map<string, Set<string>>; // userId => Set of defeated userMemeIds
-  battleSessionId: string;
+  users: UserInBattle[];
 }
 
 export type UserInBattle = {
   client: WebSocket;
+  proposed?: boolean;
   userId: string;
   userMemes: { userMemeId: string; position?: number }[];
-  proposed?: boolean;
 };
 
 export type ActiveBattles = Map<string, ActiveBattle>;
+
+
+export enum MemeBattleStatus {
+  Active = 'ACTIVE',
+  Bench ='BENCH',
+  Defeated = 'DEFEATED'
+}
 
 
