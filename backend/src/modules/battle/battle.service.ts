@@ -183,10 +183,10 @@ export class BattleService {
           }
         }
       } else {
-        client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR' }));
+        client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR', data: { message: 'Battle not found'} }));
       }
     } catch (error) {
-      client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR' }));
+      client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR', data: {message: error.message} }));
     }
   }
   private async createBattleSession(
@@ -336,77 +336,49 @@ export class BattleService {
       const userId = user.userId;
       const opponentUser = battleState.users.find(u => u.userId !== userId);
 
-      const userMemesStates = battleState.memeStates.get(userId);
-      const currentMeme = battleState.currentMemes.get(userId);
-      const defeatedMemes = battleState.defeatedMemes.get(userId);
-
-      const userMemes = userMemesStates.map(memeState => {
-        let status: MemeBattleStatus;
-        if (defeatedMemes.has(memeState.userMemeId)) {
-          status = MemeBattleStatus.Defeated;
-        } else if (memeState.userMemeId === currentMeme.userMemeId) {
-          status = MemeBattleStatus.Active;
-        } else {
-          status = MemeBattleStatus.Bench;
-        }
-  
-        return {
-          userMemeId: memeState.userMemeId,
-          memeId: memeState.userMemeId,
-          hp: memeState.hp,
-          attack: memeState.attack,
-          defense: memeState.defense,
-          speed: memeState.speed,
-          element: memeState.element,
-          level: memeState.level,
-          status,
-        };
-      });
-
-      const userData = {
-        id: userId,
-        userMemes,
-      };
-
-
-      const opponentUserMemes = userMemesStates.map(memeState => {
-        let status: 'ACTIVE' | 'BENCH' | 'DEFEATED';
-        if (defeatedMemes.has(memeState.userMemeId)) {
-          status = 'DEFEATED';
-        } else if (memeState.userMemeId === currentMeme.userMemeId) {
-          status = 'ACTIVE';
-        } else {
-          status = 'BENCH';
-        }
-  
-        return {
-          userMemeId: memeState.userMemeId,
-          memeId: memeState.userMemeId,
-          hp: memeState.hp,
-          attack: memeState.attack,
-          defense: memeState.defense,
-          speed: memeState.speed,
-          element: memeState.element,
-          level: memeState.level,
-          skills: [],
-          status,
-        };
-      });
-
-      const opponentData = {
-        id: opponentUser.userId,
-        opponentUserMemes
-      }
-
       results[user.userId] = {
         battleSessionId: battleState.battleSessionId,
         battleLogs,
-        userData,
-        opponentData,
+        userData: this.getInBattleDate(userId, battleState),
+        opponentData:  this.getInBattleDate(opponentUser.userId, battleState),
       };
     };
 
     return { battleOver, results };
+  }
+
+  private getInBattleDate(userId: string, battleState: ActiveBattle){
+    const userMemesStates = battleState.memeStates.get(userId);
+    const currentMeme = battleState.currentMemes.get(userId);
+    const defeatedMemes = battleState.defeatedMemes.get(userId);
+
+    const userMemes = userMemesStates.map(memeState => {
+      let status: MemeBattleStatus;
+      if (defeatedMemes.has(memeState.userMemeId)) {
+        status = MemeBattleStatus.Defeated;
+      } else if (memeState.userMemeId === currentMeme.userMemeId) {
+        status = MemeBattleStatus.Active;
+      } else {
+        status = MemeBattleStatus.Bench;
+      }
+
+      return {
+        userMemeId: memeState.userMemeId,
+        memeId: memeState.userMemeId,
+        hp: memeState.hp,
+        attack: memeState.attack,
+        defense: memeState.defense,
+        speed: memeState.speed,
+        element: memeState.element,
+        level: memeState.level,
+        status,
+      };
+    });
+
+    return {
+      id: userId,
+      userMemes,
+    };
   }
 
   private async calculateDamage(

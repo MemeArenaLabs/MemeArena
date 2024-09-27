@@ -67,7 +67,7 @@ export class MemeService {
 
     const attack = this.calculateAttribute(
       baseStats.attackBase,
-      tokenData.volume24h,
+      tokenData.volume24h/tokenData.marketCap,
       minMaxValues.minVolume24h,
       minMaxValues.maxVolume24h,
       1,
@@ -75,7 +75,7 @@ export class MemeService {
 
     const defense = this.calculateAttribute(
       baseStats.defenseBase,
-      tokenData.liquidity,
+      tokenData.liquidity/tokenData.marketCap,
       minMaxValues.minLiquidity,
       minMaxValues.maxLiquidity,
       1,
