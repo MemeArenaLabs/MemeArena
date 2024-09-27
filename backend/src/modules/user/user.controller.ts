@@ -10,8 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './user.entity';
-import { UserDetails } from './user.types';
+import { UserResponseDto } from './dto/user.response.dto';
 
 @Controller('users')
 export class UserController {
@@ -35,7 +34,7 @@ export class UserController {
   @Get('wallet/:walletAddress')
   async getUserMemesByWalletAddress(
     @Param('walletAddress') walletAddress: string,
-  ): Promise<UserDetails> {
+  ): Promise<UserResponseDto> {
     return this.userService.findUserByWalletAddress(walletAddress);
   }
 

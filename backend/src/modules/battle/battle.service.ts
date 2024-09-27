@@ -29,11 +29,10 @@ import {
   CRITIC_MULTIPLIER,
   DAMAGE_LEVEL_MULTIPLIER,
   ELEMENTS_MODIFIER,
-  MINIMUM_DAMAGE,
 } from './battle.constants';
 import { MemeService } from '../meme/meme.service';
 import { UserService } from '../user/user.service';
-import { JoinedResponseDto, OpponentDto, ResolvedSkillsResponseDto, TeamProposedResponseDto } from './dto/battle.response.dto';
+import { JoinedResponseDto, ResolvedSkillsResponseDto, TeamProposedResponseDto, UserDataDto } from './dto/battle.response.dto';
 
 const ATTACK_CODE = 'attack';
 const MEME_DIED_ACTION = 'meme_died';
@@ -128,7 +127,7 @@ export class BattleService {
             return { userId: user.userId, opponent: opponentDetails };
           })
         );
-        usersInBattle.forEach((user) => {
+        usersInBattle.forEach(async (user) => {
           const opponentData = opponentDetails.find((data) => data.userId === user.userId)?.opponent;
           opponentData.userMemes = opponentData.userMemes.map( meme => {
             console.log({meme})
@@ -137,9 +136,19 @@ export class BattleService {
               ...activeBattle.memeStates.get(opponentData.id).find(memeState => meme.userMemeId === memeState.userMemeId)
             }
           })
+          const myUser = await this.userService.findOne(user.userId)
+          const userData = await this.userService.findUserByWalletAddress(myUser.walletAddress);
+          userData.userMemes = userData.userMemes.map( meme => {
+            console.log({meme})
+            return {
+              ...meme,
+              ...activeBattle.memeStates.get(myUser.id).find(memeState => meme.userMemeId === memeState.userMemeId)
+            }
+          })
           const response: JoinedResponseDto = {
             battleSessionId,
-            opponent: opponentData as OpponentDto
+            userData: userData as UserDataDto,
+            opponentData: opponentData as UserDataDto
           }
           user.client.send(
             JSON.stringify({

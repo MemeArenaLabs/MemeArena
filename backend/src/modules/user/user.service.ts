@@ -5,7 +5,7 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemeService } from '../meme/meme.service';
-import { UserDetails } from './user.types';
+import { UserResponseDto } from './dto/user.response.dto';
 
 @Injectable()
 export class UserService {
@@ -37,7 +37,7 @@ export class UserService {
     await this.userRepository.delete(id);
   }
 
-  async findUserByWalletAddress(walletAddress: string): Promise<UserDetails> {
+  async findUserByWalletAddress(walletAddress: string): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { walletAddress },
     });
