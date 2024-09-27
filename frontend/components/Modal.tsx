@@ -20,10 +20,10 @@ export function Modal({
   className = "",
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const dialogElement = dialogRef.current;
-
     if (isOpen) {
       dialogElement?.showModal();
     } else {
@@ -36,10 +36,18 @@ export function Modal({
       }
     };
 
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (dialogElement && event.target === dialogElement) {
+        onClose();
+      }
+    };
+
     dialogElement?.addEventListener("close", handleDialogClose);
+    dialogElement?.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
       dialogElement?.removeEventListener("close", handleDialogClose);
+      dialogElement?.removeEventListener("mousedown", handleOutsideClick);
     };
   }, [isOpen, onClose]);
 
@@ -53,7 +61,7 @@ export function Modal({
       className={`modal max-sm:modal-bottom ${className}`}
       ref={dialogRef}
     >
-      <div className="modal-box w-fit flex flex-col gap-4 p-4">
+      <div className="modal-box w-fit flex flex-col gap-4 p-4" ref={contentRef}>
         <div className="flex items-center justify-between gap-6">
           <div className="flex gap-4">
             {icon && (
