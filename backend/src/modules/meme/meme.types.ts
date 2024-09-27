@@ -1,3 +1,5 @@
+import { SkillType } from "./meme.entity";
+
 export interface TokenDetails {
   id: string;
   symbol: string;
@@ -10,6 +12,7 @@ export interface SkillDetails {
   name: string;
   damage: number;
   speed: number;
+  type: SkillType;
 }
 
 export interface UserMemeDetails {
