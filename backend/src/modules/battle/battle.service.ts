@@ -39,6 +39,7 @@ import {
   UserDataDto,
   UserMemePositionDto,
 } from './dto/battle.response.dto';
+import { UserMemeDetails } from '../meme/meme.types';
 
 const ATTACK_CODE = 'attack';
 const MEME_DIED_ACTION = 'meme_died';
@@ -387,19 +388,23 @@ export class BattleService {
       results[user.userId] = {
         battleSessionId: battleState.battleSessionId,
         battleLogs,
-        userData: this.getUserBattleData(userId, battleState),
-        opponentData: this.getUserBattleData(opponentUser.userId, battleState),
+        userData: await this.getUserBattleData(userId, battleState),
+        opponentData: await this.getUserBattleData(
+          opponentUser.userId,
+          battleState,
+        ),
       };
     }
 
     return { battleOver, results };
   }
 
-  private getUserBattleData(userId: string, battleState: ActiveBattle) {
+  private async getUserBattleData(userId: string, battleState: ActiveBattle) {
     const userMemesStates = battleState.memeStates.get(userId);
     const currentMeme = battleState.currentMemes.get(userId);
     const defeatedMemes = battleState.defeatedMemes.get(userId);
-
+    const userMemeData: UserMemeDetails[] =
+      await this.memeService.findUserMemesByUserId(userId);
     const userMemes = userMemesStates.map((memeState) => {
       let status: MemeBattleStatus;
       if (defeatedMemes.has(memeState.userMemeId)) {
@@ -409,18 +414,31 @@ export class BattleService {
       } else {
         status = MemeBattleStatus.Bench;
       }
-
+      const {
+        attack,
+        defense,
+        element,
+        currentHp,
+        hp,
+        level,
+        userMemeId,
+        speed,
+        criticChance,
+      } = memeState;
       return {
-        attack: memeState.attack,
-        defense: memeState.defense,
-        element: memeState.element,
-        currentHp: memeState.currentHp,
-        hp: memeState.hp,
-        level: memeState.level,
-        memeId: memeState.userMemeId,
-        speed: memeState.speed,
+        attack,
+        defense,
+        criticChance,
+        element,
+        currentHp,
+        hp,
+        level,
+        skills: userMemeData.find(
+          (meme) => meme.userMemeId === memeState.userMemeId,
+        ).skills,
+        speed,
         status,
-        userMemeId: memeState.userMemeId,
+        userMemeId,
       };
     });
 
