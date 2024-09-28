@@ -44,6 +44,7 @@ import { UserMemeDetails } from '../meme/meme.types';
 const ATTACK_CODE = 'attack';
 const MEME_DIED_ACTION = 'meme_died';
 const SWITCH_ACTION = 'switch';
+const FINISH_ACTION = 'finished';
 @Injectable()
 export class BattleService {
   private waitingUsers: UserInBattle[] = [];
@@ -288,8 +289,7 @@ export class BattleService {
       battleState.proposedSkills.set(userId, dto);
 
       if (battleState.proposedSkills.size === this.NUMBER_OF_PLAYERS) {
-        const { battleOver, results } = await this.resolveSkills(battleState);
-
+        const { results, winnerUserId } = await this.resolveSkills(battleState);
         battleState.users.forEach((user) => {
           const response: ResolvedSkillsResponseDto = results[user.userId];
           user.client.send(
@@ -299,8 +299,8 @@ export class BattleService {
             }),
           );
         });
-        if (battleOver) {
-          this.finishBattle(battleState.battleSessionId);
+        if (winnerUserId) {
+          this.finishBattle(battleState.battleSessionId, winnerUserId);
         }
       }
     } catch (error) {
@@ -379,8 +379,20 @@ export class BattleService {
         battleLogs.push(...attackLogs);
       }
     }
-    const { battleOver } = await this.checkBattleOver(battleState);
+    const { logs, winnerUserId } = await this.checkBattleOver(battleState);
+    battleLogs.push(...logs);
 
+    if(winnerUserId){
+      const finishLog = await this.logAttack(
+        battleState.battleSessionId,
+        winnerUserId,
+        null,
+        null,
+        FINISH_ACTION,
+        0,
+      );
+      battleLogs.push(finishLog);
+    }
     for (const user of battleState.users) {
       const userId = user.userId;
       const opponentUser = battleState.users.find((u) => u.userId !== userId);
@@ -396,7 +408,7 @@ export class BattleService {
       };
     }
 
-    return { battleOver, results };
+    return { results, winnerUserId };
   }
 
   private async getUserBattleData(userId: string, battleState: ActiveBattle) {
@@ -477,7 +489,6 @@ export class BattleService {
         SWITCH_ACTION,
         0,
       );
-      console.log({switchLog},'SWITCHLOG OK')
       attackLogs.push(switchLog);
 
       return { attackLogs, defenderDefeated: false };
@@ -554,8 +565,8 @@ export class BattleService {
 
   private async checkBattleOver(
     battleState: ActiveBattle,
-  ): Promise<{ battleOver: boolean; logs: BattleSessionAttacksLog[] }> {
-    let battleOver = false;
+  ): Promise<{logs: BattleSessionAttacksLog[]; winnerUserId?: string }> {
+    let winnerUserId: string | null = null;
     const memeChanges = [];
     const logs: BattleSessionAttacksLog[] = [];
     for (const user of battleState.users) {
@@ -588,20 +599,24 @@ export class BattleService {
             memeDefeated: true,
             newMeme: nextMeme,
           });
+        } else {
+          const loserUserId = user.userId;
+          const winnerUser = battleState.users.find(u => u.userId !== loserUserId);
+          winnerUserId = winnerUser.userId;
         }
       }
     }
-    return { battleOver, logs };
+    return { logs, winnerUserId };
   }
 
-  finishBattle(battleSessionId: string): void {
+  finishBattle(battleSessionId: string, winnerUserId: string): void {
     const battleState = this.activeBattles.get(battleSessionId);
     if (battleState) {
       battleState.users.forEach((user) => {
         user.client.send(
           JSON.stringify({
             event: 'FINISHED',
-            data: { message: 'Battle over' },
+            data: { message: 'Battle over', winner: winnerUserId },
           }),
         );
       });

@@ -62,7 +62,7 @@ export default function BottomBarGUI() {
       proposeSkill(proposeSkillDto);
     } else if (activeTab === "team" && selectedMemeId) {
       const swapMemeDto: ProposeSkillDto = {
-        skillId: skills.find(({ type }) => type === "SWITCH")?.skillId ?? "",
+        skillId: (currentMeme.skills as SkillDetails[]).find(({ type }) => type === "SWITCH")?.skillId ?? "",
         battleSessionId,
         userId: userData.id,
         userMemeId: currentMeme?.userMemeId || "",
