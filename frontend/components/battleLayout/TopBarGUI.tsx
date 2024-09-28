@@ -4,8 +4,11 @@ import Image from "next/image";
 import Timer from "./Timer";
 import OpponentGladiators from "./OpponentGladiators";
 import { useBattle } from "@/context/BattleProvider";
-import { UserDetails } from "@/types/server-types";
-import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
+import {
+  MemeBattleStatus,
+  UserDataDto,
+  UserMemeDto,
+} from "@/types/server-types";
 
 interface MarketInfo {
   changePct: number;
@@ -41,15 +44,17 @@ export default function TopBarGUI() {
 }
 
 const PlayerPanel: React.FC<{
-  player: UserDetails | undefined;
+  player?: UserDataDto;
   isReversed?: boolean;
 }> = ({ player, isReversed = false }) => {
   if (!player) {
     return <PlayerPanelSkeleton isReversed={isReversed} />;
   }
 
-  const activeMeme = { currentHp: 400, hp: 1200 };
-
+  const activeMeme: UserMemeDto = player.userMemes.find(
+    ({ status }: { status: MemeBattleStatus }) => status === "ACTIVE"
+  );
+  console.log(player);
   return (
     <div
       className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${

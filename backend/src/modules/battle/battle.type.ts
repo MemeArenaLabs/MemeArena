@@ -18,7 +18,7 @@ export interface UserMemeState {
   speed: number;
   userMemeId: string;
   volume24h: number;
-  status?: string
+  status?: MemeBattleStatus;
 }
 export interface ActiveBattle {
   battleSessionId: string;
@@ -38,11 +38,8 @@ export type UserInBattle = {
 
 export type ActiveBattles = Map<string, ActiveBattle>;
 
-
 export enum MemeBattleStatus {
   Active = 'ACTIVE',
-  Bench ='BENCH',
-  Defeated = 'DEFEATED'
+  Bench = 'BENCH',
+  Defeated = 'DEFEATED',
 }
-
-
