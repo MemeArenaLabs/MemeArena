@@ -171,7 +171,10 @@ export class BattleService {
           (user) => user.userId === dto.userId,
         );
         if (userInBattle) {
-          userInBattle.userMemes = dto.team;
+
+          userInBattle.userMemes = dto.team.map(memeInTeam => 
+            ({ ...memeInTeam, status: memeInTeam.position === 1 ? MemeBattleStatus.Active : MemeBattleStatus.Bench })
+          )
           userInBattle.proposed = true;
 
           const allTeamsProposed = activeBattle.users.every(
