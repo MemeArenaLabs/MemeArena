@@ -467,7 +467,6 @@ export class BattleService {
       const newMeme = battleState.memeStates
         .get(userAttacker.userId)
         .find((meme) => meme.userMemeId === skillDto.newUserMemeId);
-
       battleState.currentMemes.set(userAttacker.userId, newMeme);
 
       const switchLog = await this.logAttack(
@@ -478,6 +477,7 @@ export class BattleService {
         SWITCH_ACTION,
         0,
       );
+      console.log({switchLog},'SWITCHLOG OK')
       attackLogs.push(switchLog);
 
       return { attackLogs, defenderDefeated: false };
@@ -560,7 +560,7 @@ export class BattleService {
     const logs: BattleSessionAttacksLog[] = [];
     for (const user of battleState.users) {
       const userMemeState = battleState.currentMemes.get(user.userId);
-      if (userMemeState.hp <= 0) {
+      if (userMemeState.currentHp <= 0) {
         const defeatedMemes = battleState.defeatedMemes.get(user.userId);
         defeatedMemes.add(userMemeState.userMemeId);
 
@@ -568,6 +568,7 @@ export class BattleService {
         const remainingMemes = allMemes.filter(
           (meme) => !defeatedMemes.has(meme.userMemeId),
         );
+
 
         if (remainingMemes.length > 0) {
           const nextMeme = remainingMemes[0];
