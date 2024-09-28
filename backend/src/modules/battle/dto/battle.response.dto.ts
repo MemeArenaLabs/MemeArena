@@ -1,4 +1,4 @@
-import { UserMemeState } from "../battle.type";
+import { MemeBattleStatus, UserMemeState } from "../battle.type";
 import { UserMemeDetails } from "src/modules/meme/meme.types";
 
 export interface JoinedResponseDto {
@@ -16,7 +16,7 @@ export interface UserDataDto {
 
 export type UserMemeDto = UserMemeDetails & UserMemeState
 
-export interface TeamProposedResponseDto {
+export interface  TeamProposedResponseDto {
   teams: TeamDto[];
 }
 
@@ -28,6 +28,7 @@ export interface TeamDto {
 export interface UserMemePositionDto {
   userMemeId: string;
   position?: number;
+  status: MemeBattleStatus
 }
 
 

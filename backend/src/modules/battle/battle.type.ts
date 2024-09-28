@@ -33,7 +33,7 @@ export type UserInBattle = {
   client: WebSocket;
   proposed?: boolean;
   userId: string;
-  userMemes: { userMemeId: string; position?: number }[];
+  userMemes: { userMemeId: string; position?: number; }[];
 };
 
 export type ActiveBattles = Map<string, ActiveBattle>;

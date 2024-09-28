@@ -20,7 +20,7 @@ export async function seedMemes(dataSource: DataSource, tokens: Token[]): Promis
         const randomVariation = + Math.random() * 10
         const meme = memeRepository.create({
           name: `${token.symbol} ${element} ${profession}`,
-          hpBase: 1000 + Math.floor(randomVariation),
+          hpBase: 200 + Math.floor(randomVariation),
           attackBase: 100 + Math.floor(randomVariation),
           defenseBase: 100 + Math.floor(randomVariation),
           speedBase: 100 + Math.floor(randomVariation),
