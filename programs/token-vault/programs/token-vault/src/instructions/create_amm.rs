@@ -37,3 +37,16 @@ pub struct CreateAmm<'info> {
     /// Solana ecosystem accounts
     pub system_program: Program<'info, System>,
 }
+
+
+/*
+
+AMM 
+    - ATA (Associated Token Account) : todos los tokens que sean del mismo mint
+    - Bonk ATA 
+    - WIF ATA
+    - N ATA
+    - Mint por mint en la ATA, LP token 
+   
+
+*/

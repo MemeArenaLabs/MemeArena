@@ -21,7 +21,7 @@ pub mod battle {
     }
 
     // Backend determines the winner and distributes tokens
-    pub fn declare_winner(ctx: Context<DeclareWinner>, winner: Pubkey) -> Result<()> {
+    pub fn declare_winner(ctx: Context<DeclareWinner>, amounts: [0,0,20,20,20]) -> Result<()> {
         let total_tokens = ctx.accounts.escrow_token_account.amount;
 
         // Transfer all tokens to the winner's token account
@@ -44,7 +44,16 @@ pub struct Deposit<'info> {
     #[account(mut)]
     pub player_token_account: Account<'info, TokenAccount>,
     #[account(mut)]
-    pub escrow_token_account: Account<'info, TokenAccount>,
+    pub escrow_token_account_sWIF: Account<'info, TokenAccount>,
+    #[account(mut)]
+    pub escrow_token_account_sBONK: Account<'info, TokenAccount>,
+    #[account(mut)]
+    pub escrow_token_account_sETC: Account<'info, TokenAccount>,
+    #[account(mut)]
+    pub escrow_token_account_sB: Account<'info, TokenAccount>,
+    #[account(mut)]
+    pub escrow_token_account_sC: Account<'info, TokenAccount>,
+
     pub token_program: Program<'info, Token>,
 }
 
@@ -56,10 +65,25 @@ pub struct DeclareWinner<'info> {
         mut
     )]
     pub program_authority: AccountInfo<'info>,  // Backend-controlled account
+
     #[account(mut)]
-    pub escrow_token_account: Account<'info, TokenAccount>,
+    pub escrow_token_account_sWIF: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub escrow_token_account_sBONK: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub escrow_token_account_sETC: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub escrow_token_account_sB: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub escrow_token_account_sC: Account<'info, TokenAccount>,
+
     #[account(mut)]
     pub winner_token_account: Account<'info, TokenAccount>,
+    
     pub token_program: Program<'info, Token>,
 }
 
