@@ -1,18 +1,63 @@
 "use client";
 import React, { useEffect } from "react";
-import { ProposeTeamDto } from "@/types/server-types";
+import { ProposeTeamDto, TeamProposedResponseDto } from "@/types/server-types";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { useRouter } from "next/navigation";
 import { useBattle } from "@/context/BattleProvider";
 import { Button } from "@/components/Button";
+import { TeamDto } from "#/backend/src/modules/battle/dto/battle.response.dto";
 
 export default function BattlePreparation() {
   const { isConnected, lastMessage, proposeTeam } = useWebSocket();
-  const { setUserData, userData, battleSessionId } = useBattle();
+  const {
+    setUserData,
+    userData,
+    opponentData,
+    battleSessionId,
+    setOpponentData,
+  } = useBattle();
   const router = useRouter();
 
   useEffect(() => {
     if (lastMessage?.event === "TEAM_PROPOSED") {
+      const data: TeamProposedResponseDto = lastMessage?.data;
+      const userProposed: TeamDto | undefined = data.teams.find(
+        ({ userId }) => userId === userData?.id
+      );
+      const opponentProposed: TeamDto | undefined = data.teams.find(
+        ({ userId }) => userId === opponentData?.id
+      );
+
+      // Update user data
+      if (userData && userProposed) {
+        const updatedUserMemes = userData.userMemes.map((meme) => {
+          const proposedMeme = userProposed.team.find(
+            (m) => m.userMemeId === meme.userMemeId
+          );
+          return proposedMeme ? { ...meme, status: proposedMeme.status } : meme;
+        });
+
+        setUserData({
+          ...userData,
+          userMemes: updatedUserMemes,
+        });
+      }
+
+      // Update opponent data
+      if (opponentData && opponentProposed) {
+        const updatedOpponentMemes = opponentData.userMemes.map((meme) => {
+          const proposedMeme = opponentProposed.team.find(
+            (m) => m.userMemeId === meme.userMemeId
+          );
+          return proposedMeme ? { ...meme, status: proposedMeme.status } : meme;
+        });
+
+        setOpponentData({
+          ...opponentData,
+          userMemes: updatedOpponentMemes,
+        });
+      }
+
       router.push("/battle");
     }
   }, [lastMessage]);

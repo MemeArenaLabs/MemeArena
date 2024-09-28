@@ -1,5 +1,9 @@
 "use client";
-import { UserDataDto, UserResponseDto } from "@/types/server-types";
+import {
+  BattleLogDto,
+  UserDataDto,
+  UserResponseDto,
+} from "@/types/server-types";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface BattleContextType {
@@ -11,6 +15,8 @@ interface BattleContextType {
   setOpponentData: (data: UserDataDto) => void;
   initialUserData?: UserResponseDto;
   setInitialUserData: (data: UserResponseDto) => void;
+  battleLogs?: BattleLogDto[];
+  setBattleLogs: (data: BattleLogDto[]) => void;
 }
 
 const BattleContext = createContext<BattleContextType | undefined>(undefined);
@@ -32,6 +38,7 @@ export const BattleProvider: React.FC<BattleProviderProps> = ({ children }) => {
   const [userData, setUserData] = useState<UserDataDto>();
   const [initialUserData, setInitialUserData] = useState<UserResponseDto>();
   const [opponentData, setOpponentData] = useState<UserDataDto>();
+  const [battleLogs, setBattleLogs] = useState<BattleLogDto[]>();
 
   const value = {
     battleSessionId,
@@ -42,6 +49,8 @@ export const BattleProvider: React.FC<BattleProviderProps> = ({ children }) => {
     setOpponentData,
     initialUserData,
     setInitialUserData,
+    battleLogs,
+    setBattleLogs,
   };
 
   return (

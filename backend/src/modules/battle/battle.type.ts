@@ -3,7 +3,7 @@ import { ELEMENTS } from './battle.constants';
 import { ProposeSkillDto } from './dto/battle.dto';
 import { WebSocket } from 'ws';
 
-export interface UserMemeState {
+export type UserMemeState = {
   attack: number;
   criticChance: number;
   currentHp: number;
@@ -18,8 +18,8 @@ export interface UserMemeState {
   speed: number;
   userMemeId: string;
   volume24h: number;
-  status?: MemeBattleStatus;
-}
+  status?: string;
+};
 export interface ActiveBattle {
   battleSessionId: string;
   currentMemes?: Map<string, UserMemeState>; // userId => UserMemeState (meme actual)

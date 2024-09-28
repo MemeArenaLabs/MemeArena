@@ -2,7 +2,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import SkillCard from "../gui/SkillCard";
-import { ProposeSkillDto } from "@/types/server-types";
+import {
+  ProposeSkillDto,
+  SkillDetails,
+  UserMemeDto,
+} from "@/types/server-types";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { useBattle } from "@/context/BattleProvider";
 import SvgIcon, { IconProps } from "@/utils/SvgIcon";
@@ -24,9 +28,14 @@ export default function BottomBarGUI() {
   const { proposeSkill } = useWebSocket();
   const { battleSessionId, userData } = useBattle();
 
-  const currentMeme = userData?.userMemes[0];
-  const skills =
-    currentMeme?.skills?.filter(({ type }) => type !== "SWITCH") || [];
+  const currentMeme = userData?.userMemes?.find(
+    (meme) => meme.status === "ACTIVE"
+  );
+
+  const skills: SkillDetails[] =
+    currentMeme?.skills?.filter(
+      (skill: { type: string }) => skill.type !== "SWITCH"
+    ) || [];
 
   const handleSkillClick = (skillId: string) => {
     setSelectedSkillId(skillId === selectedSkillId ? null : skillId);
@@ -52,15 +61,15 @@ export default function BottomBarGUI() {
       console.log(proposeSkillDto);
       proposeSkill(proposeSkillDto);
     } else if (activeTab === "team" && selectedMemeId) {
-      // const swapMemeDto: ProposeSkillDto = {
-      //   skillId: skills.find(({ type }) => type === "SWITCH")?.skillId ?? "",
-      //   battleSessionId,
-      //   userId: userData.id,
-      //   userMemeId: currentMeme?.userMemeId || "",
-      //   newUserMemeId: selectedMemeId,
-      // };
-      // console.log(swapMemeDto);
-      // proposeSkill(swapMemeDto);
+      const swapMemeDto: ProposeSkillDto = {
+        skillId: skills.find(({ type }) => type === "SWITCH")?.skillId ?? "",
+        battleSessionId,
+        userId: userData.id,
+        userMemeId: currentMeme?.userMemeId || "",
+        newUserMemeId: selectedMemeId,
+      };
+      console.log(swapMemeDto);
+      proposeSkill(swapMemeDto);
     } else {
       console.log("No selected skill or meme");
     }
@@ -85,7 +94,7 @@ export default function BottomBarGUI() {
         </div>
         <div className="flex gap-1">
           {activeTab === "attack"
-            ? skills.map((skill) => (
+            ? skills.map((skill: SkillDetails) => (
                 <SkillCard
                   key={skill.skillId}
                   skillName={skill.name}

@@ -6,9 +6,11 @@ import OpponentGladiators from "./OpponentGladiators";
 import { useBattle } from "@/context/BattleProvider";
 import {
   MemeBattleStatus,
+  ResolvedSkillsResponseDto,
   UserDataDto,
   UserMemeDto,
 } from "@/types/server-types";
+import { useWebSocket } from "@/context/WebSocketProvider";
 
 interface MarketInfo {
   changePct: number;
@@ -18,12 +20,45 @@ interface MarketInfo {
 const market1: MarketInfo = { changePct: 15, isUp: false };
 const market2: MarketInfo = { changePct: 15, isUp: true };
 
-export default function TopBarGUI() {
-  const [userInitHp, setUserInitHp] = useState();
-  const [opponentInitHp, setOpponentInitHp] = useState();
-  const { userData, opponentData } = useBattle();
+// Custom deep merge function
+function deepMerge(target: any, source: any) {
+  const output = Object.assign({}, target);
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach((key) => {
+      if (isObject(source[key])) {
+        if (!(key in target)) Object.assign(output, { [key]: source[key] });
+        else output[key] = deepMerge(target[key], source[key]);
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
+  return output;
+}
 
-  useEffect(() => {}, []);
+function isObject(item: any) {
+  return item && typeof item === "object" && !Array.isArray(item);
+}
+
+export default function TopBarGUI() {
+  const { isConnected, lastMessage, proposeTeam } = useWebSocket();
+  const {
+    userData,
+    opponentData,
+    setUserData,
+    setOpponentData,
+    setBattleLogs,
+    battleLogs,
+  } = useBattle();
+
+  useEffect(() => {
+    if (lastMessage?.event === "RESOLVED_SKILLS") {
+      const data: ResolvedSkillsResponseDto = lastMessage.data;
+      setUserData(data.userData);
+      setOpponentData(data.opponentData);
+      setBattleLogs(data.battleLogs);
+    }
+  }, [lastMessage]);
 
   return (
     <div className="flex justify-between mb-4 items-start">
@@ -54,7 +89,11 @@ const PlayerPanel: React.FC<{
   const activeMeme: UserMemeDto = player.userMemes.find(
     ({ status }: { status: MemeBattleStatus }) => status === "ACTIVE"
   );
-  console.log(player);
+
+  useEffect(() => {
+    console.log(activeMeme.currentHp);
+  }, [activeMeme.currentHp]);
+
   return (
     <div
       className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${

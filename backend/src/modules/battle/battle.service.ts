@@ -32,7 +32,13 @@ import {
 } from './battle.constants';
 import { MemeService } from '../meme/meme.service';
 import { UserService } from '../user/user.service';
-import { JoinedResponseDto, ResolvedSkillsResponseDto, TeamProposedResponseDto, UserDataDto } from './dto/battle.response.dto';
+import {
+  JoinedResponseDto,
+  ResolvedSkillsResponseDto,
+  TeamProposedResponseDto,
+  UserDataDto,
+  UserMemePositionDto,
+} from './dto/battle.response.dto';
 
 const ATTACK_CODE = 'attack';
 const MEME_DIED_ACTION = 'meme_died';
@@ -121,38 +127,53 @@ export class BattleService {
         this.activeBattles.set(battleSessionId, activeBattle);
         const opponentDetails = await Promise.all(
           usersInBattle.map(async (user, index) => {
-            const opponent: UserInBattle = usersInBattle[(index + 1) % this.NUMBER_OF_PLAYERS];
-            const userOpponent = await this.userService.findOne(opponent.userId)
-            const opponentDetails = await this.userService.findUserByWalletAddress(userOpponent.walletAddress);
+            const opponent: UserInBattle =
+              usersInBattle[(index + 1) % this.NUMBER_OF_PLAYERS];
+            const userOpponent = await this.userService.findOne(
+              opponent.userId,
+            );
+            const opponentDetails =
+              await this.userService.findUserByWalletAddress(
+                userOpponent.walletAddress,
+              );
             return { userId: user.userId, opponent: opponentDetails };
-          })
+          }),
         );
         usersInBattle.forEach(async (user) => {
-          const opponentData = opponentDetails.find((data) => data.userId === user.userId)?.opponent;
-          opponentData.userMemes = opponentData.userMemes.map( meme => {
-            console.log({meme})
+          const opponentData = opponentDetails.find(
+            (data) => data.userId === user.userId,
+          )?.opponent;
+          opponentData.userMemes = opponentData.userMemes.map((meme) => {
+            console.log({ meme });
             return {
               ...meme,
-              ...activeBattle.memeStates.get(opponentData.id).find(memeState => meme.userMemeId === memeState.userMemeId)
-            }
-          })
-          const myUser = await this.userService.findOne(user.userId)
-          const userData = await this.userService.findUserByWalletAddress(myUser.walletAddress);
-          userData.userMemes = userData.userMemes.map( meme => {
-            console.log({meme})
+              ...activeBattle.memeStates
+                .get(opponentData.id)
+                .find((memeState) => meme.userMemeId === memeState.userMemeId),
+            };
+          });
+          const myUser = await this.userService.findOne(user.userId);
+          const userData = await this.userService.findUserByWalletAddress(
+            myUser.walletAddress,
+          );
+          userData.userMemes = userData.userMemes.map((meme) => {
+            console.log({ meme });
             return {
               ...meme,
-              ...activeBattle.memeStates.get(myUser.id).find(memeState => meme.userMemeId === memeState.userMemeId)
-            }
-          })
+              ...activeBattle.memeStates
+                .get(myUser.id)
+                .find((memeState) => meme.userMemeId === memeState.userMemeId),
+            };
+          });
           const response: JoinedResponseDto = {
             battleSessionId,
             userData: userData as UserDataDto,
-            opponentData: opponentData as UserDataDto
-          }
+            opponentData: opponentData as UserDataDto,
+          };
           user.client.send(
             JSON.stringify({
-              event: 'JOINED', data: response
+              event: 'JOINED',
+              data: response,
             }),
           );
         });
@@ -171,10 +192,13 @@ export class BattleService {
           (user) => user.userId === dto.userId,
         );
         if (userInBattle) {
-
-          userInBattle.userMemes = dto.team.map(memeInTeam => 
-            ({ ...memeInTeam, status: memeInTeam.position === 1 ? MemeBattleStatus.Active : MemeBattleStatus.Bench })
-          )
+          userInBattle.userMemes = dto.team.map((memeInTeam) => ({
+            ...memeInTeam,
+            status:
+              memeInTeam.position === 1
+                ? MemeBattleStatus.Active
+                : MemeBattleStatus.Bench,
+          }));
           userInBattle.proposed = true;
 
           const allTeamsProposed = activeBattle.users.every(
@@ -184,9 +208,9 @@ export class BattleService {
             const response: TeamProposedResponseDto = {
               teams: activeBattle.users.map((u) => ({
                 userId: u.userId,
-                team: u.userMemes,
+                team: u.userMemes as UserMemePositionDto[],
               })),
-            }
+            };
             activeBattle.users.forEach((user) => {
               user.client.send(
                 JSON.stringify({
@@ -198,10 +222,20 @@ export class BattleService {
           }
         }
       } else {
-        client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR', data: { message: 'Battle not found'} }));
+        client.send(
+          JSON.stringify({
+            event: 'PROPOSE_TEAM_ERROR',
+            data: { message: 'Battle not found' },
+          }),
+        );
       }
     } catch (error) {
-      client.send(JSON.stringify({ event: 'PROPOSE_TEAM_ERROR', data: {message: error.message} }));
+      client.send(
+        JSON.stringify({
+          event: 'PROPOSE_TEAM_ERROR',
+          data: { message: error.message },
+        }),
+      );
     }
   }
   private async createBattleSession(
@@ -256,7 +290,7 @@ export class BattleService {
         const { battleOver, results } = await this.resolveSkills(battleState);
 
         battleState.users.forEach((user) => {
-          const response: ResolvedSkillsResponseDto = results[user.userId]
+          const response: ResolvedSkillsResponseDto = results[user.userId];
           user.client.send(
             JSON.stringify({
               event: 'RESOLVED_SKILLS',
@@ -267,7 +301,6 @@ export class BattleService {
         if (battleOver) {
           this.finishBattle(battleState.battleSessionId);
         }
-
       }
     } catch (error) {
       console.log(error);
@@ -302,7 +335,6 @@ export class BattleService {
     const skill1 = skillMemeMap.get(memeUserA.userMemeId);
     const skill2 = skillMemeMap.get(memeUserB.userMemeId);
 
-
     if (memeUserA.speed > memeUserB.speed) {
       const { attackLogs, defenderDefeated } = await this.calculateDamage(
         battleState,
@@ -312,7 +344,7 @@ export class BattleService {
         memeUserB,
         skill1,
       );
-      battleLogs.push(...attackLogs)
+      battleLogs.push(...attackLogs);
       if (!defenderDefeated) {
         const { attackLogs } = await this.calculateDamage(
           battleState,
@@ -322,7 +354,7 @@ export class BattleService {
           memeUserA,
           skill2,
         );
-        battleLogs.push(...attackLogs)
+        battleLogs.push(...attackLogs);
       }
     } else {
       const { attackLogs, defenderDefeated } = await this.calculateDamage(
@@ -333,7 +365,7 @@ export class BattleService {
         memeUserA,
         skill2,
       );
-      battleLogs.push(...attackLogs)
+      battleLogs.push(...attackLogs);
       if (!defenderDefeated) {
         await this.calculateDamage(
           battleState,
@@ -343,32 +375,32 @@ export class BattleService {
           memeUserB,
           skill1,
         );
-        battleLogs.push(...attackLogs)
+        battleLogs.push(...attackLogs);
       }
     }
     const { battleOver } = await this.checkBattleOver(battleState);
 
     for (const user of battleState.users) {
       const userId = user.userId;
-      const opponentUser = battleState.users.find(u => u.userId !== userId);
+      const opponentUser = battleState.users.find((u) => u.userId !== userId);
 
       results[user.userId] = {
         battleSessionId: battleState.battleSessionId,
         battleLogs,
         userData: this.getUserBattleData(userId, battleState),
-        opponentData:  this.getUserBattleData(opponentUser.userId, battleState),
+        opponentData: this.getUserBattleData(opponentUser.userId, battleState),
       };
-    };
+    }
 
     return { battleOver, results };
   }
 
-  private getUserBattleData(userId: string, battleState: ActiveBattle){
+  private getUserBattleData(userId: string, battleState: ActiveBattle) {
     const userMemesStates = battleState.memeStates.get(userId);
     const currentMeme = battleState.currentMemes.get(userId);
     const defeatedMemes = battleState.defeatedMemes.get(userId);
 
-    const userMemes = userMemesStates.map(memeState => {
+    const userMemes = userMemesStates.map((memeState) => {
       let status: MemeBattleStatus;
       if (defeatedMemes.has(memeState.userMemeId)) {
         status = MemeBattleStatus.Defeated;
@@ -405,15 +437,18 @@ export class BattleService {
     attacker: UserMemeState,
     defender: UserMemeState,
     skillDto: ProposeSkillDto,
-  ): Promise<{ attackLogs: BattleSessionAttacksLog[], defenderDefeated: boolean }> {
+  ): Promise<{
+    attackLogs: BattleSessionAttacksLog[];
+    defenderDefeated: boolean;
+  }> {
     const skill = await this.memeService.getSkill(skillDto.skillId);
     const attackLogs: BattleSessionAttacksLog[] = [];
     let defenderDefeated = false;
     let defenderDefeat: BattleSessionAttacksLog;
-    if(skill.skillType === SkillType.SWITCH){
-      const newMeme = battleState.memeStates.get(userAttacker.userId).find(
-        (meme) => meme.userMemeId === skillDto.newUserMemeId,
-      );
+    if (skill.skillType === SkillType.SWITCH) {
+      const newMeme = battleState.memeStates
+        .get(userAttacker.userId)
+        .find((meme) => meme.userMemeId === skillDto.newUserMemeId);
 
       battleState.currentMemes.set(userAttacker.userId, newMeme);
 
@@ -437,11 +472,12 @@ export class BattleService {
     const isCriticalHit = Math.random() < attacker.criticChance;
 
     const criticModifier = isCriticalHit ? CRITIC_MULTIPLIER : 1;
-    
+
     const damage =
       (((DAMAGE_LEVEL_MULTIPLIER * levelToken + BASE_DAMAGE_ADDITION) *
-      skillPower *
-      (attacker.attack / defender.defense)) / BASE_DEFENSE_MULTIPLIER +
+        skillPower *
+        (attacker.attack / defender.defense)) /
+        BASE_DEFENSE_MULTIPLIER +
         BASE_DAMAGE_ADDITION) *
       elementModifier *
       criticModifier;
@@ -456,11 +492,11 @@ export class BattleService {
       ATTACK_CODE,
       damageInt,
     );
-    attackLogs.push(attackerLog)
+    attackLogs.push(attackerLog);
 
     if (defender.currentHp <= 0) {
       defender.currentHp = 0;
-      defenderDefeated = true
+      defenderDefeated = true;
       battleState.defeatedMemes
         .get(userDefender.userId)
         .add(defender.userMemeId);
@@ -472,7 +508,7 @@ export class BattleService {
         MEME_DIED_ACTION,
         0,
       );
-      attackLogs.push(defenderDefeat)
+      attackLogs.push(defenderDefeat);
     }
     return { attackLogs, defenderDefeated };
   }
@@ -498,10 +534,12 @@ export class BattleService {
     return attackLog;
   }
 
-  private async checkBattleOver(battleState: ActiveBattle): Promise<{ battleOver: boolean, logs: BattleSessionAttacksLog[] }> {
+  private async checkBattleOver(
+    battleState: ActiveBattle,
+  ): Promise<{ battleOver: boolean; logs: BattleSessionAttacksLog[] }> {
     let battleOver = false;
     const memeChanges = [];
-    const logs: BattleSessionAttacksLog[] = []
+    const logs: BattleSessionAttacksLog[] = [];
     for (const user of battleState.users) {
       const userMemeState = battleState.currentMemes.get(user.userId);
       if (userMemeState.hp <= 0) {
@@ -525,14 +563,14 @@ export class BattleService {
             SWITCH_ACTION,
             0,
           );
-          logs.push(switchMemeLog)
+          logs.push(switchMemeLog);
           memeChanges.push({
             userId: user.userId,
             memeDefeated: true,
             newMeme: nextMeme,
           });
         }
-      } 
+      }
     }
     return { battleOver, logs };
   }
