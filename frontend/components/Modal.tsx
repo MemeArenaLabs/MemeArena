@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useRef } from "react";
 
 interface ModalProps {
   icon?: ReactNode;
-  title?: string;
+  title?: ReactNode;
   onClose: () => void;
   children: ReactNode;
   isOpen: boolean;
@@ -61,7 +61,7 @@ export function Modal({
       className={`modal max-sm:modal-bottom  ${className}`}
       ref={dialogRef}
     >
-      <div className="modal-box w-fit flex flex-col gap-4 p-4 min-w-[720px] rounded-none bg-gradient-to-r from-[#3B4787BF] to-[#B35BE2BF] opacity-90 " ref={contentRef}>
+      <div className="modal-box w-fit flex flex-col gap-4 px-2 pb-0 pt-2 max-w-[720px] rounded-none bg-gradient-to-r from-[#3B4787BF] to-[#B35BE2BF] opacity-90 " ref={contentRef}>
         <div className="flex items-center justify-between gap-6 ">
           <div className="flex gap-4">
             {icon && (
@@ -73,7 +73,7 @@ export function Modal({
           </div>
           <div className="flex items-center">
             <button onClick={handleClose} className="cursor-pointer">
-              <Close className="w-8 h-8"/>
+              <Close className="w-6 h-6"/>
             </button>
           </div>
         </div>

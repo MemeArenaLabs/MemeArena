@@ -144,3 +144,43 @@ a {
 .clip-path-polygon-right-market {
   clip-path: polygon(0% 0, 100% 0, 75% 100%, 0% 100%);
 }
+
+
+
+
+  
+/* Profile Selection Cut Buttons
+ */
+ .clip-path-polygon-left-gui-profile-selection {
+  clip-path: polygon(0% 0, 100% 0, 93% 100%, 0% 100%); 
+}
+
+.clip-path-polygon-left-gui-profile-setting{
+  clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%); 
+}
+/* Profile Selection Cut Buttons
+ */
+
+ /* Buttons buttom bar menu
+ */
+
+.clip-path-buttom-bar-right {
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%); 
+}
+
+ /* Gladiator Stats
+ */
+
+ .clip-path-bg-left {
+  clip-path: polygon(0% 0, 100% 0, 92% 100%, 0% 100%); 
+}
+
+.tooltip:hover .tooltip-content {
+  display: block;
+  position: absolute;
+  z-index: 1000;
+  bottom: -200%;
+  left: 0%;
+  transform: translateX(-50%);
+} 
+
