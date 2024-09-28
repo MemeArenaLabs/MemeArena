@@ -4,13 +4,13 @@ import Image from "next/image";
 import Timer from "./Timer";
 import OpponentGladiators from "./OpponentGladiators";
 import { useBattle } from "@/context/BattleProvider";
-import { UserDetails } from "@/types/server-types";
-
-interface PlayerInfo {
-  name: string;
-  hp: number;
-  avatar: string;
-}
+import {
+  MemeBattleStatus,
+  ResolvedSkillsResponseDto,
+  UserDataDto,
+  UserMemeDto,
+} from "@/types/server-types";
+import { useWebSocket } from "@/context/WebSocketProvider";
 
 interface MarketInfo {
   changePct: number;
@@ -20,24 +20,45 @@ interface MarketInfo {
 const market1: MarketInfo = { changePct: 15, isUp: false };
 const market2: MarketInfo = { changePct: 15, isUp: true };
 
-const user: PlayerInfo = {
-  name: "User",
-  hp: 70,
-  avatar: "/assets/battle-layout/user-avatars/image.png",
-};
+// Custom deep merge function
+function deepMerge(target: any, source: any) {
+  const output = Object.assign({}, target);
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach((key) => {
+      if (isObject(source[key])) {
+        if (!(key in target)) Object.assign(output, { [key]: source[key] });
+        else output[key] = deepMerge(target[key], source[key]);
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
+  return output;
+}
 
-const opponent: PlayerInfo = {
-  name: "Opponent",
-  hp: 70,
-  avatar: "/assets/battle-layout/user-avatars/Frame 17.png",
-};
+function isObject(item: any) {
+  return item && typeof item === "object" && !Array.isArray(item);
+}
 
 export default function TopBarGUI() {
-  const [userInitHp, setUserInitHp] = useState();
-  const [opponentInitHp, setOpponentInitHp] = useState();
-  const { userData, opponentData } = useBattle();
+  const { isConnected, lastMessage, proposeTeam } = useWebSocket();
+  const {
+    userData,
+    opponentData,
+    setUserData,
+    setOpponentData,
+    setBattleLogs,
+    battleLogs,
+  } = useBattle();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (lastMessage?.event === "RESOLVED_SKILLS") {
+      const data: ResolvedSkillsResponseDto = lastMessage.data;
+      setUserData(data.userData);
+      setOpponentData(data.opponentData);
+      setBattleLogs(data.battleLogs);
+    }
+  }, [lastMessage]);
 
   return (
     <div className="flex justify-between mb-4 items-start">
@@ -58,23 +79,35 @@ export default function TopBarGUI() {
 }
 
 const PlayerPanel: React.FC<{
-  player: UserDetails | undefined;
+  player?: UserDataDto;
   isReversed?: boolean;
 }> = ({ player, isReversed = false }) => {
   if (!player) {
-    return <div>Loading...</div>;
+    return <PlayerPanelSkeleton isReversed={isReversed} />;
   }
+
+  const activeMeme: UserMemeDto = player.userMemes.find(
+    ({ status }: { status: MemeBattleStatus }) => status === "ACTIVE"
+  );
+
+  useEffect(() => {
+    console.log(activeMeme.currentHp);
+  }, [activeMeme.currentHp]);
 
   return (
     <div
-      className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${isReversed ? "clip-path-polygon-right-gui-info-player" : "clip-path-polygon-left-gui-info-player"} p-2`}
+      className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${
+        isReversed
+          ? "clip-path-polygon-right-gui-info-player"
+          : "clip-path-polygon-left-gui-info-player"
+      } p-2`}
     >
       {!isReversed && (
         <Image
           src="/assets/battle-layout/user-avatars/Frame 17.png"
           width={42}
           height={42}
-          alt={`Avatar ${player?.username}`}
+          alt={`Avatar ${player.username}`}
         />
       )}
       <div
@@ -82,14 +115,18 @@ const PlayerPanel: React.FC<{
       >
         <p>{player.username}</p>
         <div
-          className={`font-bold text-[12px] flex items-center gap-2 ${isReversed ? "flex-row-reverse" : ""}`}
+          className={`font-bold text-[12px] flex items-center gap-2 ${
+            isReversed ? "flex-row-reverse" : ""
+          }`}
         >
           <p className="text-[14px]">HP</p>
           <div className="w-[143px] h-3 bg-white overflow-hidden">
-            {/* <div
+            <div
               className="h-full bg-red-500"
-              style={{ width: `${player?.hp}%` }}
-            ></div> */}
+              style={{
+                width: `${(activeMeme.currentHp * 100) / activeMeme.hp}%`,
+              }}
+            ></div>
           </div>
         </div>
       </div>
@@ -126,3 +163,33 @@ const MarketPanel: React.FC<{ market: MarketInfo; isReversed?: boolean }> = ({
     </div>
   </div>
 );
+
+// Loading skeleton example
+const PlayerPanelSkeleton: React.FC<{ isReversed?: boolean }> = ({
+  isReversed = false,
+}) => {
+  return (
+    <div
+      className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${
+        isReversed
+          ? "clip-path-polygon-right-gui-info-player"
+          : "clip-path-polygon-left-gui-info-player"
+      } p-2 animate-pulse`}
+    >
+      <div
+        className={`w-[42px] h-[42px] bg-gray-400 ${isReversed ? "order-last" : ""}`}
+      ></div>
+      <div
+        className={`w-full flex flex-col gap-[2px] ${isReversed ? "items-end" : ""}`}
+      >
+        <div className="h-4 bg-gray-400 w-2/3 mb-2"></div>
+        <div
+          className={`font-bold text-[12px] flex items-center gap-2 ${isReversed ? "flex-row-reverse" : ""}`}
+        >
+          <div className="h-3 bg-gray-400 w-8"></div>
+          <div className="w-[143px] h-3 bg-gray-400"></div>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -1,5 +1,5 @@
-import { MemeBattleStatus, UserMemeState } from "../battle.type";
-import { UserMemeDetails } from "src/modules/meme/meme.types";
+import { MemeBattleStatus, UserMemeState } from '../battle.type';
+import { UserMemeDetails } from 'src/modules/meme/meme.types';
 
 export interface JoinedResponseDto {
   battleSessionId: string;
@@ -14,9 +14,9 @@ export interface UserDataDto {
   userMemes: UserMemeDto[];
 }
 
-export type UserMemeDto = UserMemeDetails & UserMemeState
+export type UserMemeDto = UserMemeDetails & UserMemeState;
 
-export interface  TeamProposedResponseDto {
+export interface TeamProposedResponseDto {
   teams: TeamDto[];
 }
 
@@ -28,11 +28,10 @@ export interface TeamDto {
 export interface UserMemePositionDto {
   userMemeId: string;
   position?: number;
-  status: MemeBattleStatus
+  status: MemeBattleStatus;
 }
 
-
-export interface ResolvedSkillsResponseDto extends JoinedResponseDto{
+export interface ResolvedSkillsResponseDto extends JoinedResponseDto {
   battleLogs: BattleLogDto[];
 }
 
@@ -46,4 +45,3 @@ export interface BattleLogDto {
   skillId: string;
   damage: number;
 }
-

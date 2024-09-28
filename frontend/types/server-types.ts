@@ -3,20 +3,30 @@ import {
   FindOpponentDto,
   ProposeTeamDto,
 } from "#/backend/src/modules/battle/dto/battle.dto";
+
+import { UserResponseDto } from "#/backend/src/modules/user/dto/user.response.dto";
 import {
-  UserMemeDetails,
+  BattleLogDto,
+  JoinedResponseDto,
+  ResolvedSkillsResponseDto,
+  TeamProposedResponseDto,
+  UserDataDto,
+  UserMemeDto,
+} from "#/backend/src/modules/battle/dto/battle.response.dto";
+import { MemeBattleStatus } from "#/backend/src/modules/battle/battle.type";
+import { SkillDetails } from "#/backend/src/modules/meme/meme.types";
+
+export type {
+  ProposeSkillDto,
+  FindOpponentDto,
+  ProposeTeamDto,
   SkillDetails,
-  TokenDetails,
-} from "#/backend/src/modules/meme/meme.types";
-
-import { UserDetails } from "#/backend/src/modules/user/user.types";
-
-import { CreateMemeDto } from "#/backend/src/modules/meme/dto/create-meme.dto";
-
-import { CreateTokenDto } from "#/backend/src/modules/token/dto/create-token.dto";
-
-import { CreateUserDto } from "#/backend/src/modules/user/dto/create-user.dto";
-
-export type { ProposeSkillDto, FindOpponentDto, ProposeTeamDto };
-
-export type { UserMemeDetails, SkillDetails, TokenDetails, UserDetails };
+  TeamProposedResponseDto,
+  JoinedResponseDto,
+  ResolvedSkillsResponseDto,
+  BattleLogDto,
+  UserDataDto,
+  MemeBattleStatus,
+  UserMemeDto,
+  UserResponseDto,
+};

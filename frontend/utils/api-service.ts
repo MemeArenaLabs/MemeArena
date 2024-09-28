@@ -1,4 +1,4 @@
-import { UserDetails } from "@/types/server-types";
+import { UserResponseDto } from "@/types/server-types";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
@@ -23,7 +23,9 @@ export const getUserMemes = async (walletAddr: string) => {
   }
 };
 
-export const getUserData = async (walletAddr: string): Promise<UserDetails> => {
+export const getUserData = async (
+  walletAddr: string
+): Promise<UserResponseDto> => {
   try {
     const response = await fetch(`${serverUrl}/users/wallet/${walletAddr}`, {
       method: "GET",

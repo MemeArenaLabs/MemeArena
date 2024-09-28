@@ -2,7 +2,7 @@
 import React from "react";
 import { ReactSVG } from "react-svg";
 
-interface IconProps {
+export interface IconProps {
   name: string;
   className: string;
 }
