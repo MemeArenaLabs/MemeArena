@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SkillCard from "../gui/SkillCard";
 import { ProposeSkillDto } from "@/types/serverDTOs";
 import { useWebSocket } from "@/context/WebSocketProvider";
@@ -19,18 +19,24 @@ export default function BottomBarGUI() {
   const [activeTab, setActiveTab] = useState<MenuTab>("attack");
   const [selectedSkillId, setSelectedSkillId] = useState<string>();
   const [selectedMemeId, setSelectedMemeId] = useState<string>();
-  const { proposeSkill } = useWebSocket();
+  const { proposeSkill, lastMessage } = useWebSocket();
   const { battleSessionId, userData, userMemes } = useBattle();
 
-  const memesInMenu = userMemes.filter((meme) => meme.status === "BENCH");
+  const memesInBench = userMemes.filter((meme) => meme.status !== "ACTIVE");
   const activeMeme = userMemes.find((meme) => meme.status === "ACTIVE");
   const skillsInMenu = activeMeme?.skills?.filter(
     (skill) => skill.type !== "SWITCH"
   );
 
-  console.log(activeMeme);
   const swapSkillId =
     activeMeme?.skills.find((skill) => skill.type === "SWITCH")?.skillId ?? "";
+
+  useEffect(() => {
+    if (lastMessage?.event === "RESOLVED_SKILLS") {
+      setSelectedSkillId(undefined);
+      setSelectedMemeId(undefined);
+    }
+  }, [lastMessage]);
 
   const handleSkillClick = (skillId: string) => {
     setSelectedSkillId(skillId === selectedSkillId ? undefined : skillId);
@@ -97,10 +103,11 @@ export default function BottomBarGUI() {
                   onClick={() => handleSkillClick(skill.skillId)}
                 />
               ))
-            : memesInMenu?.map((meme) => (
+            : memesInBench?.map((meme) => (
                 <SkillCard
                   key={meme.userMemeId}
                   skillName={meme.name}
+                  status={meme.status}
                   isSelected={meme.userMemeId === selectedMemeId}
                   onClick={() => handleMemeClick(meme.userMemeId)}
                 />

@@ -31,7 +31,6 @@ export default function OpponentGladiators({
 }: {
   opponentMemes?: UserMeme[];
 }): JSX.Element {
-  console.log(opponentMemes);
   return (
     <div className="flex justify-end gap-2">
       {positions.map((position, index) => (

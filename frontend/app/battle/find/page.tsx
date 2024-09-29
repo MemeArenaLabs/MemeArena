@@ -22,7 +22,6 @@ export default function FindBattle() {
     if (walletAddress) {
       const call = async () => {
         const data = await getUserData(walletAddress);
-        console.log(data);
         setUserData({
           id: data.id,
           walletAddress: data.walletAddress,

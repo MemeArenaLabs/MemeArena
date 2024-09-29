@@ -56,7 +56,6 @@ const PlayerPanel: React.FC<{
   if (!player || !activeMeme) {
     return <PlayerPanelSkeleton isReversed={isReversed} />;
   }
-  console.log(activeMeme);
   return (
     <div
       className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${
