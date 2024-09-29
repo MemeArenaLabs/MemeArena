@@ -9,19 +9,28 @@ import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/navigation";
 import { FindOpponentDto } from "@/types/serverDTOs";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import SolanaConnectButton from "@/components/SolanaConnectButton";
 
 export default function FindBattle() {
-  const [walletAddress, setWalletAddress] = useState<string>("");
+  const [walletAddress, setWalletAddress] = useState<string | PublicKey>("");
   const [time, setTime] = useState<number>(0);
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const { isConnected, lastMessage, findOpponent } = useWebSocket();
   const { setUserData, userData, userMemes, setUserMemes } = useBattle();
   const router = useRouter();
+  const { publicKey } = useWallet();
 
   useEffect(() => {
-    if (walletAddress) {
+    let addr: string | PublicKey = "";
+    if (publicKey) {
+      addr = publicKey;
+      setWalletAddress(publicKey);
+    }
+    if (addr) {
       const call = async () => {
-        const data = await getUserData(walletAddress);
+        const data = await getUserData(addr);
         setUserData({
           id: data.id,
           walletAddress: data.walletAddress,
@@ -33,7 +42,7 @@ export default function FindBattle() {
       };
       call();
     }
-  }, [walletAddress]);
+  }, [walletAddress, publicKey]);
 
   useEffect(() => {
     if (lastMessage?.event === "JOINED") {
@@ -75,16 +84,18 @@ export default function FindBattle() {
   };
 
   return (
-    <main className="flex flex-col gap-8 items-center">
+    <main className="flex flex-col gap-6 items-center">
       <h2>Find a Battle</h2>
       <p>Web socket: {isConnected ? "Connected" : "Disconnected"}</p>
       <section className="layout gap-4">
+        <SolanaConnectButton />
+        <p>Or</p>
         <div className="flex flex-col gap-2">
           <label htmlFor="walletAddress">Set wallet Address:</label>
           <input
             id="walletAddress"
             type="text"
-            value={walletAddress}
+            value={walletAddress.toString()}
             onChange={(e) => setWalletAddress(e.target.value)}
             placeholder="Enter your wallet address"
             className="p-2 border rounded-md w-96"
