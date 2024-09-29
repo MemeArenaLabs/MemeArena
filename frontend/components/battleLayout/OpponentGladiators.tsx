@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { UserDetails } from "@/types/server-types";
+import { UserMeme } from "@/types/entities";
 
 interface Position {
   src: string;
@@ -27,10 +27,11 @@ const positions: Position[] = [
 ];
 
 export default function OpponentGladiators({
-  opponentData,
+  opponentMemes,
 }: {
-  opponentData?: UserDetails;
+  opponentMemes?: UserMeme[];
 }): JSX.Element {
+  console.log(opponentMemes);
   return (
     <div className="flex justify-end gap-2">
       {positions.map((position, index) => (

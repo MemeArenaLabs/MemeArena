@@ -1,16 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import Timer from "./Timer";
 import OpponentGladiators from "./OpponentGladiators";
 import { useBattle } from "@/context/BattleProvider";
-import {
-  MemeBattleStatus,
-  ResolvedSkillsResponseDto,
-  UserDataDto,
-  UserMemeDto,
-} from "@/types/server-types";
-import { useWebSocket } from "@/context/WebSocketProvider";
+import { UserData, UserMeme } from "@/types/entities";
 
 interface MarketInfo {
   changePct: number;
@@ -20,80 +14,49 @@ interface MarketInfo {
 const market1: MarketInfo = { changePct: 15, isUp: false };
 const market2: MarketInfo = { changePct: 15, isUp: true };
 
-// Custom deep merge function
-function deepMerge(target: any, source: any) {
-  const output = Object.assign({}, target);
-  if (isObject(target) && isObject(source)) {
-    Object.keys(source).forEach((key) => {
-      if (isObject(source[key])) {
-        if (!(key in target)) Object.assign(output, { [key]: source[key] });
-        else output[key] = deepMerge(target[key], source[key]);
-      } else {
-        Object.assign(output, { [key]: source[key] });
-      }
-    });
-  }
-  return output;
-}
-
-function isObject(item: any) {
-  return item && typeof item === "object" && !Array.isArray(item);
-}
-
 export default function TopBarGUI() {
-  const { isConnected, lastMessage, proposeTeam } = useWebSocket();
-  const {
-    userData,
-    opponentData,
-    setUserData,
-    setOpponentData,
-    setBattleLogs,
-    battleLogs,
-  } = useBattle();
+  const { userData, opponentData, userMemes, opponentMemes } = useBattle();
 
-  useEffect(() => {
-    if (lastMessage?.event === "RESOLVED_SKILLS") {
-      const data: ResolvedSkillsResponseDto = lastMessage.data;
-      setUserData(data.userData);
-      setOpponentData(data.opponentData);
-      setBattleLogs(data.battleLogs);
-    }
-  }, [lastMessage]);
+  const userActiveMeme = useMemo(
+    () => userMemes.find((meme) => meme.status === "ACTIVE"),
+    [userMemes]
+  );
 
+  const opponentActiveMeme = useMemo(
+    () => opponentMemes.find((meme) => meme.status === "ACTIVE"),
+    [opponentMemes]
+  );
   return (
     <div className="flex justify-between mb-4 items-start">
       <div className="text-white min-w-[336px] flex">
-        <PlayerPanel player={userData} />
+        <PlayerPanel player={userData} activeMeme={userActiveMeme} />
         <MarketPanel market={market1} />
       </div>
       <Timer time={12} />
       <div className="text-white min-w-[336px] flex flex-col gap-2">
         <div className="flex">
           <MarketPanel market={market2} isReversed />
-          <PlayerPanel player={opponentData} isReversed />
+          <PlayerPanel
+            player={opponentData}
+            activeMeme={opponentActiveMeme}
+            isReversed
+          />
         </div>
-        <OpponentGladiators opponentData={opponentData} />
+        <OpponentGladiators opponentMemes={opponentMemes} />
       </div>
     </div>
   );
 }
 
 const PlayerPanel: React.FC<{
-  player?: UserDataDto;
+  player?: UserData;
+  activeMeme?: UserMeme;
   isReversed?: boolean;
-}> = ({ player, isReversed = false }) => {
-  if (!player) {
+}> = ({ player, activeMeme, isReversed = false }) => {
+  if (!player || !activeMeme) {
     return <PlayerPanelSkeleton isReversed={isReversed} />;
   }
-
-  const activeMeme: UserMemeDto = player.userMemes.find(
-    ({ status }: { status: MemeBattleStatus }) => status === "ACTIVE"
-  );
-
-  useEffect(() => {
-    console.log(activeMeme.currentHp);
-  }, [activeMeme.currentHp]);
-
+  console.log(activeMeme);
   return (
     <div
       className={`flex gap-2 bg-dark-blue-80 min-w-[226px] items-center w-full ${
@@ -124,7 +87,7 @@ const PlayerPanel: React.FC<{
             <div
               className="h-full bg-red-500"
               style={{
-                width: `${(activeMeme.currentHp * 100) / activeMeme.hp}%`,
+                width: `${(activeMeme.currentHp * 100) / activeMeme.maxHp}%`,
               }}
             ></div>
           </div>

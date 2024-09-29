@@ -1,4 +1,4 @@
-import { UserResponseDto } from "@/types/server-types";
+import { UserResponseDto } from "@/types/serverDTOs";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "";
 

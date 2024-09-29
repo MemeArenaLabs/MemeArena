@@ -3,25 +3,19 @@ import React, { useEffect, useState } from "react";
 import { formatTime } from "@/utils/utils";
 import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
 import { useWebSocket } from "@/context/WebSocketProvider";
-import { useBattle } from "@/context/BattleProvider";
+import { transformUserMeme, useBattle } from "@/context/BattleProvider";
 import { getUserData } from "@/utils/api-service";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/navigation";
-import { FindOpponentDto, JoinedResponseDto } from "@/types/server-types";
+import { FindOpponentDto } from "@/types/serverDTOs";
 
 export default function FindBattle() {
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [time, setTime] = useState<number>(0);
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const { isConnected, lastMessage, findOpponent } = useWebSocket();
-  const {
-    setInitialUserData,
-    setUserData,
-    setOpponentData,
-    initialUserData,
-    setBattleSessionId,
-  } = useBattle();
+  const { setUserData, userData, userMemes, setUserMemes } = useBattle();
   const router = useRouter();
 
   useEffect(() => {
@@ -29,7 +23,14 @@ export default function FindBattle() {
       const call = async () => {
         const data = await getUserData(walletAddress);
         console.log(data);
-        setInitialUserData(data);
+        setUserData({
+          id: data.id,
+          walletAddress: data.walletAddress,
+          username: data.username,
+        });
+        setUserMemes(
+          data.userMemes.map((memeDto) => transformUserMeme(memeDto))
+        );
       };
       call();
     }
@@ -37,10 +38,6 @@ export default function FindBattle() {
 
   useEffect(() => {
     if (lastMessage?.event === "JOINED") {
-      const data: JoinedResponseDto = lastMessage?.data;
-      setBattleSessionId(data?.battleSessionId);
-      setUserData(data?.userData);
-      setOpponentData(data?.opponentData);
       router.push("/battle/preparation");
       handleCloseModal();
     }
@@ -61,10 +58,10 @@ export default function FindBattle() {
   const handleFindBattle = () => {
     setIsFinding(true);
     setTime(0);
-    if (initialUserData) {
+    if (userData) {
       const findOpponentDto: FindOpponentDto = {
-        userId: initialUserData.id,
-        userMemeIds: initialUserData.userMemes.map((meme) => meme.userMemeId),
+        userId: userData.id,
+        userMemeIds: userMemes.map((meme) => meme.userMemeId),
       };
       findOpponent(findOpponentDto);
     } else {
@@ -99,7 +96,7 @@ export default function FindBattle() {
         </div>
         <Button
           onClick={handleFindBattle}
-          disabled={!walletAddress || !isConnected || !initialUserData}
+          disabled={!walletAddress || !isConnected || !userData}
         >
           Find battle
         </Button>

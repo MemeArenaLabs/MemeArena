@@ -65,7 +65,7 @@ export function Modal({
           </div>
           <div className="flex items-center">
             <button onClick={handleClose} className="cursor-pointer">
-              <Close className="w-8 h-8"/>
+              <Close className="w-8 h-8" />
             </button>
           </div>
         </div>

@@ -1,15 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
 import SkillCard from "../gui/SkillCard";
-import {
-  ProposeSkillDto,
-  SkillDetails,
-  UserMemeDto,
-} from "@/types/server-types";
+import { ProposeSkillDto } from "@/types/serverDTOs";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { useBattle } from "@/context/BattleProvider";
-import SvgIcon, { IconProps } from "@/utils/SvgIcon";
+import SvgIcon from "@/utils/SvgIcon";
 
 type MenuTab = "attack" | "team";
 
@@ -22,27 +17,27 @@ interface TabButtonProps {
 
 export default function BottomBarGUI() {
   const [activeTab, setActiveTab] = useState<MenuTab>("attack");
-  const [selectedSkillId, setSelectedSkillId] = useState<string | null>(null);
-  const [selectedMemeId, setSelectedMemeId] = useState<string | null>(null);
-
+  const [selectedSkillId, setSelectedSkillId] = useState<string>();
+  const [selectedMemeId, setSelectedMemeId] = useState<string>();
   const { proposeSkill } = useWebSocket();
-  const { battleSessionId, userData } = useBattle();
+  const { battleSessionId, userData, userMemes } = useBattle();
 
-  const currentMeme = userData?.userMemes?.find(
-    (meme) => meme.status === "ACTIVE"
+  const memesInMenu = userMemes.filter((meme) => meme.status === "BENCH");
+  const activeMeme = userMemes.find((meme) => meme.status === "ACTIVE");
+  const skillsInMenu = activeMeme?.skills?.filter(
+    (skill) => skill.type !== "SWITCH"
   );
 
-  const skills: SkillDetails[] =
-    currentMeme?.skills?.filter(
-      (skill: { type: string }) => skill.type !== "SWITCH"
-    ) || [];
+  console.log(activeMeme);
+  const swapSkillId =
+    activeMeme?.skills.find((skill) => skill.type === "SWITCH")?.skillId ?? "";
 
   const handleSkillClick = (skillId: string) => {
-    setSelectedSkillId(skillId === selectedSkillId ? null : skillId);
+    setSelectedSkillId(skillId === selectedSkillId ? undefined : skillId);
   };
 
   const handleMemeClick = (memeId: string) => {
-    setSelectedMemeId(memeId === selectedMemeId ? null : memeId);
+    setSelectedMemeId(memeId === selectedMemeId ? undefined : memeId);
   };
 
   const handleAction = () => {
@@ -56,16 +51,16 @@ export default function BottomBarGUI() {
         skillId: selectedSkillId,
         battleSessionId,
         userId: userData.id,
-        userMemeId: currentMeme?.userMemeId || "",
+        userMemeId: activeMeme?.userMemeId || "",
       };
       console.log(proposeSkillDto);
       proposeSkill(proposeSkillDto);
     } else if (activeTab === "team" && selectedMemeId) {
       const swapMemeDto: ProposeSkillDto = {
-        skillId: skills.find(({ type }) => type === "SWITCH")?.skillId ?? "",
+        skillId: swapSkillId,
         battleSessionId,
         userId: userData.id,
-        userMemeId: currentMeme?.userMemeId || "",
+        userMemeId: activeMeme?.userMemeId || "",
         newUserMemeId: selectedMemeId,
       };
       console.log(swapMemeDto);
@@ -94,7 +89,7 @@ export default function BottomBarGUI() {
         </div>
         <div className="flex gap-1">
           {activeTab === "attack"
-            ? skills.map((skill: SkillDetails) => (
+            ? skillsInMenu?.map((skill) => (
                 <SkillCard
                   key={skill.skillId}
                   skillName={skill.name}
@@ -102,7 +97,7 @@ export default function BottomBarGUI() {
                   onClick={() => handleSkillClick(skill.skillId)}
                 />
               ))
-            : userData?.userMemes.map((meme) => (
+            : memesInMenu?.map((meme) => (
                 <SkillCard
                   key={meme.userMemeId}
                   skillName={meme.name}
@@ -132,10 +127,10 @@ export default function BottomBarGUI() {
               activeTab === "attack" ? !selectedSkillId : !selectedMemeId
             }
           />
-          <ActionButton
+          {/* <ActionButton
             label="SKIP"
             className="bg-dark-blue-80 text-white w-full max-h-[30px]"
-          />
+          /> */}
         </div>
       </div>
     </div>
