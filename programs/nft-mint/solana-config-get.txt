@@ -1,0 +1,6 @@
+(base) raigal@Raquels-MacBook-Pro nft-mint % solana config get
+Config File: /Users/raigal/.config/solana/cli/config.yml
+RPC URL: https://api.devnet.solana.com 
+WebSocket URL: wss://api.devnet.solana.com/ (computed)
+Keypair Path: /Users/raigal/my-solana-wallet/mykeypair.json 
+Commitment: confirmed 
