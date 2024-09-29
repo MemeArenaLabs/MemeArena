@@ -1,21 +1,16 @@
-//import Link from "next/link";
-//import { Button } from "../components/Button";
-//import SvgIcon from "@/utils/SvgIcon";
-//import { Close, Info } from "@nine-thirty-five/material-symbols-react/outlined";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-
+import Link from "next/link";
+import { Button } from "../components/Button";
+import SvgIcon from "@/utils/SvgIcon";
+import { Close, Info } from "@nine-thirty-five/material-symbols-react/outlined";
 
 export default function Home() {
   return (
     <main>
       <section className="layout gap-6 mb-6">
         <h2>Landing page</h2>
-        {/* <Link href={"/app"}>
+        <Link href={"/app"}>
           <Button>Launch App</Button>
-        </Link> */}
-        <div className="border hover:border-slate-900 rounded">
-          <WalletMultiButton style={{}} />
-        </div>
+        </Link>
         <div>
           <h1>Heading1 test 96</h1>
           <h2>Heading2 test 64</h2>
@@ -40,18 +35,18 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-2 p-2 bg-[#444444]">
           <p>Game Icons</p>
-          {/* <div className="flex gap-2">
+          <div className="flex gap-2">
             <SvgIcon name="all-for-one" className="text-red-500 h-10 w-10" />
             <SvgIcon name="broken-heart" className="text-blue h-8 w-8" />
             <SvgIcon name="book-cover" className="text-red-600 h-10 w-10" />
-          </div> */}
+          </div>
         </div>
         <div className="flex flex-col gap-2 p-2 bg-[#444444]">
           <p>Material symbols</p>
-          {/* <div className="flex gap-2">
+          <div className="flex gap-2">
             <Close className="h-7 w-7 text-yellow" />
             <Info className="h-7 w-7 text-blue-70" />
-          </div> */}
+          </div>
         </div>
       </section>
     </main>
