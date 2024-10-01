@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import AppWalletProvider from "../context/AppWalletProvider";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={` ${montserrat.className} font-montserrat`}>
-      <body className="min-h-screen p-2 flex flex-col">{children}</body>
+      <body className="min-h-screen p-2 flex flex-col">
+        <AppWalletProvider>{children}</AppWalletProvider>
+      </body>
     </html>
   );
 }

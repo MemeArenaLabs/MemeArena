@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMemeDto } from './dto/create-meme.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meme, Skill, UserMeme } from './meme.entity';
 import { Repository } from 'typeorm';
@@ -19,15 +18,6 @@ export class MemeService {
     @InjectRepository(Skill)
     private readonly skillRepository: Repository<Skill>,
   ) {}
-
-  async create(createMemeDto: CreateMemeDto): Promise<Meme> {
-    const meme = this.memeRepository.create(createMemeDto);
-    return await this.memeRepository.save(meme);
-  }
-
-  async getMemesByUser(userId: string): Promise<Meme[]> {
-    return await this.memeRepository.find({});
-  }
 
   async getMemeByUserMemeId(userMemeId: string): Promise<Meme> {
     const userMeme: UserMeme = await this.userMemeRepository.findOne({
@@ -67,7 +57,7 @@ export class MemeService {
 
     const attack = this.calculateAttribute(
       baseStats.attackBase,
-      tokenData.volume24h,
+      tokenData.volume24h/tokenData.marketCap,
       minMaxValues.minVolume24h,
       minMaxValues.maxVolume24h,
       1,
@@ -75,7 +65,7 @@ export class MemeService {
 
     const defense = this.calculateAttribute(
       baseStats.defenseBase,
-      tokenData.liquidity,
+      tokenData.liquidity/tokenData.marketCap,
       minMaxValues.minLiquidity,
       minMaxValues.maxLiquidity,
       1,

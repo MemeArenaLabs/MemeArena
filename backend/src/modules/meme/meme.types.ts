@@ -1,3 +1,5 @@
+import { SkillType } from './meme.entity';
+
 export interface TokenDetails {
   id: string;
   symbol: string;
@@ -10,9 +12,10 @@ export interface SkillDetails {
   name: string;
   damage: number;
   speed: number;
+  type: SkillType;
 }
 
-export interface UserMemeDetails {
+export type UserMemeDetails = {
   userMemeId: string;
   tokensLocked: number;
   memeId: string;
@@ -25,4 +28,4 @@ export interface UserMemeDetails {
   profession: string;
   token: TokenDetails;
   skills: SkillDetails[];
-}
+};
