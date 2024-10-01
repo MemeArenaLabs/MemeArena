@@ -69,6 +69,8 @@ const collectionCreation = async () => {
     
     console.log('imageUri: ' + imageUri[0])
 
+    
+
     const metadata = {
         name: 'Gladiators.meme Geneis Collection',
         description: "This is the genesis Gladiator's collection",
@@ -91,10 +93,32 @@ const collectionCreation = async () => {
 
     const collection = generateSigner(umi) 
 
+    // for royalties
+    //const creator1 = generateSigner(umi);
+    //const creator2 = generateSigner(umi);
+
     const tx = await createCollection(umi, {
         collection,
         name: 'My Collection',
         uri: metadataUri,
+        // plugins: [     //Lo he deployado sin royalty, pero sería posible
+        //     {
+        //       type: 'Royalties',
+        //         basisPoints: 500,
+        //         creators: [
+        //           {
+        //             address: creator1.publicKey,
+        //             percentage: 20,
+        //           },
+        //           {
+        //             address: creator2.publicKey,
+        //             percentage: 80,
+        //           },
+        //         ],
+        //         ruleSet: ruleSet('None'), // Compatibility rule set
+        
+        //     },
+        // ],
     }).sendAndConfirm(umi)
 
     const signature = base58.deserialize(tx.signature)[0]
