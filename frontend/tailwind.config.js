@@ -14,8 +14,6 @@ module.exports = {
           80: "#002448CC", // 80% opacity
           70: "#05345AB3", // 70% opacity
           50: "#00244880", // 50% opacity
-         
-
         },
         blue: {
           DEFAULT: "#1F1A8C",
@@ -25,5 +23,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"), require("tailwind-scrollbar-hide")],
 };

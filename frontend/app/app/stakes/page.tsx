@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
 import { BottomMenu } from "@/components/gui/BottomMenu";
-import { ChevronDown } from "lucide-react";
+import { KeyboardArrowDown } from "@nine-thirty-five/material-symbols-react/outlined";
 
 type MemeCoin = {
   name: string;
@@ -170,7 +170,7 @@ export default function Stakes() {
                       <span className="text-lg font-bold">
                         {selectedCoin ? selectedCoin.name : "SELECT TOKEN"}
                       </span>
-                      <ChevronDown size={20} className="ml-auto" />
+                      <KeyboardArrowDown className="ml-auto w-5 h-5" />
                     </div>
 
                     {isDropdownOpen && (
