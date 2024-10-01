@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
 import { BottomMenu } from "@/components/gui/BottomMenu";
-import { ChevronDown } from "lucide-react";
+import { KeyboardArrowDown } from "@nine-thirty-five/material-symbols-react/outlined";
 
 type MemeCoin = {
   name: string;
@@ -15,11 +15,41 @@ type MemeCoin = {
 };
 
 const memeCoins: MemeCoin[] = [
-  { name: "DOG WIF HAT", icon: "/assets/stakes/icons/wif.png", gladiatorIcon: "/assets/stakes/gladiators/wif.png", amount: "132,235,253.00", usdValue: "12 USD" },
-  { name: "POPCAT", icon: "/assets/stakes/icons/popcat.png", gladiatorIcon: "/assets/stakes/gladiators/wif.png", amount: "132,235,253.00", usdValue: "25 USD" },
-  { name: "BONK", icon: "/assets/stakes/icons/bonk.png", gladiatorIcon: "/assets/stakes/gladiators/wif.png",  amount: "0.00", usdValue: "0 USD" },
-  { name: "GIGACHAD", icon: "/assets/stakes/icons/gigachad.png", gladiatorIcon: "/assets/stakes/gladiators/wif.png", amount: "0.00", usdValue: "0 USD" },
-  { name: "PONKE", icon: "/assets/stakes/icons/ponke.png", gladiatorIcon: "/assets/stakes/gladiators/wif.png", amount: "0.00", usdValue: "0 USD" },
+  {
+    name: "DOG WIF HAT",
+    icon: "/assets/stakes/icons/wif.png",
+    gladiatorIcon: "/assets/stakes/gladiators/wif.png",
+    amount: "132,235,253.00",
+    usdValue: "12 USD",
+  },
+  {
+    name: "POPCAT",
+    icon: "/assets/stakes/icons/popcat.png",
+    gladiatorIcon: "/assets/stakes/gladiators/wif.png",
+    amount: "132,235,253.00",
+    usdValue: "25 USD",
+  },
+  {
+    name: "BONK",
+    icon: "/assets/stakes/icons/bonk.png",
+    gladiatorIcon: "/assets/stakes/gladiators/wif.png",
+    amount: "0.00",
+    usdValue: "0 USD",
+  },
+  {
+    name: "GIGACHAD",
+    icon: "/assets/stakes/icons/gigachad.png",
+    gladiatorIcon: "/assets/stakes/gladiators/wif.png",
+    amount: "0.00",
+    usdValue: "0 USD",
+  },
+  {
+    name: "PONKE",
+    icon: "/assets/stakes/icons/ponke.png",
+    gladiatorIcon: "/assets/stakes/gladiators/wif.png",
+    amount: "0.00",
+    usdValue: "0 USD",
+  },
 ];
 
 export default function Stakes() {
@@ -85,12 +115,18 @@ export default function Stakes() {
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
                       {selectedCoin && (
-                        <Image src={selectedCoin.icon} width={24} height={24} alt={selectedCoin.name} className="mr-2" />
+                        <Image
+                          src={selectedCoin.icon}
+                          width={24}
+                          height={24}
+                          alt={selectedCoin.name}
+                          className="mr-2"
+                        />
                       )}
                       <span className="text-lg font-bold">
                         {selectedCoin ? selectedCoin.name : "SELECT TOKEN"}
                       </span>
-                      <ChevronDown size={20} className="ml-auto" />
+                      <KeyboardArrowDown className="ml-auto w-5 h-5" />
                     </div>
 
                     {isDropdownOpen && (
@@ -107,12 +143,20 @@ export default function Stakes() {
                             }}
                           >
                             <div className="flex items-center">
-                              <Image src={coin.icon} width={24} height={24} alt={coin.name} className="mr-2" />
+                              <Image
+                                src={coin.icon}
+                                width={24}
+                                height={24}
+                                alt={coin.name}
+                                className="mr-2"
+                              />
                               <span>{coin.name}</span>
                             </div>
                             <div className="text-right">
                               <div className="text-[14px]">{coin.amount}</div>
-                              <div className="text-[10px] text-light-blue">{coin.usdValue}</div>
+                              <div className="text-[10px] text-light-blue">
+                                {coin.usdValue}
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -142,14 +186,17 @@ export default function Stakes() {
                     {selectedCoin ? selectedCoin.usdValue : "0 USD"}
                     <div className="flex justify-between text-sm mb-4 gap-1">
                       Staked:
-                      <span className="text-light-blue">{selectedCoin ? selectedCoin.amount : "0.00"}</span>
+                      <span className="text-light-blue">
+                        {selectedCoin ? selectedCoin.amount : "0.00"}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <button className="w-[126px] bg-yellow text-black py-2 gap-1 h-[28px] flex justify-center items-center font-bold mt-4 text-[14px]">
-                <SvgIcon name="hand-money" className="text-black h-5 w-5" /> {activeTab.toUpperCase()}
+                <SvgIcon name="hand-money" className="text-black h-5 w-5" />{" "}
+                {activeTab.toUpperCase()}
               </button>
             </div>
           </div>
