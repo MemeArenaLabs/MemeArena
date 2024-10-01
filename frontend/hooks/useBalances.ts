@@ -2,18 +2,19 @@
 
 import { useEffect, useState } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 // import { useWallet } from '@solana/wallet-adapter-react';
 import { Token, TOKEN_MINTS, TokenInfo } from '../types/tokens';
 
 interface BalanceInfo {
-  balance: number; // En formato legible por el usuario
+  balance: number;
 }
 
 interface Balances {
   [tokenSymbol: string]: BalanceInfo;
 }
 
-const publicKeyString = '7dY73Q3mbHj5VuDKnGXdWfu1Trpt1Nn9MmZ8ZdiM3nM5';
+const publicKeyString = 'HKUoH5NxNUfcBJsbdmM4JeN7aB2r9icNdtoWdLQyrEvN';
 const publicKey = new PublicKey(publicKeyString);
 
 export function useBalances(tokens: Token[]) {
@@ -29,48 +30,52 @@ export function useBalances(tokens: Token[]) {
       setLoading(false);
       return;
     }
-
-    const connection = new Connection('https://api.devnet.solana.com'); // Aquí puedes cambiar la red
+    const DEVNET_RPC_URL = 'https://rpc.ankr.com/solana_devnet'
+    const MAINNET_RPC_URL = 'https://rpc.ankr.com/solana'
+    const connection = new Connection(DEVNET_RPC_URL);
 
     const fetchBalances = async () => {
       setLoading(true);
       try {
+        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(publicKey, {
+          programId: TOKEN_PROGRAM_ID,
+        });
+        console.log({tokenAccounts})
+
+        const tokensOfInterest = tokens.reduce((acc, token) => {
+          const tokenInfo = TOKEN_MINTS[token];
+          if (tokenInfo) {
+            acc[tokenInfo.contractAddress] = token;
+          }
+          return acc;
+        }, {} as { [mintAddress: string]: Token });
+
         const balancesResult: Balances = {};
-        const promises = tokens.map(async (token) => {
-          if (token === Token.SOL) {
-            // Obtener balance de SOL
-            const lamports = await connection.getBalance(publicKey);
-            balancesResult[token] = { balance: lamports / 1e9 }; // Convertir de lamports a SOL
-          } else {
-            const tokenInfo: TokenInfo | undefined = TOKEN_MINTS[token];
-            if (!tokenInfo) {
-              console.warn(`Token no encontrado: ${token}`);
-              balancesResult[token] = { balance: 0 };
-              return;
-            }
+        tokens.forEach((token) => {
+          balancesResult[token] = { balance: 0 };
+        });
 
-            const mintPublicKey = new PublicKey(tokenInfo.contractAddress);
+        tokenAccounts.value.forEach((accountInfo) => {
+          const accountData = accountInfo.account.data.parsed.info;
+          const mintAddress = accountData.mint;
+          const tokenAmount = accountData.tokenAmount;
 
-            const tokenAccounts = await connection.getParsedTokenAccountsByOwner(publicKey, {
-              mint: mintPublicKey,
-            });
-
-            let totalBalance = 0;
-            for (const tokenAccountInfo of tokenAccounts.value) {
-              const accountInfo = tokenAccountInfo.account.data.parsed.info;
-              const tokenAmount = accountInfo.tokenAmount;
-              totalBalance += Number(tokenAmount.uiAmount);
-            }
-
-            const balanceWithDecimals = totalBalance / Math.pow(10, tokenInfo.decimals);
-            balancesResult[token] = { balance: balanceWithDecimals };
+          const tokenSymbol = tokensOfInterest[mintAddress];
+          if (tokenSymbol) {
+            balancesResult[tokenSymbol]!.balance += Number(tokenAmount.uiAmount);
           }
         });
 
-        await Promise.all(promises);
+        if (tokens.includes(Token.SOL)) {
+          const lamports = await connection.getBalance(publicKey);
+          balancesResult[Token.SOL] = {
+            balance: lamports / 1e9,
+          };
+        }
+
         setBalances(balancesResult);
       } catch (err) {
-        console.error('Error al obtener balances', err);
+        console.error('Error al obtener balances:', err);
         setError(err as Error);
       } finally {
         setLoading(false);

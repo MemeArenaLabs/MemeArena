@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nine-thirty-five/material-symbols-react": "^1.10.0",
+    "@solana/spl-token": "^0.4.8",
     "@solana/web3.js": "^1.95.3",
     "next": "14.2.6",
     "react": "18.3.1",
