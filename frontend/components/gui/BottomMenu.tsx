@@ -8,7 +8,14 @@ export function BottomMenu() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const menuItems = [
+  type Icons = "barbute" | "all-for-one" | "hand-money";
+  type MenuItem = {
+    name: string;
+    icon: Icons;
+    path: string;
+  };
+
+  const menuItems: MenuItem[] = [
     { name: "Gladiators", icon: "barbute", path: "/app/gladiators" },
     { name: "Teams", icon: "all-for-one", path: "/app/teams" },
     { name: "Stake", icon: "hand-money", path: "/app/stakes" },

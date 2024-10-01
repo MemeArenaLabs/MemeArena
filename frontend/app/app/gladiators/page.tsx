@@ -82,7 +82,7 @@ export default function TeamSelection() {
         onClose={() => setIsModalOpen(false)}
         title="SKILL INFORMATION"
       >
-        <div className=" flex gap-2 max-w-[617px]">
+        <div className="flex gap-2 max-w-[617px]">
           <div className="min-w-[226px]">
             <Image
               src="/assets/skills/magaiba/skills-info-kiss-of-death.png"

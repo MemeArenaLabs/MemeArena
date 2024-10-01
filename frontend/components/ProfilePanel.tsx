@@ -8,7 +8,16 @@ interface ProfilePanelProps {
 const ProfilePanel: React.FC<ProfilePanelProps> = ({
   username = "Magaibero22",
 }) => (
-  <div className="flex items-center pb-2">
+  <div className="flex items-center p-2">
+    <Profile username={username} />
+    <Settings />
+  </div>
+);
+
+export default ProfilePanel;
+
+export function Profile({ username }: { username: string }) {
+  return (
     <div className="flex items-center gap-2 w-40 h-[43px] bg-dark-blue-80 clip-path-polygon-left-gui-profile-selection p-1 cursor-pointer">
       <Image
         src="/assets/team-selection/avatar/example-avatar.png"
@@ -18,10 +27,13 @@ const ProfilePanel: React.FC<ProfilePanelProps> = ({
       />
       <span className="text-sm font-bold">{username}</span>
     </div>
+  );
+}
+
+export function Settings() {
+  return (
     <div className="flex items-center justify-center w-14 h-[43px] bg-dark-blue-80 -ml-[5px] clip-path-polygon-left-gui-profile-setting pl-1 cursor-pointer">
       <Image src="/icons/settings.svg" width={24} height={24} alt="Settings" />
     </div>
-  </div>
-);
-
-export default ProfilePanel;
+  );
+}

@@ -6,6 +6,7 @@ import SvgIcon from "@/utils/SvgIcon";
 import { Modal } from "@/components/Modal";
 import { TeamModal } from "@/components/gui/TeamModal";
 import { BottomMenu } from "@/components/gui/BottomMenu";
+import ProfilePanel from "@/components/ProfilePanel";
 
 export default function TeamSelection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,32 +37,12 @@ export default function TeamSelection() {
   return (
     <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
       <div className="flex flex-grow">
-        <div className="pt-2 pl-2 ">
+        <div className="">
           {/* User CTA profile */}
-          <div className="pb-2 flex items-center">
-            <div className=" cursor-pointer flex gap-2 items-center p-1 w-40 bg-dark-blue-80 h-[43px] clip-path-polygon-left-gui-profile-selection ">
-              <div>
-                <Image
-                  src="/assets/team-selection/avatar/example-avatar.png "
-                  width={26.5}
-                  height={26.5}
-                  alt="Avatar"
-                />
-              </div>
-              <div className="text-[14px] font-bold">Magaibero22</div>
-            </div>
-            <div className="cursor-pointer w-14 pl-1 bg-dark-blue-80 h-[43px] ml-[-5px] clip-path-polygon-left-gui-profile-setting flex items-center justify-center">
-              <Image
-                src="/icons/settings.svg"
-                width={24}
-                height={24}
-                alt="Setting"
-              />
-            </div>
-          </div>
+          <ProfilePanel />
 
           {/* Left side and Center - Characters */}
-          <div className="flex">
+          <div className="flex pl-2">
             <div>
               <div className="space-y-2 overflow-y-auto w-[110px] pr-2 max-h-[271px] ">
                 <div
@@ -357,7 +338,6 @@ export default function TeamSelection() {
         onSave={handleSaveNewTeamName}
       >
         <div>
-      
           {/* Añade aquí los componentes necesarios para crear un nuevo equipo */}
         </div>
       </TeamModal>
@@ -368,9 +348,8 @@ export default function TeamSelection() {
         onClose={closeEditTeamModal}
         onSave={handleSaveEditTeamName}
       >
-<div></div>
-          {/* Añade aquí los componentes necesarios para editar el equipo */}
-       
+        <div></div>
+        {/* Añade aquí los componentes necesarios para editar el equipo */}
       </TeamModal>
     </main>
   );
