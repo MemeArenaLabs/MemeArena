@@ -19,6 +19,9 @@ import {
   fetchCollection,
 } from '@metaplex-foundation/mpl-core'
 
+import { attributesOptions } from './metadataAtributes';
+
+
 // Create the wrapper function
 const createNft = async () => {
   ///
@@ -78,21 +81,17 @@ const createNft = async () => {
 
    // const collection = fetchCollection(umi, collectionPub);
 
+     // Randomly select an attribute set
+    const randomIndex = Math.floor(Math.random() * attributesOptions.length);
+    const selectedAttributes = attributesOptions[randomIndex];
+
+
     const metadata = {
         name: 'My NFT',
         description: 'This is an NFT on Solana',
         image: imageUri[0],
         external_url: 'https://example.com',
-        attributes: [
-          {
-            trait_type: 'trait1',
-            value: 'value1',
-          },
-          {
-            trait_type: 'trait2',
-            value: 'value2',
-          },
-        ],
+        attributes: selectedAttributes,
         properties: {
           files: [
             {
@@ -129,7 +128,7 @@ const createNft = async () => {
     console.log(`https://explorer.solana.com/tx/${signature}?cluster=devnet`)
     console.log('\n')
     console.log('View NFT on Metaplex Explorer')
-    console.log(`https://core.metaplex.com/explorer/${nftSigner.publicKey}?env=devnet`)
+    //console.log(`https://core.metaplex.com/explorer/${nftSigner.publicKey}?env=devnet`)
 
 
     //////////////////////////////////////////
