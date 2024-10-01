@@ -153,6 +153,9 @@ importers:
       react-svg:
         specifier: ^16.1.34
         version: 16.1.34(react-dom@18.3.1)(react@18.3.1)
+      tailwind-scrollbar-hide:
+        specifier: ^1.1.7
+        version: 1.1.7
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -8655,6 +8658,10 @@ packages:
       '@pkgr/core': 0.1.1
       tslib: 2.7.0
     dev: true
+
+  /tailwind-scrollbar-hide@1.1.7:
+    resolution: {integrity: sha512-X324n9OtpTmOMqEgDUEA/RgLrNfBF/jwJdctaPZDzB3mppxJk7TLIDmOreEDm1Bq4R9LSPu4Epf8VSdovNU+iA==}
+    dev: false
 
   /tailwindcss@3.4.12:
     resolution: {integrity: sha512-Htf/gHj2+soPb9UayUNci/Ja3d8pTmu9ONTfh4QY8r3MATTZOzmv6UYWF7ZwikEIC8okpfqmGqrmDehua8mF8w==}

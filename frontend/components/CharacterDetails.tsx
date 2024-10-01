@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import SvgIcon from "@/utils/SvgIcon";
 import { Character } from "@/types/types";
+import StatDisplay from "./StatDisplay";
 
 interface CharacterDetailsProps {
   character: Character;
@@ -10,14 +10,14 @@ interface CharacterDetailsProps {
 const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character }) => {
   return (
     <div>
-      <div>
+      <div className="flex flex-col gap-2">
         <h1 className="relative mt-[-16px]">{character.name.toUpperCase()}</h1>
-        <h3 className="relative mt-[-16px] pl-2 text-yellow">
+        <h3 className="relative mt-[-16px] text-yellow">
           {character.type} / {character.subtype}
         </h3>
       </div>
-      <div className="flex pt-2">
-        <div className="px-2 min-w-[229px]">
+      <div className="flex">
+        <div className="min-w-[229px]">
           <StatDisplay icon="broken-heart" label="HP" value={character.hp} />
           <StatDisplay
             icon="battered-axe"
@@ -64,27 +64,3 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character }) => {
 };
 
 export default CharacterDetails;
-
-interface StatDisplayProps {
-  icon: string;
-  label: string;
-  value: number;
-}
-
-const StatDisplay: React.FC<StatDisplayProps> = ({ icon, label, value }) => {
-  return (
-    <div className="flex px-2 py-1 max-h-[28px] justify-between clip-path-bg-left bg-dark-blue-50 items-center mb-2">
-      <div className="flex items-center gap-1">
-        <SvgIcon name={icon} className="text-light-blue h-4 w-4" />
-        <p className="text-light-blue text-[12px] font-medium">{label}</p>
-      </div>
-      <div className="flex items-center gap-1">
-        <SvgIcon
-          name={value > 50 ? "market-up" : "market-down"}
-          className="text-white h-[6px] w-[7px]"
-        />
-        <p className="text-[12px] font-bold pr-4">{value}</p>
-      </div>
-    </div>
-  );
-};

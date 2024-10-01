@@ -61,7 +61,7 @@ export default function TeamSelection() {
   };
 
   return (
-    <main className="flex flex-col bg-gray-900 text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
+    <main className="flex flex-col justify-between bg-gray-900 text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
       <div className="flex justify-between">
         <div className="pt-2 pl-2 ">
           <ProfilePanel />

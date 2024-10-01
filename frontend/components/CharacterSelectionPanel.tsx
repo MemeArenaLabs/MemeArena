@@ -73,9 +73,9 @@ const mockCharacters: Character[] = [
 ];
 
 const CharacterSelectionPanel: React.FC = () => {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
-    null
-  );
+  const [selectedCharacter, setSelectedCharacter] = useState<
+    Character | undefined
+  >(mockCharacters[0]);
 
   const handleCharacterSelect = (character: Character) => {
     setSelectedCharacter(character);
@@ -87,7 +87,7 @@ const CharacterSelectionPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex gap-3">
       <CharacterList
         selectedCharacter={selectedCharacter}
         onCharacterSelect={handleCharacterSelect}
@@ -101,7 +101,7 @@ const CharacterSelectionPanel: React.FC = () => {
 export default CharacterSelectionPanel;
 
 interface CharacterListProps {
-  selectedCharacter: Character | null;
+  selectedCharacter?: Character;
   onCharacterSelect: (character: Character) => void;
   onAddCharacter: () => void;
 }
@@ -112,23 +112,25 @@ const CharacterList: React.FC<CharacterListProps> = ({
   onAddCharacter,
 }) => {
   return (
-    <div>
-      <div className="space-y-2 overflow-y-auto max-w-[78px] max-h-[271px]">
-        {mockCharacters.map((character) => (
-          <Image
-            key={character.id}
-            className={`border-2 ${
-              selectedCharacter?.id === character.id
-                ? "border-yellow"
-                : "border-transparent hover:border-yellow"
-            }`}
-            src={character.image}
-            width={78}
-            height={78}
-            alt={`${character.name} avatar`}
-            onClick={() => onCharacterSelect(character)}
-          />
-        ))}
+    <div className="flex flex-col">
+      <div className="overflow-y-auto scrollbar-hide max-h-[271px] flex-grow">
+        <div className="flex flex-col gap-[2px] max-w-[78px]">
+          {mockCharacters.map((character) => (
+            <Image
+              key={character.id}
+              className={`border-2 ${
+                selectedCharacter?.id === character.id
+                  ? "border-yellow"
+                  : "border-transparent hover:border-yellow"
+              }`}
+              src={character.image}
+              width={78}
+              height={78}
+              alt={`${character.name} avatar`}
+              onClick={() => onCharacterSelect(character)}
+            />
+          ))}
+        </div>
       </div>
       <div className="pt-2">
         <button

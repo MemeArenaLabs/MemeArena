@@ -21,7 +21,7 @@ export function BottomMenu() {
   };
 
   return (
-    <div className="px-2 pb-2">
+    <div className="p-2">
       <div className="flex">
         {menuItems.map((item, index) => (
           <button
@@ -30,19 +30,24 @@ export function BottomMenu() {
             className={`
               ${index === 0 ? "clip-path-polygon-left" : "clip-path-polygon-center"}
               min-w-[200px] h-[40px] font-bold py-2 flex uppercase ${index === 0 ? "pl-4" : "justify-center"} items-center mr-[-20px]
-              ${isActive(item.path)
-                ? "bg-dark-blue text-yellow"
-                : "bg-dark-blue-50 text-white hover:bg-dark-blue group"
+              ${
+                isActive(item.path)
+                  ? "bg-dark-blue text-yellow"
+                  : "bg-dark-blue-50 text-white hover:bg-dark-blue group"
               }
             `}
           >
-            <span className={`mr-2 ${isActive(item.path) ? "text-yellow" : "text-white group-hover:text-yellow transition-colors duration-200"}`}>
-              <SvgIcon 
-                name={item.icon} 
-                className={`h-5 w-5 ${isActive(item.path) ? "text-yellow" : "group-hover:text-yellow transition-colors duration-200"}`} 
+            <span
+              className={`mr-2 ${isActive(item.path) ? "text-yellow" : "text-white group-hover:text-yellow transition-colors duration-200"}`}
+            >
+              <SvgIcon
+                name={item.icon}
+                className={`h-5 w-5 ${isActive(item.path) ? "text-yellow" : "group-hover:text-yellow transition-colors duration-200"}`}
               />
             </span>
-            <span className={`${isActive(item.path) ? "" : "group-hover:text-yellow transition-colors duration-200"}`}>
+            <span
+              className={`${isActive(item.path) ? "" : "group-hover:text-yellow transition-colors duration-200"}`}
+            >
               {item.name}
             </span>
           </button>
