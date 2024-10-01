@@ -1,9 +1,21 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/Button";
+import { Token } from "@/types/tokens";
+import { useBalances } from "@/hooks/useBalances";
+
+const tokens = [Token.BONK];
 
 export default function MainApp() {
+  useEffect(()=>{
+    console.log('INICIO')
+  },[])
+  useEffect(()=>{
+    console.log('AAAAAAAAA')
+  },[tokens])
+  const { balances, loading, error } = useBalances(tokens)
+  console.log({balances})
   return (
     <main className="flex flex-col gap-8 items-center">
       <h2>Main menu</h2>

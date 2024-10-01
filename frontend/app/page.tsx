@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Button } from "../components/Button";
 import SvgIcon from "@/utils/SvgIcon";
 import { Close, Info } from "@nine-thirty-five/material-symbols-react/outlined";
+import { useBalances } from "@/hooks/useBalances";
+import { Token } from "@/types/tokens";
 
 export default function Home() {
   return (

@@ -24,7 +24,8 @@ export default function FindBattle() {
   } = useBattle();
   const router = useRouter();
 
-  useEffect(() => {
+
+  useEffect(() => { 
     if (walletAddress) {
       const call = async () => {
         const data = await getUserData(walletAddress);
