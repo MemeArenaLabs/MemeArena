@@ -19,7 +19,7 @@ import {
   fetchCollection,
 } from '@metaplex-foundation/mpl-core'
 
-import { attributesOptions } from './metadataAtributes';
+import { generateMetadata } from './metadata/generateMetadata';
 
 
 // Create the wrapper function
@@ -60,21 +60,6 @@ const createNft = async () => {
 
   //////////////////////////////////////////
 
-
-  //// Creating the Metadata for the Asset ////
-
-    const imageFile = fs.readFileSync(
-        path.join(__dirname, '.', '/public/gladiator-meme-profile.jpg')
-    )
-
-    const umiImageFile = createGenericFile(imageFile, 'gladiator-meme-profile.jpeg', {
-        tags: [{ name: 'Gladiator-dot-Meme-Profile', value: 'image/jpeg' }],
-    })
-
-    const imageUri = await umi.uploader.upload([umiImageFile]).catch((err) => {
-        throw new Error(err)
-    })
-
     // fetch the collection
     const collectionAddress = publicKey('ENc8zjHjmipY3ZeccvxAG8Z8wudVmbWcyjLrjNug4NDy');
     const collection = await fetchCollectionV1(umi, collectionAddress);
@@ -82,26 +67,33 @@ const createNft = async () => {
    // const collection = fetchCollection(umi, collectionPub);
 
      // Randomly select an attribute set
-    const randomIndex = Math.floor(Math.random() * attributesOptions.length);
-    const selectedAttributes = attributesOptions[randomIndex];
+      // Generate all metadata combinations
+        //// Creating the Metadata for the Asset ////
+    const metadataList = generateMetadata();
 
 
-    const metadata = {
-        name: 'My NFT',
-        description: 'This is an NFT on Solana',
-        image: imageUri[0],
-        external_url: 'https://example.com',
-        attributes: selectedAttributes,
-        properties: {
-          files: [
-            {
-              uri: imageUri[0],
-              type: 'image/jpeg',
-            },
-          ],
-          category: 'image',
-        },
-      }
+    // Select a random metadata
+
+
+    const randomIndex = Math.floor(Math.random() * metadataList.length);
+    const metadata = metadataList[randomIndex];
+  
+    // Read the image file for the selected creature
+    const imageFile = fs.readFileSync(
+        path.join(__dirname, '.', metadata.image)
+    );
+  
+    const umiImageFile = createGenericFile(imageFile, path.basename(metadata.image), {
+        tags: [{ name: 'Gladiator-dot-Meme-Profile', value: 'image/jpeg' }],
+    });
+  
+    const imageUri = await umi.uploader.upload([umiImageFile]).catch((err) => {
+        throw new Error(err);
+    });
+
+    // Update metadata with dynamic values
+    metadata.image = imageUri[0];
+    metadata.properties.files[0].uri = imageUri[0];
 
     /// get URI to attach to our collection
 
