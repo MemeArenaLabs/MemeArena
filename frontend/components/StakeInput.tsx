@@ -23,7 +23,7 @@ export const StakeInput = ({
   <div className="min-h-[64px] bg-dark-blue">
     <div className="flex items-center justify-between">
       <div className="flex justify-center items-center px-4">
-        <div className="pt-2">
+       {/*  <div className="pt-2">
           {selectedCoin ? (
             <Image
               src={selectedCoin.icon}
@@ -35,13 +35,13 @@ export const StakeInput = ({
           ) : (
             <SvgIcon name="solana" className="text-white h-5 w-5" />
           )}
-        </div>
+        </div> */}
         <div className="flex items-center justify-center">
           <input
             type="text"
             value={stakeAmount}
             onChange={handleStakeAmountChange}
-            className="w-full bg-dark-blue outline-none text-white px-2 pt-2 text-2xl font-bold"
+            className="w-full bg-dark-blue outline-none text-white pt-2 text-2xl font-bold"
             placeholder="0.0"
           />
           <button
