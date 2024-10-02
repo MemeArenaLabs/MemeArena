@@ -82,7 +82,7 @@ export const StakeForm = ({
           userAvailableTokens={userAvailableTokens}
         />
       </div>
-      <button className="w-[126px] bg-yellow text-black py-2 gap-1 h-[28px] flex justify-center items-center font-bold mt-4 text-[14px]">
+      <button className="w-[126px] bg-yellow text-black py-2 gap-1 h-[28px] flex justify-center items-center font-bold mt-3 text-[14px]">
         <SvgIcon name="hand-money" className="text-black h-5 w-5" />{" "}
         {activeTab.toUpperCase()}
       </button>

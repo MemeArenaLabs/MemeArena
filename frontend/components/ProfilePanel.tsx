@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import SvgIcon from "@/utils/SvgIcon";
 
 interface ProfilePanelProps {
   username?: string;
@@ -8,7 +9,7 @@ interface ProfilePanelProps {
 const ProfilePanel: React.FC<ProfilePanelProps> = ({
   username = "Magaibero22",
 }) => (
-  <div className="flex items-center p-2">
+  <div className="flex m-2">
     <Profile username={username} />
     <Settings />
   </div>
@@ -18,11 +19,11 @@ export default ProfilePanel;
 
 export function Profile({ username }: { username: string }) {
   return (
-    <div className="flex items-center gap-2 w-40 h-[43px] bg-dark-blue-80 clip-path-polygon-left-gui-profile-selection p-1 cursor-pointer">
+    <div className="flex items-center gap-2 w-40 bg-dark-blue-80 clip-path-polygon-left-gui-profile-selection p-2 cursor-pointer">
       <Image
         src="/assets/team-selection/avatar/example-avatar.png"
-        width={26.5}
-        height={26.5}
+        width={28}
+        height={28}
         alt={`${username}'s Avatar`}
       />
       <span className="text-sm font-bold">{username}</span>
@@ -32,8 +33,8 @@ export function Profile({ username }: { username: string }) {
 
 export function Settings() {
   return (
-    <div className="flex items-center justify-center w-14 h-[43px] bg-dark-blue-80 -ml-[5px] clip-path-polygon-left-gui-profile-setting pl-1 cursor-pointer">
-      <Image src="/icons/settings.svg" width={24} height={24} alt="Settings" />
+    <div className="pr-2 flex items-center justify-center w-14 bg-dark-blue-80 -ml-[5px] clip-path-polygon-left-gui-profile-setting pl-1 cursor-pointer p-2">
+      <SvgIcon name="settings" className="ml-2 w-6 h-6" />
     </div>
   );
 }

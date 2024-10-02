@@ -26,7 +26,7 @@ type TabButtonsProps = {
 };
 
 export const TabButtons = ({ activeTab, setActiveTab }: TabButtonsProps) => (
-  <div className="flex mb-4">
+  <div className="flex mb-2">
     <TabButton
       isActive={activeTab === "stake"}
       onClick={() => setActiveTab("stake")}
