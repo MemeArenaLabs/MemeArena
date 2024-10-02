@@ -147,6 +147,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.95.3
         version: 1.95.3
+      axios:
+        specifier: ^1.7.7
+        version: 1.7.7
       next:
         specifier: 14.2.6
         version: 14.2.6(react-dom@18.3.1)(react@18.3.1)
