@@ -46,7 +46,7 @@ export const StakeInput = ({
           />
           <button
             onClick={handleMaxClick}
-            className="bg-yellow text-black px-1 py-1 h-5 text-[10px] font-bold items-center flex"
+            className=" text-light-blue px-1 py-1 h-5 text-[10px] hover:underline items-center flex"
           >
             MAX
           </button>
