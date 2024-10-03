@@ -3,39 +3,6 @@ import { BottomMenu } from "@/components/gui/BottomMenu";
 import ProfilePanel from "@/components/ProfilePanel";
 import { StakeForm } from "@/components/StakeForm";
 
-export interface MemeCoin {
-  name: string;
-  icon: string;
-  gladiatorIcon: string;
-}
-const memeCoins: MemeCoin[] = [
-  {
-    name: "DOG WIF HAT",
-    icon: "/assets/stakes/icons/wif.png",
-    gladiatorIcon: "/assets/stakes/gladiators/wif.png",
-  },
-  {
-    name: "POPCAT",
-    icon: "/assets/stakes/icons/popcat.png",
-    gladiatorIcon: "/assets/stakes/gladiators/popcat.png",
-  },
-  {
-    name: "BONK",
-    icon: "/assets/stakes/icons/bonk.png",
-    gladiatorIcon: "/assets/stakes/gladiators/bonk.png",
-  },
-  {
-    name: "GIGACHAD",
-    icon: "/assets/stakes/icons/gigachad.png",
-    gladiatorIcon: "/assets/stakes/gladiators/gigachad.png",
-  },
-  {
-    name: "PONKE",
-    icon: "/assets/stakes/icons/ponke.png",
-    gladiatorIcon: "/assets/stakes/gladiators/ponke.png",
-  },
-];
-
 export const userAvailableTokens: { [key: string]: string } = {
   "DOG WIF HAT": "150,000,000.00",
   POPCAT: "100,000,000.00",
@@ -67,7 +34,6 @@ export default function Stakes() {
       <div className="w-full flex justify-center items-center">
         <div className="w-[491px] flex justify-center">
           <StakeForm
-            memeCoins={memeCoins}
             userAvailableTokens={userAvailableTokens}
             userStakedTokens={userStakedTokens}
             coinPrices={coinPrices}

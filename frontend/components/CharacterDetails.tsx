@@ -17,7 +17,7 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character }) => {
         </h3>
       </div>
       <div className="flex">
-        <div className="min-w-[229px]">
+        <div className="min-w-[229px] flex flex-col gap-1">
           <StatDisplay icon="broken-heart" label="HP" value={character.hp} />
           <StatDisplay
             icon="battered-axe"

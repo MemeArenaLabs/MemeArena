@@ -1,6 +1,6 @@
-"use client";
+import { useOutsideClick } from "@/hooks/useOutsideClick";
 import { Close } from "@nine-thirty-five/material-symbols-react/outlined";
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useCallback, useEffect, useRef } from "react";
 
 interface ModalProps {
   icon?: ReactNode;
@@ -22,6 +22,13 @@ export function Modal({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const handleClose = useCallback(() => {
+    onClose();
+    dialogRef.current?.close();
+  }, [onClose]);
+
+  useOutsideClick(contentRef, handleClose);
+
   useEffect(() => {
     const dialogElement = dialogRef.current;
     if (isOpen) {
@@ -29,50 +36,25 @@ export function Modal({
     } else {
       dialogElement?.close();
     }
-
-    const handleDialogClose = () => {
-      if (!dialogElement?.open) {
-        onClose();
-      }
-    };
-
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (dialogElement && event.target === dialogElement) {
-        onClose();
-      }
-    };
-
-    dialogElement?.addEventListener("close", handleDialogClose);
-    dialogElement?.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      dialogElement?.removeEventListener("close", handleDialogClose);
-      dialogElement?.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [isOpen, onClose]);
-
-  const handleClose = () => {
-    onClose();
-    dialogRef.current?.close();
-  };
+  }, [isOpen]);
 
   return (
     <dialog
-      className={`modal max-sm:modal-bottom  ${className}`}
+      className={`modal max-sm:modal-bottom ${className}`}
       ref={dialogRef}
     >
       <div
-        className="modal-box w-fit flex flex-col gap-4 px-2 pb-0 pt-2 max-w-[720px] rounded-none bg-gradient-to-r from-[#3B4787BF] to-[#B35BE2BF] opacity-90 "
+        className="modal-box w-fit flex flex-col gap-4 p-3 max-w-[720px] rounded-none bg-gradient-to-r from-[#3B4787BF] to-[#B35BE2BF] opacity-90"
         ref={contentRef}
       >
-        <div className="flex items-center justify-between gap-6 ">
+        <div className="flex items-center justify-between gap-6">
           <div className="flex gap-4">
             {icon && (
               <div className="flex h-6 w-6 items-center justify-center">
                 {icon}
               </div>
             )}
-            <h4 className="text-[20px] font-bold">{title}</h4>
+            <h3 className="">{title}</h3>
           </div>
           <div className="flex items-center">
             <button onClick={handleClose} className="cursor-pointer">
