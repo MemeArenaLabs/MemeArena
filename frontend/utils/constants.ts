@@ -1,12 +1,9 @@
-import { StaticImageData } from "next/image";
-import { IconName } from "./SvgIcon";
-
 export type TickerSymbol = "WIF" | "POPCAT" | "BONK" | "PONKE" | "GIGA" | "SOL";
 
 export type Coin = {
   name: string;
   tickerSymbol: TickerSymbol;
-  icon: IconName;
+  iconUrl: string;
 };
 
 export type MemeCoin = Coin & {
@@ -17,36 +14,36 @@ export const supportedCoins: (MemeCoin | Coin)[] = [
   {
     name: "Solana",
     tickerSymbol: "SOL",
-    icon: "solana",
+    iconUrl: "/assets/coin-logos/solana.svg",
   },
   {
     name: "DOG WIF HAT",
     tickerSymbol: "WIF",
-    icon: "wif",
+    iconUrl: "/assets/coin-logos/wif.png",
     gladiatorIcon: "/assets/stakes/gladiators/wif.png",
   },
   {
     name: "POPCAT",
     tickerSymbol: "POPCAT",
-    icon: "popcat",
+    iconUrl: "/assets/coin-logos/popcat.png",
     gladiatorIcon: "/assets/stakes/gladiators/popcat.png",
   },
   {
     name: "BONK",
     tickerSymbol: "BONK",
-    icon: "bonk",
+    iconUrl: "/assets/coin-logos/bonk.png",
     gladiatorIcon: "/assets/stakes/gladiators/bonk.png",
   },
   {
     name: "GIGACHAD",
     tickerSymbol: "GIGA",
-    icon: "gigachad",
+    iconUrl: "/assets/coin-logos/gigachad.png",
     gladiatorIcon: "/assets/stakes/gladiators/gigachad.png",
   },
   {
     name: "PONKE",
     tickerSymbol: "PONKE",
-    icon: "ponke",
+    iconUrl: "/assets/coin-logos/ponke.png",
     gladiatorIcon: "/assets/stakes/gladiators/ponke.png",
   },
 ];
