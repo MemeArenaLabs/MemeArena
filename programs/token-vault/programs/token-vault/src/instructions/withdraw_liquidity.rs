@@ -15,7 +15,7 @@ pub fn withdraw_liquidity(ctx: Context<WithdrawLiquidity>, amount: u64) -> Resul
     let authority_seeds = &[
         &ctx.accounts.pool.amm.to_bytes(),
         &ctx.accounts.mint_a.key().to_bytes(),
-        &ctx.accounts.mint_b.key().to_bytes(),
+        //&ctx.accounts.mint_b.key().to_bytes(),
         AUTHORITY_SEED,
         &[authority_bump],
     ];
@@ -44,27 +44,27 @@ pub fn withdraw_liquidity(ctx: Context<WithdrawLiquidity>, amount: u64) -> Resul
         amount_a,
     )?;
 
-    let amount_b = I64F64::from_num(amount)
-        .checked_mul(I64F64::from_num(ctx.accounts.pool_account_b.amount))
-        .unwrap()
-        .checked_div(I64F64::from_num(
-            ctx.accounts.mint_liquidity.supply + MINIMUM_LIQUIDITY,
-        ))
-        .unwrap()
-        .floor()
-        .to_num::<u64>();
-    token::transfer(
-        CpiContext::new_with_signer(
-            ctx.accounts.token_program.to_account_info(),
-            Transfer {
-                from: ctx.accounts.pool_account_b.to_account_info(),
-                to: ctx.accounts.depositor_account_b.to_account_info(),
-                authority: ctx.accounts.pool_authority.to_account_info(),
-            },
-            signer_seeds,
-        ),
-        amount_b,
-    )?;
+    // let amount_b = I64F64::from_num(amount)
+    //     .checked_mul(I64F64::from_num(ctx.accounts.pool_account_b.amount))
+    //     .unwrap()
+    //     .checked_div(I64F64::from_num(
+    //         ctx.accounts.mint_liquidity.supply + MINIMUM_LIQUIDITY,
+    //     ))
+    //     .unwrap()
+    //     .floor()
+    //     .to_num::<u64>();
+    // token::transfer(
+    //     CpiContext::new_with_signer(
+    //         ctx.accounts.token_program.to_account_info(),
+    //         Transfer {
+    //             from: ctx.accounts.pool_account_b.to_account_info(),
+    //             to: ctx.accounts.depositor_account_b.to_account_info(),
+    //             authority: ctx.accounts.pool_authority.to_account_info(),
+    //         },
+    //         signer_seeds,
+    //     ),
+    //     amount_b,
+    // )?;
 
     // Burn the liquidity tokens
     // It will fail if the amount is invalid
@@ -97,11 +97,11 @@ pub struct WithdrawLiquidity<'info> {
         seeds = [
             pool.amm.as_ref(),
             pool.mint_a.key().as_ref(),
-            pool.mint_b.key().as_ref(),
+            //pool.mint_b.key().as_ref(),
         ],
         bump,
         has_one = mint_a,
-        has_one = mint_b,
+        //has_one = mint_b,
     )]
     pub pool: Account<'info, Pool>,
 
@@ -110,7 +110,7 @@ pub struct WithdrawLiquidity<'info> {
         seeds = [
             pool.amm.as_ref(),
             mint_a.key().as_ref(),
-            mint_b.key().as_ref(),
+            //mint_b.key().as_ref(),
             AUTHORITY_SEED,
         ],
         bump,
@@ -125,7 +125,7 @@ pub struct WithdrawLiquidity<'info> {
         seeds = [
             pool.amm.as_ref(),
             mint_a.key().as_ref(),
-            mint_b.key().as_ref(),
+            //mint_b.key().as_ref(),
             LIQUIDITY_SEED,
         ],
         bump,
@@ -135,8 +135,8 @@ pub struct WithdrawLiquidity<'info> {
     #[account(mut)]
     pub mint_a: Box<Account<'info, Mint>>,
 
-    #[account(mut)]
-    pub mint_b: Box<Account<'info, Mint>>,
+    // #[account(mut)]
+    // pub mint_b: Box<Account<'info, Mint>>,
 
     #[account(
         mut,
@@ -145,12 +145,12 @@ pub struct WithdrawLiquidity<'info> {
     )]
     pub pool_account_a: Box<Account<'info, TokenAccount>>,
 
-    #[account(
-        mut,
-        associated_token::mint = mint_b,
-        associated_token::authority = pool_authority,
-    )]
-    pub pool_account_b: Box<Account<'info, TokenAccount>>,
+    // #[account(
+    //     mut,
+    //     associated_token::mint = mint_b,
+    //     associated_token::authority = pool_authority,
+    // )]
+    // pub pool_account_b: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
@@ -167,13 +167,13 @@ pub struct WithdrawLiquidity<'info> {
     )]
     pub depositor_account_a: Box<Account<'info, TokenAccount>>,
 
-    #[account(
-        init_if_needed,
-        payer = payer,
-        associated_token::mint = mint_b,
-        associated_token::authority = depositor,
-    )]
-    pub depositor_account_b: Box<Account<'info, TokenAccount>>,
+    // #[account(
+    //     init_if_needed,
+    //     payer = payer,
+    //     associated_token::mint = mint_b,
+    //     associated_token::authority = depositor,
+    // )]
+    // pub depositor_account_b: Box<Account<'info, TokenAccount>>,
 
     /// The account paying for all rents
     #[account(mut)]

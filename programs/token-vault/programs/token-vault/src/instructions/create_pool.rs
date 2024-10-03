@@ -13,7 +13,7 @@ pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
     let pool = &mut ctx.accounts.pool;
     pool.amm = ctx.accounts.amm.key();
     pool.mint_a = ctx.accounts.mint_a.key();
-    pool.mint_b = ctx.accounts.mint_b.key();
+    //pool.mint_b = ctx.accounts.mint_b.key();
 
     Ok(())
 }
@@ -35,7 +35,7 @@ pub struct CreatePool<'info> {
         seeds = [
             amm.key().as_ref(),
             mint_a.key().as_ref(),
-            mint_b.key().as_ref(),
+            //mint_b.key().as_ref(),
         ],
         bump,
     )]
@@ -46,7 +46,7 @@ pub struct CreatePool<'info> {
         seeds = [
             amm.key().as_ref(),
             mint_a.key().as_ref(),
-            mint_b.key().as_ref(),
+            //mint_b.key().as_ref(),
             AUTHORITY_SEED,
         ],
         bump,
@@ -59,7 +59,7 @@ pub struct CreatePool<'info> {
         seeds = [
             amm.key().as_ref(),
             mint_a.key().as_ref(),
-            mint_b.key().as_ref(),
+            //mint_b.key().as_ref(),
             LIQUIDITY_SEED,
         ],
         bump,
@@ -80,13 +80,13 @@ pub struct CreatePool<'info> {
     )]
     pub pool_account_a: Box<Account<'info, TokenAccount>>,
 
-    #[account(
-        init,
-        payer = payer,
-        associated_token::mint = mint_b,
-        associated_token::authority = pool_authority,
-    )]
-    pub pool_account_b: Box<Account<'info, TokenAccount>>,
+    // #[account(
+    //     init,
+    //     payer = payer,
+    //     associated_token::mint = mint_b,
+    //     associated_token::authority = pool_authority,
+    // )]
+    // pub pool_account_b: Box<Account<'info, TokenAccount>>,
 
     /// The account paying for all rents
     #[account(mut)]
