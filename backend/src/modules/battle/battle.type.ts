@@ -43,3 +43,8 @@ export enum MemeBattleStatus {
   Bench = 'BENCH',
   Defeated = 'DEFEATED',
 }
+
+export enum WebSocketEventMessage {
+  Joined = 'JOINED',
+  TeamProposed = 'TEAM_PROPOSED'
+}

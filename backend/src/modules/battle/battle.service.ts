@@ -19,6 +19,7 @@ import {
   MemeBattleStatus,
   UserInBattle,
   UserMemeState,
+  WebSocketEventMessage,
 } from './battle.type';
 import { SkillType, UserMeme } from '../meme/meme.entity';
 import { User } from '../user/user.entity';
@@ -174,7 +175,7 @@ export class BattleService {
           };
           user.client.send(
             JSON.stringify({
-              event: 'JOINED',
+              event: WebSocketEventMessage.Joined,
               data: response,
             }),
           );
@@ -216,7 +217,7 @@ export class BattleService {
             activeBattle.users.forEach((user) => {
               user.client.send(
                 JSON.stringify({
-                  event: 'TEAM_PROPOSED',
+                  event: WebSocketEventMessage.TeamProposed,
                   data: response,
                 }),
               );
