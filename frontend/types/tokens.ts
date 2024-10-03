@@ -12,6 +12,7 @@ export type TokenInfo =  {
   decimals: number;
 }
 
+
 export const TOKEN_MINTS: { [key in Token]?: TokenInfo } = {
   [Token.WIF]: { contractAddress: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', decimals: 9 },
   [Token.POPCAT]: { contractAddress: '7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr', decimals: 9 },
