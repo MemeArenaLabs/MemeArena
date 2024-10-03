@@ -12,6 +12,7 @@ import {
   TeamProposedResponseDto,
   ResolvedSkillsResponseDto,
   UserMemeDto,
+  ELEMENTS,
 } from "@/types/serverDTOs";
 import {
   UserData,
@@ -72,8 +73,8 @@ export const transformUserMeme = (
       attack: memeDto.attack ?? 0,
       defense: memeDto.defense ?? 0,
       speed: memeDto.speed ?? 0,
-      element: memeDto.element || "",
-      profession: memeDto.profession || "",
+      element: memeDto.element,
+      profession: memeDto.profession,
       status: (memeDto.status as MemeStatus) || "BENCH",
       skills:
         memeDto.skills?.map((skill: SkillDetails) => ({

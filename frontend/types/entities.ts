@@ -1,3 +1,5 @@
+import { ELEMENTS, PROFESSIONS } from "./serverDTOs";
+
 export type UserData = {
   id: string;
   walletAddress: string;
@@ -12,8 +14,8 @@ export type UserMeme = {
   attack: number;
   defense: number;
   speed: number;
-  element: string;
-  profession: string;
+  element?: ELEMENTS;
+  profession?: PROFESSIONS;
   status: MemeStatus;
   skills: SkillDetails[];
 };
