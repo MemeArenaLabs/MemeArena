@@ -33,7 +33,9 @@ export default function TeamSelection() {
     <main className="flex flex-col justify-between bg-gray-900 text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
       <div className="flex justify-between">
         <div className="">
-          <ProfilePanel />
+          <div className="p-2">
+            <ProfilePanel />
+          </div>
           <CharacterSelectionPanel />
         </div>
         <SkillsPanel

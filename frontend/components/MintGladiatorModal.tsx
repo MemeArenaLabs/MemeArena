@@ -95,7 +95,6 @@ const GladiatorModal: React.FC<GladiatorModalProps> = ({
               coinValue={mintAmount}
               handleStakeAmountChange={(e) => setMintAmount(e.target.value)}
               handleMaxClick={handleMaxAmount}
-              usdValue={"10.00"}
               userCoinBalance={"123"}
             />
             <p className="pb-2 pt-1 font-medium text-[12px]">

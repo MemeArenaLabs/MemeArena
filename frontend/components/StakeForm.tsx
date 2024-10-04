@@ -3,19 +3,38 @@ import React, { useState, useMemo } from "react";
 import SvgIcon from "@/utils/SvgIcon";
 import { CoinDropdown } from "./CoinDropdown";
 import { TabButtons } from "./TabButtons";
-import { calculateUsdValue } from "@/utils/utilFunctions";
 import { MemeCoin, supportedCoins } from "@/utils/constants";
 import { CoinInput } from "./CoinInput";
 
 export type StakeTabs = "stake" | "unstake";
 
-type StakeFormProps = {
-  userStakedTokens: { [key: string]: string };
-  coinPrices: { [key: string]: number };
-};
 const userCoinBalance = "13.44";
 
-export const StakeForm = ({ userStakedTokens, coinPrices }: StakeFormProps) => {
+export const userAvailableTokens: { [key: string]: string } = {
+  "DOG WIF HAT": "150,000,000.00",
+  POPCAT: "100,000,000.00",
+  BONK: "2,000,000.00",
+  GIGACHAD: "750,000.00",
+  PONKE: "1,000,000.00",
+};
+
+export const userStakedTokens: { [key: string]: string } = {
+  "DOG WIF HAT": "132,235,253.00",
+  POPCAT: "132,235,253.00",
+  BONK: "2000.00",
+  GIGACHAD: "0.00",
+  PONKE: "0.00",
+};
+
+export const coinPrices: { [key: string]: number } = {
+  "DOG WIF HAT": 2.32,
+  POPCAT: 0.9051,
+  BONK: 0.00002376,
+  GIGACHAD: 0.084401,
+  PONKE: 0.3403,
+};
+
+export const StakeForm = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [stakeAmount, setStakeAmount] = useState("0.1");
   const [activeTab, setActiveTab] = useState<StakeTabs>("stake");
@@ -23,25 +42,13 @@ export const StakeForm = ({ userStakedTokens, coinPrices }: StakeFormProps) => {
 
   const handleStakeAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (
-      value === "" ||
-      (/^\d*\.?\d*$/.test(value) && !isNaN(parseFloat(value)))
-    ) {
-      setStakeAmount(value);
-    }
+    // handle input restrictions
+    setStakeAmount(value);
   };
 
   const handleMaxClick = () => {
     console.log("handle max click");
   };
-
-  const memoizedUsdValue = useMemo(
-    () =>
-      selectedCoin
-        ? calculateUsdValue(stakeAmount, selectedCoin.name, coinPrices)
-        : "0.00",
-    [selectedCoin, stakeAmount, coinPrices]
-  );
 
   return (
     <div className="w-full max-w-md p-4 text-white">
@@ -60,16 +67,11 @@ export const StakeForm = ({ userStakedTokens, coinPrices }: StakeFormProps) => {
             userStakedTokens={userStakedTokens}
           />
         </div>
-        {/* <StakeInfo
-          selectedCoin={selectedCoin}
-          userStakedTokens={userStakedTokens}
-        /> */}
         <CoinInput
           coinSymbol={selectedCoin?.tickerSymbol}
           coinValue={stakeAmount}
           handleStakeAmountChange={handleStakeAmountChange}
           handleMaxClick={handleMaxClick}
-          usdValue={memoizedUsdValue}
           userCoinBalance={userCoinBalance}
         />
       </div>

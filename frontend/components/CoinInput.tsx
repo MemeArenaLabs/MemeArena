@@ -7,7 +7,6 @@ type StakeInputProps = {
   coinValue: string;
   handleStakeAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleMaxClick: () => void;
-  usdValue: string;
   userCoinBalance: string;
 };
 
@@ -16,21 +15,20 @@ export const CoinInput = ({
   coinValue,
   handleStakeAmountChange,
   handleMaxClick,
-  usdValue,
   userCoinBalance,
 }: StakeInputProps) => {
   const solanaIconUrl = supportedCoins.find(
     (coin) => coin.tickerSymbol === coinSymbol
   )?.iconUrl;
 
+  const usdValue = "10.00"; // replace with hook
+
   return (
-    <div className="min-h-[64px] bg-dark-blue p-3">
-      <div className="flex items-center justify-between ">
-        <div className="flex justify-center">
+    <div className="min-h-[64px] bg-dark-blue p-3 w-full">
+      <div className="flex items-center w-full">
+        <div className="w-full flex items-center">
           {solanaIconUrl && (
-            <div className="flex items-center">
-              {/* <SvgIcon name={svgName} className="text-white h-5 w-5 mr-1" />
-               */}
+            <div className="">
               <Image
                 src={solanaIconUrl}
                 alt="Solana logo"
@@ -40,7 +38,7 @@ export const CoinInput = ({
               />
             </div>
           )}
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-between w-full">
             <input
               type="text"
               value={coinValue}
@@ -50,7 +48,7 @@ export const CoinInput = ({
             />
             <button
               onClick={handleMaxClick}
-              className="bg-yellow text-black px-1 py-1 h-5 text-[10px] font-bold items-center flex"
+              className=" text-light-blue h-5 text-[10px] hover:underline items-center flex"
             >
               MAX
             </button>
