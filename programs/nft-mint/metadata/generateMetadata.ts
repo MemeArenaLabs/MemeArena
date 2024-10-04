@@ -12,12 +12,12 @@ export const gladiators = [
   { name: 'Popcatius', image: '/public/plant.jpg' },
   { name: 'Bonkarus', image: '/public/plant.jpg' },
   { name: 'Giga Imperator', image: '/public/plant.jpg' },
-  { name: 'Ponkarus', image: '/public/plant.jpg' },
+  { name: 'Moodenshi', image: '/public/plant.jpg' },
 ];
 
 export const attributes = {
-  role: ['Tank', 'Rogue', 'Mage'],
-  element: ['Fire', 'Water', 'Earth']
+  role: ['Tank', 'Rogue', 'Fighter'],
+  element: ['Fire', 'Water', 'Plant']
 };
 
 export const generateMetadata = () => {
@@ -29,7 +29,7 @@ export const generateMetadata = () => {
             attributes.element.forEach(element => {
                 const metadata = {
                     name: `${gladiator} ${role} ${element}`,
-                    description: `This is a ${gladiator} with ${role} role and ${element} element.`,
+                    description: `This is a ${role} ${gladiator} type ${element}.`,
                     image: gladiator.image, // This will be set dynamically
                     external_url: 'https://example.com',
                     attributes: [

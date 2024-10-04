@@ -9,7 +9,7 @@ describe('Create AMM', () => {
   const connection = provider.connection;
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.SwapExample as Program<TokenVault>;
+  const program = anchor.workspace.TokenVault as Program<TokenVault>;
 
   let values: TestValues;
 
