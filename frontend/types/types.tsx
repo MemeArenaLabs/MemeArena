@@ -1,4 +1,4 @@
-export interface Character {
+export interface Gladiator {
   id: number;
   name: string;
   image: string;

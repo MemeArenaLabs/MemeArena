@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import CharacterDetails from "./CharacterDetails";
-import { Character } from "@/types/types";
+import GladiatorDetails from "./GladiatorDetails";
 import SvgIcon from "@/utils/SvgIcon";
-import MintGladiatorModal from "./MintGladiatorModal";
+import MintGladiatorModal from "./Modals/MintGladiatorModal";
+import { Gladiator } from "@/types/types";
 
-const mockCharacters: Character[] = [
+const mockGladiators: Gladiator[] = [
   {
     id: 1,
     name: "MAGAIBA",
@@ -74,74 +74,54 @@ const mockCharacters: Character[] = [
   },
 ];
 
-export default function CharacterSelectionPanel({}) {
-  const [selectedCharacter, setSelectedCharacter] = useState<
-    Character | undefined
-  >(mockCharacters[0]);
+export default function GladiatorSelectionPanel({}) {
+  const [selectedGladiator, setSelectedGladiator] = useState<
+    Gladiator | undefined
+  >(mockGladiators[0]);
 
-  const handleCharacterSelect = (character: Character) => {
-    setSelectedCharacter(character);
+  const handleGladiatorSelect = (gladiator: Gladiator) => {
+    setSelectedGladiator(gladiator);
   };
 
   return (
     <div className="flex gap-3 ml-2">
-      <CharacterList
-        selectedCharacter={selectedCharacter}
-        onCharacterSelect={handleCharacterSelect}
+      <GladiatorList
+        selectedGladiator={selectedGladiator}
+        onGladiatorSelect={handleGladiatorSelect}
       />
-      {selectedCharacter && <CharacterDetails character={selectedCharacter} />}
+      {selectedGladiator && <GladiatorDetails gladiator={selectedGladiator} />}
     </div>
   );
 }
 
-interface CharacterListProps {
-  selectedCharacter?: Character;
-  onCharacterSelect: (character: Character) => void;
+interface GladiatorListProps {
+  selectedGladiator?: Gladiator;
+  onGladiatorSelect: (gladiator: Gladiator) => void;
 }
 
-const CharacterList: React.FC<CharacterListProps> = ({
-  selectedCharacter,
-  onCharacterSelect,
+const GladiatorList: React.FC<GladiatorListProps> = ({
+  selectedGladiator,
+  onGladiatorSelect,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [mintAmount, setMintAmount] = useState("0.1");
-  // const [showGladiatorInfo, setShowGladiatorInfo] = useState(false);
-  // const [modalTitle, setModalTitle] = useState("MINT GLADIATOR");
-
-  // const handleMintAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setMintAmount(e.target.value);
-  // };
-
-  // const handleMintGladiator = () => {
-  //   // Add logic for minting gladiator here
-  //   console.log(`Minting gladiator with ${mintAmount} SOL`);
-  //   setShowGladiatorInfo(true);
-  //   setModalTitle("GLADIATOR MINTED");
-  // };
-
-  const onAddCharacter = () => {
-    setIsModalOpen(true);
-    // setShowGladiatorInfo(false);
-    // setModalTitle("MINT GLADIATOR");
-  };
 
   return (
     <div className="flex flex-col">
       <div className="overflow-y-auto scrollbar-hide max-h-[271px] flex-grow">
         <div className="flex flex-col gap-[2px] max-w-[78px]">
-          {mockCharacters.map((character) => (
+          {mockGladiators.map((gladiator) => (
             <Image
-              key={character.id}
+              key={gladiator.id}
               className={`border-2 ${
-                selectedCharacter?.id === character.id
+                selectedGladiator?.id === gladiator.id
                   ? "border-yellow"
                   : "border-transparent hover:border-yellow"
               }`}
-              src={character.image}
+              src={gladiator.image}
               width={78}
               height={78}
-              alt={`${character.name} avatar`}
-              onClick={() => onCharacterSelect(character)}
+              alt={`${gladiator.name} avatar`}
+              onClick={() => onGladiatorSelect(gladiator)}
             />
           ))}
         </div>
@@ -149,7 +129,7 @@ const CharacterList: React.FC<CharacterListProps> = ({
       <div className="pt-2">
         <button
           className="bg-yellow text-black font-bold text-[14px] w-[78px] h-[28px] flex items-center justify-evenly"
-          onClick={onAddCharacter}
+          onClick={() => setIsModalOpen(true)}
         >
           <SvgIcon name="barbute" className="text-dark h-4 w-4" />
           ADD
@@ -158,8 +138,6 @@ const CharacterList: React.FC<CharacterListProps> = ({
       <MintGladiatorModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        availableSOL={0}
-        solToUSD={0}
       />
     </div>
   );

@@ -1,11 +1,11 @@
 import React from "react";
 import Image from "next/image";
-import { Character } from "@/types/types";
+import { Gladiator } from "@/types/types";
 import StatDisplay from "./StatDisplay";
 import { IconName } from "@/utils/SvgIcon";
 
-interface CharacterDetailsProps {
-  character: Character;
+interface GladiatorDetailsProps {
+  gladiator: Gladiator;
 }
 
 type Stat = {
@@ -14,7 +14,7 @@ type Stat = {
   value: number;
 };
 
-export const CHARACTER_STATS: Stat[] = [
+export const GLADIATOR_STATS: Stat[] = [
   { icon: "broken-heart", label: "HP", value: 100 },
   { icon: "battered-axe", label: "ATTACK", value: 50 },
   { icon: "crossed-swords", label: "CRITICAL CHANCE", value: 15 },
@@ -22,18 +22,18 @@ export const CHARACTER_STATS: Stat[] = [
   { icon: "speedometer", label: "SPEED", value: 80 },
 ];
 
-const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character }) => {
+const GladiatorDetails: React.FC<GladiatorDetailsProps> = ({ gladiator }) => {
   return (
     <div>
       <div className="flex flex-col gap-2">
-        <h1 className="relative mt-[-16px]">{character.name.toUpperCase()}</h1>
+        <h1 className="relative mt-[-16px]">{gladiator.name.toUpperCase()}</h1>
         <h3 className="relative mt-[-16px] text-yellow">
-          {character.type} / {character.subtype}
+          {gladiator.type} / {gladiator.subtype}
         </h3>
       </div>
       <div className="flex">
         <div className="min-w-[229px] flex flex-col gap-1">
-          {CHARACTER_STATS.map(({ icon, label, value }) => (
+          {GLADIATOR_STATS.map(({ icon, label, value }) => (
             <StatDisplay key={label} icon={icon} label={label} value={value} />
           ))}
         </div>
@@ -41,17 +41,17 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character }) => {
           <div className="mt-[-100px] mx-auto w-full justify-center h-40">
             <Image
               className="relative z-10"
-              src={character.fullImage}
+              src={gladiator.fullImage}
               width={226}
               height={226}
-              alt={`${character.name} full image`}
+              alt={`${gladiator.name} full image`}
             />
             <Image
               className="mt-[-30px] animate-pulse z-0"
               src="/assets/battle-layout/gui-gladiators/shadow-gladiators.png"
               width={234}
               height={60}
-              alt="Character shadow"
+              alt="Gladiator shadow"
             />
           </div>
         </div>
@@ -60,4 +60,4 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character }) => {
   );
 };
 
-export default CharacterDetails;
+export default GladiatorDetails;
