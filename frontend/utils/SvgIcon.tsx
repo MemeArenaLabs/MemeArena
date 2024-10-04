@@ -19,6 +19,9 @@ import Solana from "@/public/icons/solana.svg";
 import Speedometer from "@/public/icons/speedometer.svg";
 import TriangleArrow from "@/public/icons/triangle-arrow.svg";
 import ZeusSword from "@/public/icons/zeus-sword.svg";
+import Save from "@/public/icons/save.svg";
+import FountainPen from "@/public/icons/fountain-pen.svg";
+import Unplugged from "@/public/icons/unplugged.svg";
 
 const IconComponents = {
   "all-for-one": AllForOne,
@@ -40,6 +43,9 @@ const IconComponents = {
   speedometer: Speedometer,
   "triangle-arrow": TriangleArrow,
   "zeus-sword": ZeusSword,
+  "save": Save,
+  "unplugged": Unplugged,
+  "fountain-pen": FountainPen,
 };
 
 export type IconName = keyof typeof IconComponents;

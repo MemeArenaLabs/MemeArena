@@ -43,11 +43,11 @@ export const CoinDropdown = ({
     </div>
 
     {isOpen && (
-      <div className="absolute z-50 w-full bg-dark-blue shadow-lg max-h-[145px] overflow-y-auto">
+      <div className="absolute top-full left-0 z-50 w-full bg-dark-blue shadow-lg max-h-[145px] overflow-y-auto mt-1">
         {memeCoins.map((coin, index) => (
           <div
             key={coin.name}
-            className={`flex items-center justify-between p-4 max-h-[45px] cursor-pointer ${
+            className={`flex items-center justify-between p-4 h-[45px] cursor-pointer hover:bg-dark-blue-80 transition-colors ${
               index % 2 === 0 ? "bg-dark-blue-70" : ""
             }`}
             onClick={() => onSelect(coin)}
@@ -83,8 +83,8 @@ export const CoinDropdown = ({
       {selectedCoin ? (
         <Image
           src={selectedCoin.gladiatorIcon}
-          width={24}
-          height={24}
+          width={32}
+          height={32}
           alt={`${selectedCoin.name} Gladiator`}
           className="h-8 w-8"
         />

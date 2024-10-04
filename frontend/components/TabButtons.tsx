@@ -5,15 +5,16 @@ type TabButtonProps = {
   isActive: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  isLeftButton: boolean;
 };
 
-const TabButton = ({ isActive, onClick, children }: TabButtonProps) => (
+const TabButton = ({ isActive, onClick, children, isLeftButton }: TabButtonProps) => (
   <button
     className={`flex-1 py-2 ${
       isActive
-        ? "bg-dark-blue-80 text-yellow font-bold clip-path-polygon-left"
-        : "bg-dark-blue-70 opacity-60 font-bold clip-path-polygon-right ml-[-30px]"
-    }`}
+        ? "bg-dark-blue-80 text-yellow font-bold"
+        : "bg-dark-blue-70 text-gray-400 font-normal hover:bg-dark-blue-75 hover:text-gray-300"
+    } ${isLeftButton ? "clip-path-polygon-left" : "clip-path-polygon-right ml-[-30px]"}`}
     onClick={onClick}
   >
     {children}
@@ -30,12 +31,14 @@ export const TabButtons = ({ activeTab, setActiveTab }: TabButtonsProps) => (
     <TabButton
       isActive={activeTab === "stake"}
       onClick={() => setActiveTab("stake")}
+      isLeftButton={true}
     >
       STAKE
     </TabButton>
     <TabButton
       isActive={activeTab === "unstake"}
       onClick={() => setActiveTab("unstake")}
+      isLeftButton={false}
     >
       UNSTAKE
     </TabButton>

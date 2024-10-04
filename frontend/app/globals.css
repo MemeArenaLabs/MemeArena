@@ -18,8 +18,8 @@
 
 /*  div {
   border: solid 0.1px red;
-} 
- */
+}  */
+
 /* debug Nahue */
 
 body {
@@ -127,6 +127,14 @@ a {
 
 .clip-path-polygon-right {
   clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.clip-path-polygon-left-top {
+  clip-path: polygon(0% 0, 100% 0, 93% 100%, 0% 100%);
+}
+
+.clip-path-polygon-right-top {
+  clip-path: polygon(0% 0, 100% 0, 100% 100%, 7% 100%);
 }
 
 .clip-path-polygon-left-gui-info-player {
