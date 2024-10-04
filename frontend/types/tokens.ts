@@ -5,6 +5,7 @@ export enum Token {
   BONK = 'BONK',
   GIGA = 'GIGA',
   PONKE = 'PONKE',
+  MOODENG = 'MOODENG'
 }
 
 export type TokenInfo =  {

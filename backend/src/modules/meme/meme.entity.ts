@@ -13,6 +13,9 @@ import { BattleSessionUserMeme } from '../battle/battle.entity';
 export enum SkillType {
   DAMAGE = 'DAMAGE',
   SWITCH = 'SWITCH',
+  STUN = 'STUN',
+  BUFF = 'BUFF',
+  DEBUFF = 'DEBUFF',
 }
 
 @Entity()
@@ -82,6 +85,15 @@ export class Skill{
 
   @Column()
   name: string;
+
+  @Column({nullable:true})
+  title: string;
+
+  @Column({nullable:true})
+  quote: string;
+
+  @Column({nullable:true})
+  description: string;
 
   @Column()
   damage: number;
