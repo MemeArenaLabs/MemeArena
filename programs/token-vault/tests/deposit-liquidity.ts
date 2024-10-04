@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor';
 import type { Program } from '@coral-xyz/anchor';
 import { expect } from 'chai';
-import type { SwapExample } from '../target/types/swap_example';
+import type { TokenVault } from '../target/types/token_vault.ts';
 import { type TestValues, createValues, mintingTokens } from './utils';
 
 describe('Deposit liquidity', () => {
@@ -9,7 +9,7 @@ describe('Deposit liquidity', () => {
   const connection = provider.connection;
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.SwapExample as Program<SwapExample>;
+  const program = anchor.workspace.SwapExample as Program<TokenVault>;
 
   let values: TestValues;
 

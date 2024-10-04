@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor';
 import type { Program } from '@coral-xyz/anchor';
 import { expect } from 'chai';
-import type { SwapExample } from '../target/types/swap_example';
+import type { TokenVault } from '../target/types/token_vault.ts';
 import { type TestValues, createValues, expectRevert } from './utils';
 
 describe('Create AMM', () => {
@@ -9,7 +9,7 @@ describe('Create AMM', () => {
   const connection = provider.connection;
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.SwapExample as Program<SwapExample>;
+  const program = anchor.workspace.SwapExample as Program<TokenVault>;
 
   let values: TestValues;
 
@@ -18,7 +18,12 @@ describe('Create AMM', () => {
   });
 
   it('Creation', async () => {
-    await program.methods.createAmm(values.id, values.fee).accounts({ amm: values.ammKey, admin: values.admin.publicKey }).rpc();
+    await program.methods.createAmm(values.id, values.fee).accounts({ 
+      amm: values.ammKey, 
+      admin: values.admin.publicKey,
+
+
+     }).rpc();
 
     const ammAccount = await program.account.amm.fetch(values.ammKey);
     expect(ammAccount.id.toString()).to.equal(values.id.toString());

@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor';
 import type { Program } from '@coral-xyz/anchor';
 import { PublicKey } from '@solana/web3.js';
-import type { SwapExample } from '../target/types/swap_example';
+import type { TokenVault } from '../target/types/token_vault.ts';
 import { type TestValues, createValues, expectRevert, mintingTokens } from './utils';
 
 describe('Create pool', () => {
@@ -9,7 +9,7 @@ describe('Create pool', () => {
   const connection = provider.connection;
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.SwapExample as Program<SwapExample>;
+  const program = anchor.workspace.SwapExample as Program<TokenVault>;
 
   let values: TestValues;
 
