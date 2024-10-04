@@ -25,11 +25,9 @@ pub struct Pool {
 
     /// Mint of token A
     pub mint_a: Pubkey,
-
-    /// Mint of token B
-    pub mint_b: Pubkey,
 }
 
 impl Pool {
-    pub const LEN: usize = 8 + 32 + 32 + 32;
+    //pub const LEN: usize = 8 + 32 + 32 + 32;
+    pub const LEN: usize = 8 + 32 + 32;
 }

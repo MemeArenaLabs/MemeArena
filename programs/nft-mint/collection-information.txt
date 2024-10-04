@@ -1,0 +1,12 @@
+(base) raigal@Raquels-MacBook-Pro nft-mint % pnpm ts-node collectionCreation.ts
+imageUri: https://arweave.net/5eMJ9YmoTPY9JEcXwQBi8BbwvyDYCEaa2S3A2fg2nKFH
+
+ Collection Created
+View Transaction on Solana Explorer
+https://explorer.solana.com/tx/5Wkfbu3YFz8HdtZQkYnKkdhKZhJYrRj88cT3PHfKFK31pK9LR7qytNHHq7uQcjkGX4vbiRMchsb6iaHztbt8nhqw?cluster=devnet
+
+
+View Collection on Metaplex Explorer
+https://core.metaplex.com/explorer/ENc8zjHjmipY3ZeccvxAG8Z8wudVmbWcyjLrjNug4NDy?env=devnet
+
+

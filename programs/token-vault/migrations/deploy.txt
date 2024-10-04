@@ -1,0 +1,8 @@
+(base) raigal@Raquels-MacBook-Pro token-vault %    anchor deploy
+Deploying cluster: http://127.0.0.1:8899
+Upgrade authority: /Users/raigal/.config/solana/id.json
+Deploying program "token_vault"...
+Program path: /Users/raigal/tmp/Projects/MemeArena/MVP/MemeArena/programs/token-vault/target/deploy/token_vault.so...
+Program Id: FqvM2PgVPQED3GLNJK1GNrFvDodVtH7SRZKPVxafvfTV
+
+Deploy success
