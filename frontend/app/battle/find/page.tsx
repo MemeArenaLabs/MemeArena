@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { formatTime } from "@/utils/utils";
+import { formatTime } from "@/utils/utilFunctions";
 import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { transformUserMeme, useBattle } from "@/context/BattleProvider";
