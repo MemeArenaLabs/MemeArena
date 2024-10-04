@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SkillCard from "../gui/SkillCard";
+import SkillCard from "../cards/SkillCard";
 import { ProposeSkillDto } from "@/types/serverDTOs";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { useBattle } from "@/context/BattleProvider";

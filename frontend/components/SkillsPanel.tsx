@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import DetailedCard from "./DetailedCard";
+import DetailedCard from "./cards/DetailedCard";
 import { Modal } from "./Modal";
 import Image from "next/image";
 interface Skill {
@@ -14,7 +14,7 @@ interface SkillPanelProps {
   stakedUsd: number;
 }
 
-const SkillPanel: React.FC<SkillPanelProps> = ({
+const SkillsPanel: React.FC<SkillPanelProps> = ({
   skills,
   stakedAmount,
   stakedUsd,
@@ -35,7 +35,8 @@ const SkillPanel: React.FC<SkillPanelProps> = ({
             {skills.map((skill, index) => (
               <DetailedCard
                 key={index}
-                skill={skill}
+                name={skill.name}
+                imageUrl={skill.imageUrl}
                 onClick={() => onSkillClick()}
               />
             ))}
@@ -80,7 +81,7 @@ const SkillPanel: React.FC<SkillPanelProps> = ({
   );
 };
 
-export default SkillPanel;
+export default SkillsPanel;
 
 interface StakedInfoProps {
   amount: number;
