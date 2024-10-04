@@ -8,7 +8,7 @@ mod instructions;
 mod state;
 
 
-declare_id!("91zLvqJCwF6gQjSJzkj1rXxHsRuu1ZD1gzMzp8VAdL5n");
+declare_id!("FqvM2PgVPQED3GLNJK1GNrFvDodVtH7SRZKPVxafvfTV");
 
 
 #[program]
