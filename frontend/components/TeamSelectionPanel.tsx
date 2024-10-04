@@ -18,7 +18,7 @@ const TeamSelectionPanel = ({
   return (
     <div className="flex pl-2">
       <div>
-        <div className="space-y-2 overflow-y-auto w-[110px] pr-2 max-h-[271px]">
+        <div className="overflow-y-auto flex scrollbar-hide flex-col gap-[6px] h-[270px] pr-2">
           {teams.map((team, index) => (
             <TeamCard
               key={team.teamName + "_" + index}

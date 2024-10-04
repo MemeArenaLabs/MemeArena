@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Modal } from "@/components/Modal";
 import { Edit } from "@nine-thirty-five/material-symbols-react/outlined";
 import SvgIcon from "@/utils/SvgIcon";
@@ -18,16 +18,13 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
   const [title, setTitle] = useState(initialTitle);
   const [selectedGladiators, setSelectedGladiators] = useState<number[]>([]);
 
-  const handleTitleClick = useCallback(() => setIsEditing(true), []);
+  const handleTitleClick = () => setIsEditing(true);
 
-  const handleTitleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTitle(e.target.value);
-    },
-    []
-  );
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
 
-  const handleGladiatorSelect = useCallback((index: number) => {
+  const handleGladiatorSelect = (index: number) => {
     setSelectedGladiators((prev) => {
       if (prev.includes(index)) {
         return prev.filter((i) => i !== index);
@@ -36,19 +33,18 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
       }
       return prev;
     });
-  }, []);
+  };
 
   const renderTitle = () => (
     <div className="flex items-center">
-      <span className="text-yellow mr-2">
+      <h3 className="text-yellow mr-2 tracking-widest">
         {selectedGladiators.length}/{MAX_GLADIATORS}
-      </span>
+      </h3>
       {isEditing ? (
         <input
           type="text"
           value={title}
           onChange={handleTitleChange}
-          // onBlur={handleTitleBlur}
           className="bg-transparent border-b border-yellow text-yellow text-[20px] font-bold focus:outline-none"
           autoFocus
         />
@@ -57,7 +53,7 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
           onClick={handleTitleClick}
           className="flex items-center cursor-pointer"
         >
-          <span className="mr-2 border-b border-white">{title}</span>
+          <h3 className="mr-2 border-b border-white">{title}</h3>
           <Edit className="w-5 h-5 text-yellow" />
         </div>
       )}
@@ -71,7 +67,7 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
     return (
       <div
         key={index}
-        className={`w-[94px] h-[100px] border-4 ${
+        className={`w-[94px] h-[100px] border-2 ${
           isSelected ? "border-yellow" : "border-dark-blue-70 border-opacity-70"
         } cursor-pointer relative ${!isSelected ? "brightness-[40%]" : ""}`}
         onClick={() => handleGladiatorSelect(index)}
@@ -79,16 +75,16 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
         <div className="h-full flex flex-col justify-between bg-[url('/assets/team-selection/gladiators/mog.png')]">
           <div className="flex justify-end p-1">
             {isSelected && (
-              <div className="w-6 h-6 bg-yellow rounded-full flex items-center justify-center text-black font-bold">
+              <p className="w-4 h-4 bg-yellow rounded-full flex items-center justify-center text-black font-bold text-[14px]">
                 {selectionOrder}
-              </div>
+              </p>
             )}
           </div>
           <div className="w-full bg-[#05345A] h-[17px] bg-opacity-70">
             <div className="flex items-center gap-2 justify-center">
-              <div className="text-[10px] font-bold text-white">
+              <p className="text-[10px] font-bold text-white">
                 SLOT {index + 1}
-              </div>
+              </p>
             </div>
           </div>
         </div>

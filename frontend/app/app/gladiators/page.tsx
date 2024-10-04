@@ -2,7 +2,7 @@ import React from "react";
 import { BottomMenu } from "@/components/gui/BottomMenu";
 import SkillsPanel from "@/components/SkillsPanel";
 import ProfilePanel from "@/components/ProfilePanel";
-import CharacterSelectionPanel from "@/components/CharacterSelectionPanel";
+import GladiatorSelectionPanel from "@/components/GladiatorSelectionPanel";
 
 const mockSkills = [
   {
@@ -36,7 +36,7 @@ export default function TeamSelection() {
           <div className="p-2">
             <ProfilePanel />
           </div>
-          <CharacterSelectionPanel />
+          <GladiatorSelectionPanel />
         </div>
         <SkillsPanel
           skills={mockSkills}

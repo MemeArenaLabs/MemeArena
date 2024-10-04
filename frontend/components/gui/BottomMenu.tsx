@@ -27,7 +27,7 @@ export function BottomMenu() {
   };
 
   return (
-    <div className="p-2">
+    <nav className="p-2">
       <div className="flex">
         {menuItems.map((item, index) => (
           <button
@@ -68,6 +68,6 @@ export function BottomMenu() {
           FIGHT!
         </button>
       </div>
-    </div>
+    </nav>
   );
 }
