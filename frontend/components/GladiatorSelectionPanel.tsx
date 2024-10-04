@@ -112,7 +112,7 @@ const GladiatorList: React.FC<GladiatorListProps> = ({
           {mockGladiators.map((gladiator) => (
             <Image
               key={gladiator.id}
-              className={`border-2 ${
+              className={`border-2 cursor-pointer ${
                 selectedGladiator?.id === gladiator.id
                   ? "border-yellow"
                   : "border-transparent hover:border-yellow"
