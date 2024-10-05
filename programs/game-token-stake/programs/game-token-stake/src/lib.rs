@@ -3,18 +3,16 @@
 
 use anchor_lang::prelude::*;
 
-pub mod instructions;
-pub mod constants;
-pub mod errors;
-pub mod state;
+mod instructions;
+mod constants;
+mod errors;
+mod state;
 
 declare_id!("FU3grTvP5yB6L8Cz68Hyn9tdiexVV5LUBhvLyMcwR1gN");
 
-
 #[program]
 pub mod game_token_stake {
-    pub use super::instructions::*;
-    use super::*;
+    use crate::instructions::*; 
 
     pub fn deposit_token(ctx: Context<instructions::DepositToken>, amounts: [(u64, usize); 3]) -> Result<()> {
         instructions::deposit_token(ctx, amounts)
