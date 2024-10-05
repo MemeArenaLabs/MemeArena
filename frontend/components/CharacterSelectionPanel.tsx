@@ -1,8 +1,10 @@
+"use client";
 import React, { useState } from "react";
 import Image from "next/image";
 import CharacterDetails from "./CharacterDetails";
 import { Character } from "@/types/types";
 import SvgIcon from "@/utils/SvgIcon";
+import MintGladiatorModal from "./MintGladiatorModal";
 
 const mockCharacters: Character[] = [
   {
@@ -72,7 +74,7 @@ const mockCharacters: Character[] = [
   },
 ];
 
-const CharacterSelectionPanel: React.FC = () => {
+export default function CharacterSelectionPanel({}) {
   const [selectedCharacter, setSelectedCharacter] = useState<
     Character | undefined
   >(mockCharacters[0]);
@@ -81,36 +83,48 @@ const CharacterSelectionPanel: React.FC = () => {
     setSelectedCharacter(character);
   };
 
-  const handleAddCharacter = () => {
-    // Implement logic to add a new character
-    console.log("Add character clicked");
-  };
-
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 ml-2">
       <CharacterList
         selectedCharacter={selectedCharacter}
         onCharacterSelect={handleCharacterSelect}
-        onAddCharacter={handleAddCharacter}
       />
       {selectedCharacter && <CharacterDetails character={selectedCharacter} />}
     </div>
   );
-};
-
-export default CharacterSelectionPanel;
+}
 
 interface CharacterListProps {
   selectedCharacter?: Character;
   onCharacterSelect: (character: Character) => void;
-  onAddCharacter: () => void;
 }
 
 const CharacterList: React.FC<CharacterListProps> = ({
   selectedCharacter,
   onCharacterSelect,
-  onAddCharacter,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [mintAmount, setMintAmount] = useState("0.1");
+  // const [showGladiatorInfo, setShowGladiatorInfo] = useState(false);
+  // const [modalTitle, setModalTitle] = useState("MINT GLADIATOR");
+
+  // const handleMintAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setMintAmount(e.target.value);
+  // };
+
+  // const handleMintGladiator = () => {
+  //   // Add logic for minting gladiator here
+  //   console.log(`Minting gladiator with ${mintAmount} SOL`);
+  //   setShowGladiatorInfo(true);
+  //   setModalTitle("GLADIATOR MINTED");
+  // };
+
+  const onAddCharacter = () => {
+    setIsModalOpen(true);
+    // setShowGladiatorInfo(false);
+    // setModalTitle("MINT GLADIATOR");
+  };
+
   return (
     <div className="flex flex-col">
       <div className="overflow-y-auto scrollbar-hide max-h-[271px] flex-grow">
@@ -141,6 +155,12 @@ const CharacterList: React.FC<CharacterListProps> = ({
           ADD
         </button>
       </div>
+      <MintGladiatorModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        availableSOL={0}
+        solToUSD={0}
+      />
     </div>
   );
 };

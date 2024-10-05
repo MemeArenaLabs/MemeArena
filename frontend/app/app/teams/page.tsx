@@ -39,7 +39,9 @@ export default function TeamSelection() {
       <div className="flex flex-grow">
         <div className="">
           {/* User CTA profile */}
-          <ProfilePanel />
+          <div className="p-2">
+            <ProfilePanel />
+          </div>
 
           {/* Left side and Center - Characters */}
           <div className="flex pl-2">

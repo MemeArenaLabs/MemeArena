@@ -2,10 +2,25 @@ import React from "react";
 import Image from "next/image";
 import { Character } from "@/types/types";
 import StatDisplay from "./StatDisplay";
+import { IconName } from "@/utils/SvgIcon";
 
 interface CharacterDetailsProps {
   character: Character;
 }
+
+type Stat = {
+  icon: IconName;
+  label: string;
+  value: number;
+};
+
+export const CHARACTER_STATS: Stat[] = [
+  { icon: "broken-heart", label: "HP", value: 100 },
+  { icon: "battered-axe", label: "ATTACK", value: 50 },
+  { icon: "crossed-swords", label: "CRITICAL CHANCE", value: 15 },
+  { icon: "shield-impact", label: "DEFENSE", value: 30 },
+  { icon: "speedometer", label: "SPEED", value: 80 },
+];
 
 const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character }) => {
   return (
@@ -17,33 +32,15 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ character }) => {
         </h3>
       </div>
       <div className="flex">
-        <div className="min-w-[229px]">
-          <StatDisplay icon="broken-heart" label="HP" value={character.hp} />
-          <StatDisplay
-            icon="battered-axe"
-            label="ATTACK"
-            value={character.attack}
-          />
-          <StatDisplay
-            icon="zeus-sword"
-            label="CRITICAL CHANCE"
-            value={character.criticalChance}
-          />
-          <StatDisplay
-            icon="shield-impact"
-            label="DEFENSE"
-            value={character.defense}
-          />
-          <StatDisplay
-            icon="speedometer"
-            label="SPEED"
-            value={character.speed}
-          />
+        <div className="min-w-[229px] flex flex-col gap-1">
+          {CHARACTER_STATS.map(({ icon, label, value }) => (
+            <StatDisplay key={label} icon={icon} label={label} value={value} />
+          ))}
         </div>
         <div className="w-full">
-          <div className="grid mt-[-100px] mx-auto w-full justify-center h-40">
+          <div className="mt-[-100px] mx-auto w-full justify-center h-40">
             <Image
-              className="relative player z-40"
+              className="relative z-10"
               src={character.fullImage}
               width={226}
               height={226}

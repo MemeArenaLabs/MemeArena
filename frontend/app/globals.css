@@ -36,13 +36,13 @@ body {
 }
 
 h1 {
-  @apply font-bold text-[96px] leading-[110px];
+  @apply font-bold text-[96px] leading-[104px];
 }
 h2 {
-  @apply font-bold text-[64px] leading-[72px];
+  @apply font-bold text-[64px] leading-[70px];
 }
 h3 {
-  @apply font-bold text-[32px] leading-[40px];
+  @apply font-bold text-[32px] leading-[36px];
 }
 p,
 label {

@@ -2,8 +2,9 @@ import React from "react";
 import Image from "next/image";
 import { KeyboardArrowDown } from "@nine-thirty-five/material-symbols-react/outlined";
 import SvgIcon from "@/utils/SvgIcon";
-import { coinPrices, MemeCoin } from "@/app/app/stakes/page";
 import { calculateUsdValue } from "@/utils/utilFunctions";
+import { MemeCoin } from "@/utils/constants";
+import { coinPrices } from "./StakeForm";
 
 type CoinDropdownProps = {
   selectedCoin: MemeCoin | null;
@@ -29,11 +30,11 @@ export const CoinDropdown = ({
     >
       {selectedCoin && (
         <Image
-          src={selectedCoin.icon}
+          src={selectedCoin.iconUrl}
           width={24}
           height={24}
           alt={selectedCoin.name}
-          className="mr-2"
+          className="mr-2 rounded-full"
         />
       )}
       <span className="text-lg font-bold">
@@ -54,11 +55,11 @@ export const CoinDropdown = ({
           >
             <div className="flex items-center">
               <Image
-                src={coin.icon}
+                src={coin.iconUrl}
                 width={24}
                 height={24}
                 alt={coin.name}
-                className="mr-2"
+                className="mr-2 rounded-full"
               />
               <span>{coin.name}</span>
             </div>
@@ -71,7 +72,7 @@ export const CoinDropdown = ({
                   userStakedTokens[coin.name] || "0.00",
                   coin.name,
                   coinPrices
-                )}{" "}
+                )}
                 USD
               </div>
             </div>
@@ -80,9 +81,9 @@ export const CoinDropdown = ({
       </div>
     )}
     <div className="w-12 h-12 bg-dark-blue flex items-center justify-center">
-      {selectedCoin ? (
+      {selectedCoin?.gladiatorIcon ? (
         <Image
-          src={selectedCoin.gladiatorIcon}
+          src={selectedCoin?.gladiatorIcon}
           width={32}
           height={32}
           alt={`${selectedCoin.name} Gladiator`}

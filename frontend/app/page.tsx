@@ -1,9 +1,7 @@
+import React from "react";
 import Link from "next/link";
 import { Button } from "../components/Button";
 import { Close, Info } from "@nine-thirty-five/material-symbols-react/outlined";
-import AllForOne from "@/public/icons/all-for-one.svg";
-import BookCover from "@/public/icons/book-cover.svg";
-import BrokenHeart from "@/public/icons/broken-heart.svg";
 import SvgIcon from "@/utils/SvgIcon";
 
 export default function Home() {
