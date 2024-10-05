@@ -1,319 +1,321 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
-import { Modal } from "@/components/Modal";
-import { TeamModal } from "@/components/gui/TeamModal";
-import { BottomMenu } from "@/components/gui/BottomMenu";
+import Profile from "@/components/ProfilePanel";
+
+type TokenType = 'BEAR' | 'MAGAIBA' | 'MOG';
+
+const TOKEN_PRICES: Record<TokenType, number> = {
+  BEAR: 0.000000021837,
+  MAGAIBA: 0.00019104,
+  MOG: 0.0000015,
+};
+
+const STAKED_AMOUNTS: Record<TokenType, number> = {
+  BEAR: 123456733.2,
+  MAGAIBA: 3456789.2,
+  MOG: 123456789.2,
+};
+
+const TOKEN_IMAGES: Record<TokenType, string> = {
+  BEAR: 'bear.png',
+  MAGAIBA: 'magaiba.png',
+  MOG: 'mog.png',
+};
+
+interface Gladiator {
+  token: TokenType;
+  image: string;
+}
+
+interface Team {
+  name: string;
+  gladiators: Gladiator[];
+}
+
+const DEFAULT_TEAM: Team = {
+  name: "DEFAULT TEAM",
+  gladiators: [
+    { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+    { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+  ],
+};
+
+const TEAMS: Team[] = [
+  {
+    name: "TEAM A",
+    gladiators: [
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+    ],
+  },
+  {
+    name: "TEAM B",
+    gladiators: [
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    ],
+  },
+  {
+    name: "TEAM C",
+    gladiators: [
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    ],
+  },
+  {
+    name: "TEAM D",
+    gladiators: [
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    ],
+  },
+  {
+    name: "TEAM E",
+    gladiators: [
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    ],
+  },
+  {
+    name: "TEAM F",
+    gladiators: [
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    ],
+  },
+  {
+    name: "TEAM G",
+    gladiators: [
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    ],
+  },
+  {
+    name: "TEAM H",
+    gladiators: [
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    ],
+  },
+
+  {
+    name: "TEAM I ",
+    gladiators: [
+      { token: 'MOG', image: '/assets/team-selection/gladiators/mog-no-bg.png' },
+      { token: 'BEAR', image: '/assets/team-selection/gladiators/bear-no-bg.png' },
+      { token: 'MAGAIBA', image: '/assets/team-selection/gladiators/magaiba-no-bg.png' },
+    ],
+  },
+];
 
 export default function BattlePreparation() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isNewTeamModalOpen, setIsNewTeamModalOpen] = useState(false);
-  const [isEditTeamModalOpen, setIsEditTeamModalOpen] = useState(false);
-  const [newTeamName, setNewTeamName] = useState("NEW TEAM");
-  const [editTeamName, setEditTeamName] = useState("TEAM NAME");
+  const [selectedTeam, setSelectedTeam] = useState<Team>(TEAMS[0] || DEFAULT_TEAM);
+  const [bets, setBets] = useState<number[]>(new Array(3).fill(0));
+  const [totalBets, setTotalBets] = useState(0);
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
-  const openNewTeamModal = () => setIsNewTeamModalOpen(true);
-  const closeNewTeamModal = () => setIsNewTeamModalOpen(false);
-
-  const openEditTeamModal = () => setIsEditTeamModalOpen(true);
-  const closeEditTeamModal = () => setIsEditTeamModalOpen(false);
-
-  const handleSaveNewTeamName = (name: string) => {
-    setNewTeamName(name);
-    // Aquí puedes agregar lógica adicional para guardar el nuevo nombre del equipo
+  const calculateStakedValue = (token: TokenType) => {
+    return STAKED_AMOUNTS[token] * TOKEN_PRICES[token];
   };
 
-  const handleSaveEditTeamName = (name: string) => {
-    setEditTeamName(name);
-    // Aquí puedes agregar lógica adicional para guardar el nombre editado del equipo
+  const handleBetChange = (index: number, value: string) => {
+    const newBets = [...bets];
+    const numericValue = parseFloat(value) || 0;
+    const gladiator = selectedTeam.gladiators[index];
+    if (gladiator) {
+      newBets[index] = numericValue;
+    } else {
+      newBets[index] = 0;
+    }
+    setBets(newBets);
   };
+
+  const handleTeamSelect = (team: Team) => {
+    setSelectedTeam(team);
+    setBets(new Array(team.gladiators.length).fill(0));
+  };
+
+  const calculateTokenAmount = (betValue: number, tokenPrice: number) => {
+    if (tokenPrice === 0) return 0;
+    return betValue / tokenPrice;
+  };
+
+  useEffect(() => {
+    const total = bets.reduce((acc, bet) => acc + (bet || 0), 0);
+    setTotalBets(total);
+  }, [bets]);
 
   return (
-    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
-      <div className="flex flex-grow">
+    <main className="flex flex-col text-white bg-cover bg-center w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
+      <div className="flex justify-between    ">
         <div className="pt-2 pl-2 ">
-          {/* User CTA profile */}
-          <div className="pb-2 flex items-center">
-            <div className=" cursor-pointer flex gap-2 items-center p-1 w-40 bg-dark-blue-80 h-[43px] clip-path-polygon-left-gui-profile-selection ">
-              <div>
-                <Image
-                  src="/assets/team-selection/avatar/example-avatar.png "
-                  width={26.5}
-                  height={26.5}
-                  alt="Avatar"
-                />
+          <Profile
+            username="YourUsername"
+            showSettings={true}
+            onOpenModal={openModal}
+          />
+
+          <div className="flex   h-full px-10">
+            <div className="pt-11 ">
+              <div className="pb-3  ">
+                <h3 className="uppercase">Select your team</h3>
               </div>
-              <div className="text-[14px] font-bold">Magaibero22</div>
-            </div>
-            <div className="cursor-pointer w-14 pl-1 bg-dark-blue-80 h-[43px] ml-[-5px] clip-path-polygon-left-gui-profile-setting flex items-center justify-center">
-              <Image
-                src="/icons/settings.svg"
-                width={24}
-                height={24}
-                alt="Setting"
-              />
-            </div>
-          </div>
-
-          {/* Left side and Center - Characters */}
-          <div className="flex justify-center items-center h-full w-[500px] ">
-            <div>
-              <div className="flex gap-2  w-[400px] overflow-x-scroll overflow-y-hidden pb-4  ">
-                <div className="w-32 h-[110px] relative group cursor-pointer">
-                  <div className="absolute inset-0 z-20 transition-shadow duration-300 group-hover:shadow-[inset_0_0_0_4px_#FFFF00]"></div>
-
-                  <div className="w-32  h-full">
-                    <Image
-                      src="/assets/team-selection/gladiators/teams.png"
-                      width={128}
-                      height={110}
-                      alt="Gladiators"
-                    />
-
-                    <div className="w-32 flex items-center justify-center h-[27px] bg-[#05345A] bg-opacity-70">
-                      <div className="text-[10px] font-bold text-white">
-                        MEMEKILLERS
+              <div className="grid grid-cols-3 gap-2 overflow-y-scroll overflow-x-hidden snap-y pr-4 pb-4 max-h-[234px]">
+                {TEAMS.length > 0 ? (
+                  TEAMS.map((team, index) => (
+                    <div
+                      key={index}
+                      className={`w-[122px] h-28 relative group cursor-pointer ${
+                        selectedTeam.name === team.name 
+                          ? 'shadow-[inset_0_0_0_4px_#FFFF00]' 
+                          : 'hover:shadow-[inset_0_0_0_4px_#FFFF00]'
+                      }`}
+                      onClick={() => handleTeamSelect(team)}
+                    >
+                      <div className={`absolute inset-0 z-20 transition-shadow duration-300 ${
+                        selectedTeam.name === team.name 
+                          ? 'shadow-[inset_0_0_0_4px_#FFFF00]' 
+                          : 'group-hover:shadow-[inset_0_0_0_4px_#FFFF00]'
+                      }`}></div>
+                      <div className="h-28 w-[122px]     ">
+                        <div className="z-10  w-full h-full flex flex-col bg-no-repeat justify-between bg-[url('/assets/team-selection/gladiators/teams-x2.png')]">
+                          <div className="flex justify-end  "></div>
+                          <div className="w-full  bg-dark-blue-70 p-1">    
+                            <div className="text-[10px] font-bold text-white text-center">
+                              {team.name}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-
-                <div className="w-32 h-[110px] relative group cursor-pointer">
-                  <div className="absolute inset-0 z-20 transition-shadow duration-300 group-hover:shadow-[inset_0_0_0_4px_#FFFF00]"></div>
-
-                  <div className="w-32  h-full">
-                    <Image
-                      src="/assets/team-selection/gladiators/teams.png"
-                      width={128}
-                      height={110}
-                      alt="Gladiators"
-                    />
-
-                    <div className="w-32 flex items-center justify-center h-[27px] bg-[#05345A] bg-opacity-70">
-                      <div className="text-[10px] font-bold text-white">
-                        MEMEKILLERS
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <button className="bg-yellow text-black font-bold text-[14px] h-10 w-[367px] flex items-center justify-center gap-1">
-                  <SvgIcon name="all-for-one" className="text-dark h-5 w-5  " />
-                  I’M READY
-                </button>
+                  ))
+                ) : (
+                  <div className="col-span-3 text-center">No teams available</div>
+                )}
               </div>
             </div>
-
-            {/*   <div>
-              <div>
-                <h2 className="relative mt-[-8px] ">MEMEKILLERS </h2>
-              </div>
-
-              <div className="flex w-[600px] justify-center pt-2">
-                <div className="w-full">
-                  <div className="grid  mx-auto w-full  justify-center h-40">
-                    <div className="flex max-w-[498px] ">
-                      <div className="mr-[-50px] ">
-                        <Image
-                          className="relative player z-40  "
-                          src="/assets/battle-layout/gladiators/magaiba.png"
-                          width={226}
-                          height={226}
-                          alt="Jugador"
-                        />
-                      </div>
-                      <div>
-                        <Image
-                          className="relative player z-40   "
-                          src="/assets/battle-layout/gladiators/magaiba.png"
-                          width={226}
-                          height={226}
-                          alt="Jugador"
-                        />
-                      </div>
-                      <div className="ml-[-50px]">
-                        <Image
-                          className="relative player z-40   "
-                          src="/assets/battle-layout/gladiators/magaiba.png"
-                          width={226}
-                          height={226}
-                          alt="Jugador"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-center">
-                      {" "}
-                      <Image
-                        className="mt-[-50px] animate-pulse z-0"
-                        src="/assets/team-selection/bg/big-shadow.png"
-                        width={471}
-                        height={72}
-                        alt="Sombra jugador"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
 
-        {/* Right side - Skills */}
-        <div className="w-full flex justify-end">
-          <div className="w-[200px]  bg-[url('/assets/team-selection/bg/bg-gladiators.png')] z-0 ">
-            <div className="pr-2 pt-2">
-              <div className="flex justify-end py-2">
-                <p> GLADIATORS</p>
+        <div className="flex h-full bg-no-repeat bg-[url('/assets/battle-layout/bg/battle-preparation.svg')] z-0">
+          <div className="px-7 py-2">
+            <div className="">
+              <div className="flex">
+                <p className="text-xl">STAKED</p>
               </div>
 
-              <div className="flex justify-end">
-                <div className="grid grid-cols-1 gap-1  ">
-                  <div className=" flex items-center">
-                    <div
-                      className="w-full max-w-[98px] border-2 border-transparent hover:border-2 hover:border-yellow"
-                      onClick={openModal}
-                    >
-                      <div className=" w-[94px] h-[100px]  cursor-pointer  border-4 border-dark-blue-70 border-opacity-70  ">
-                        <div className=" z-10 h-full flex flex-col justify-between bg-[url('/assets/team-selection/gladiators/mog.png')]">
-                          <div className="flex justify-end p-1">
-                            <Image
-                              src="/assets/battle-layout/gui-skills/info-skills.svg"
-                              width={12}
-                              height={12}
-                              alt="Skill Info"
-                              className="cursor-pointer"
-                            />
-                          </div>
-                          <div className="w-full bg-[#05345A] h-[17px] bg-opacity-70 p-1">
-                            <div className="text-xs font-bold text-white text-center">
-                              MOG
-                            </div>
-                          </div>
-                        </div>
+              <div className="flex gap-2 items-center justify-between">
+                {Object.entries(STAKED_AMOUNTS).map(([token, amount]) => (
+                  <div key={token} className="flex gap-2 items-center justify-between">
+                    <div className="w-7 h-7">
+                      <Image
+                        src={`/assets/logos/${TOKEN_IMAGES[token as TokenType]}`}
+                        width={28}
+                        height={28}
+                        alt={`${token} Logo`}
+                      />
+                    </div>
+                    <div>
+                      <div>
+                        <p className="text-[10px] font-semibold">
+                          {amount.toLocaleString()}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] leading-tight text-light-blue font-semibold">
+                          ${calculateStakedValue(token as TokenType).toFixed(2)}
+                        </p>
                       </div>
                     </div>
                   </div>
+                ))}
+              </div>
 
-                  <div className=" flex items-center">
-                    <div
-                      className="w-full max-w-[98px] border-2 border-transparent hover:border-2 hover:border-yellow"
-                      onClick={openModal}
-                    >
-                      <div className=" w-[94px] h-[100px]  cursor-pointer  border-4 border-dark-blue-70 border-opacity-70  ">
-                        <div className=" z-10 h-full flex flex-col justify-between bg-[url('/assets/team-selection/gladiators/mog.png')]">
-                          <div className="flex justify-end p-1">
+              <div className="pb-3 pt-3">
+                <p className="text-xl uppercase">Enter your bet</p>
+              </div>
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  {selectedTeam.gladiators.map((gladiator, index) => (
+                    <div key={index} className="bg-dark-blue-50 w-[113px]">
+                      <div className="p-1">
+                        <div className="">
+                          <Image
+                            src={gladiator.image}
+                            width={106}
+                            height={106}
+                            alt={`${gladiator.token} Gladiator`}
+                            className="cursor-pointer"
+                          />
+                        </div>
+                        <div className="bg-dark-blue-70 mt-[-20px] w-full z-0 flex justify-center">
+                          <p className="font-bold text-[10px]">{gladiator.token}</p>
+                        </div>
+                        <div className="py-1">
+                          <div className="flex items-center justify-between gap-1">
+                            <div><p className="text-xl font-bold">$</p></div>
+                            <div><input
+                              type="text"
+                              value={bets[index] || ''}
+                              onChange={(e) => handleBetChange(index, e.target.value)}
+                              className="w-full bg-transparent outline-none text-white placeholder:text-white text-xl font-bold"
+                              placeholder="0.0"
+                            /></div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-4 h-4">
                             <Image
-                              src="/assets/battle-layout/gui-skills/info-skills.svg"
-                              width={12}
-                              height={12}
-                              alt="Skill Info"
-                              className="cursor-pointer"
+                              src={`/assets/logos/${TOKEN_IMAGES[gladiator.token]}`}
+                              width={16}
+                              height={16}
+                              alt={`${gladiator.token} Logo`}
                             />
                           </div>
-                          <div className="w-full bg-[#05345A] h-[17px] bg-opacity-70 p-1">
-                            <div className="text-xs font-bold text-white text-center">
-                              MOG
-                            </div>
+                          <div>
+                            <p className="text-light-blue font-medium text-[10px]">
+                              {calculateTokenAmount(bets[index] || 0, TOKEN_PRICES[gladiator.token]).toLocaleString(undefined, {maximumFractionDigits: 2})}
+                            </p>
                           </div>
                         </div>
                       </div>
                     </div>
+                  ))}
+                </div>
+
+                <div className="w-full flex items-center justify-between py-5">
+                  <div>
+                    <p className="text-xl uppercase">Total bets</p>
                   </div>
-                  <div className=" flex items-center">
-                    <div
-                      className="w-full max-w-[98px] border-2 border-transparent hover:border-2 hover:border-yellow"
-                      onClick={openModal}
-                    >
-                      <div className=" w-[94px] h-[100px]  cursor-pointer  border-4 border-dark-blue-70 border-opacity-70  ">
-                        <div className=" z-10 h-full flex flex-col justify-between bg-[url('/assets/team-selection/gladiators/mog.png')]">
-                          <div className="flex justify-end p-1">
-                            <Image
-                              src="/assets/battle-layout/gui-skills/info-skills.svg"
-                              width={12}
-                              height={12}
-                              alt="Skill Info"
-                              className="cursor-pointer"
-                            />
-                          </div>
-                          <div className="w-full bg-[#05345A] h-[17px] bg-opacity-70 p-1">
-                            <div className="text-xs font-bold text-white text-center">
-                              MOG
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  <div>
+                    <p className="text-3xl text-yellow">${totalBets.toFixed(2)}</p>
                   </div>
                 </div>
+              </div>
+              <div className="pt-2">
+                <button className="bg-yellow text-black font-bold text-[14px] h-10 w-full flex items-center justify-center gap-1">
+                  <SvgIcon name="all-for-one" className="text-dark h-5 w-5" />
+                  I'M READY
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <BottomMenu />
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="SKILL INFORMATION"
-      >
-        <div className=" flex gap-2 max-w-[617px]">
-          <div className="min-w-[226px]">
-            <Image
-              src="/assets/skills/magaiba/skills-info-kiss-of-death.png"
-              width={226}
-              height={226}
-              alt="Kiss of Death"
-            />
-          </div>
-          <div className="p-2 max-w-[347px]">
-            <h3 className="text-yellow pb-2">KISS OF DEATH</h3>
-            <p className="font-normal text-[14px] ">
-              Magaiba unleashes a venomous tongue lash towards its opponent,
-              loaded with paralyzing toxins. With lethal precision, the strike
-              immobilizes the adversary, leaving them unable to move for a full
-              turn.
-            </p>
-            <div>
-              <ul className="text-[14px] font-bold p-2">
-                <li className="list-disc">Immobilizes the enemy for 1 turn.</li>
-                <li className="list-disc">
-                  Instant application with a high chance of paralysis.
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </Modal>
-
-      <TeamModal
-        initialTitle={newTeamName}
-        isOpen={isNewTeamModalOpen}
-        onClose={closeNewTeamModal}
-        onSave={handleSaveNewTeamName}
-      >
-        <div>
-          {/* Añade aquí los componentes necesarios para crear un nuevo equipo */}
-        </div>
-      </TeamModal>
-
-      <TeamModal
-        initialTitle={editTeamName}
-        isOpen={isEditTeamModalOpen}
-        onClose={closeEditTeamModal}
-        onSave={handleSaveEditTeamName}
-      >
-        <div></div>
-        {/* Añade aquí los componentes necesarios para editar el equipo */}
-      </TeamModal>
     </main>
   );
-}
+}   

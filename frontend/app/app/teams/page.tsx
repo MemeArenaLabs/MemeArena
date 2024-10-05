@@ -263,6 +263,8 @@ export default function TeamSelection() {
                       </div>
                     </div>
                   </div>
+
+                  
                   <div className=" flex items-center">
                     <div
                       className="w-full max-w-[98px] border-2 border-transparent hover:border-2 hover:border-yellow"
