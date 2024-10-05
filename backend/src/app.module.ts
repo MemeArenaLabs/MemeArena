@@ -6,6 +6,7 @@ import { MemeModule } from './modules/meme/meme.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/ormconfig';
 import { AppController } from './app.controller';
+import { TeamModule } from './modules/team/team.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AppController } from './app.controller';
     TokenModule,
     BattleModule,
     MemeModule,
+    TeamModule
   ],
   controllers: [AppController],
   providers: [],
