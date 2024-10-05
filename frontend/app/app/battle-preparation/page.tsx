@@ -294,15 +294,12 @@ export default function BattlePreparation() {
         </div>
       </Modal>
 
-      <TeamModal
+      {/* <TeamModal
         initialTitle={newTeamName}
         isOpen={isNewTeamModalOpen}
         onClose={closeNewTeamModal}
         onSave={handleSaveNewTeamName}
       >
-        <div>
-          {/* Añade aquí los componentes necesarios para crear un nuevo equipo */}
-        </div>
       </TeamModal>
 
       <TeamModal
@@ -311,9 +308,7 @@ export default function BattlePreparation() {
         onClose={closeEditTeamModal}
         onSave={handleSaveEditTeamName}
       >
-        <div></div>
-        {/* Añade aquí los componentes necesarios para editar el equipo */}
-      </TeamModal>
+      </TeamModal> */}
     </main>
   );
 }

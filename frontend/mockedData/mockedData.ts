@@ -22,6 +22,8 @@ export type Team = {
   gladiators: GladiImg[];
 };
 
+export const userName = "User1";
+
 export const mockGladiatorInfo: GladiatorInfo = {
   name: "MAGAIBA",
   type: "TANK / PLANT",

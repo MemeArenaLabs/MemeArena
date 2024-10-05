@@ -3,6 +3,7 @@ import { BottomMenu } from "@/components/gui/BottomMenu";
 import SkillsPanel from "@/components/SkillsPanel";
 import ProfilePanel from "@/components/ProfilePanel";
 import GladiatorSelectionPanel from "@/components/GladiatorSelectionPanel";
+import { userName } from "@/mockedData/mockedData";
 
 const mockSkills = [
   {
@@ -34,7 +35,7 @@ export default function TeamSelection() {
       <div className="flex justify-between">
         <div className="">
           <div className="p-2">
-            <ProfilePanel />
+            <ProfilePanel userName={userName} />
           </div>
           <GladiatorSelectionPanel />
         </div>

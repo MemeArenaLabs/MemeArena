@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { BottomMenu } from "@/components/gui/BottomMenu";
 import ProfilePanel from "@/components/ProfilePanel";
 import { TeamDetailsPanel } from "@/components/TeamDetailsPanel";
-import { mockedTeams } from "@/mockedData/mockedData";
+import { mockedTeams, userName } from "@/mockedData/mockedData";
 import TeamSelectionPanel from "@/components/TeamSelectionPanel";
 
 const Teams: React.FC = () => {
@@ -14,7 +14,7 @@ const Teams: React.FC = () => {
       <div className="flex flex-grow">
         <div className="">
           <div className="p-2">
-            <ProfilePanel />
+            <ProfilePanel userName={userName} />
           </div>
           <TeamSelectionPanel
             teams={mockedTeams}
