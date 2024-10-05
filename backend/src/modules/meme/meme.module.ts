@@ -3,11 +3,11 @@ import { MemeService } from './meme.service';
 import { MemeController } from './meme.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Meme, Skill, UserMeme } from './meme.entity';
-import { UserModule } from '../user/user.module';
+import { UserMemesController } from './user-meme.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Meme, UserMeme, Skill])],
-  controllers: [MemeController],
+  controllers: [MemeController, UserMemesController],
   providers: [MemeService],
   exports: [MemeService],
 })
