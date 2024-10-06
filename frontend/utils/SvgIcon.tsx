@@ -34,8 +34,6 @@ const IconComponents = {
   "crossed-swords": CrossedSwords,
   "hand-money": HandMoney,
   info: Info,
-  "market-down": MarketDown,
-  "market-up": MarketUp,
   settings: Settings,
   "shield-impact": ShieldImpact,
   "skid-mark": SkidMark,
@@ -43,8 +41,8 @@ const IconComponents = {
   speedometer: Speedometer,
   "triangle-arrow": TriangleArrow,
   "zeus-sword": ZeusSword,
-  "save": Save,
-  "unplugged": Unplugged,
+  save: Save,
+  unplugged: Unplugged,
   "fountain-pen": FountainPen,
 };
 
