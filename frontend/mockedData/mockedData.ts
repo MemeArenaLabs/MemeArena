@@ -18,6 +18,7 @@ export type GladiImg = {
 };
 
 export type Team = {
+  id: string;
   teamName: string;
   gladiators: GladiImg[];
 };
@@ -38,35 +39,39 @@ export const mockGladiatorInfo: GladiatorInfo = {
 
 export const mockedTeams: Team[] = [
   {
+    id: "team-a",
     teamName: "MEMEKILLERS",
     gladiators: [
-      { name: "Meme 1", imageUrl: "/assets/gladiators/magaiba.png" },
-      { name: "Meme 2", imageUrl: "/assets/gladiators/magaiba.png" },
-      { name: "Meme 3", imageUrl: "/assets/gladiators/bonk.png" },
+      { name: "magaiba", imageUrl: "/assets/gladiators/magaiba.png" },
+      { name: "magaiba", imageUrl: "/assets/gladiators/magaiba.png" },
+      { name: "bonk", imageUrl: "/assets/gladiators/bonk.png" },
     ],
   },
   {
+    id: "team-b",
     teamName: "MEMEKILLERS2",
     gladiators: [
-      { name: "Meme 1", imageUrl: "/assets/gladiators/magaiba.png" },
-      { name: "Meme 2", imageUrl: "/assets/gladiators/magaiba.png" },
-      { name: "Meme 3", imageUrl: "/assets/gladiators/magaiba.png" },
+      { name: "magaiba", imageUrl: "/assets/gladiators/magaiba.png" },
+      { name: "magaiba", imageUrl: "/assets/gladiators/magaiba.png" },
+      { name: "magaiba", imageUrl: "/assets/gladiators/magaiba.png" },
     ],
   },
   {
+    id: "team-c",
     teamName: "MEMEKILLERS3",
     gladiators: [
-      { name: "Meme 1", imageUrl: "/assets/gladiators/bonk.png" },
-      { name: "Meme 2", imageUrl: "/assets/gladiators/bonk.png" },
-      { name: "Meme 3", imageUrl: "/assets/gladiators/magaiba.png" },
+      { name: "bonk", imageUrl: "/assets/gladiators/bonk.png" },
+      { name: "bonk", imageUrl: "/assets/gladiators/bonk.png" },
+      { name: "magaiba", imageUrl: "/assets/gladiators/magaiba.png" },
     ],
   },
   {
+    id: "team-d",
     teamName: "MEMEKILLERS4",
     gladiators: [
-      { name: "Meme 1", imageUrl: "/assets/gladiators/bonk.png" },
-      { name: "Meme 2", imageUrl: "/assets/gladiators/bonk.png" },
-      { name: "Meme 3", imageUrl: "/assets/gladiators/bonk.png" },
+      { name: "bonk", imageUrl: "/assets/gladiators/bonk.png" },
+      { name: "bonk", imageUrl: "/assets/gladiators/bonk.png" },
+      { name: "bonk", imageUrl: "/assets/gladiators/bonk.png" },
     ],
   },
 ];
