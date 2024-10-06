@@ -5,4 +5,5 @@ packages:
   - "programs/game-token-stake/*"
   - "programs/nft-mint/*"
   - "programs/token-vault/*"
+  - "programs/battle-logic/*"
 

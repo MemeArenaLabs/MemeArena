@@ -1,6 +1,5 @@
 #![allow(clippy::result_large_err)]
 
-
 use anchor_lang::prelude::*;
 
 mod instructions;
@@ -18,7 +17,7 @@ pub mod game_token_stake {
         instructions::deposit_token(ctx, amounts)
     }
 
-    pub fn withdrawal_token(ctx: Context<instructions::WithdrawalToken>, amounts: [u64; 3]) -> Result<()> {
+    pub fn withdrawal_token(ctx: Context<instructions::WithdrawalToken>, amounts: [(u64, usize); 3]) -> Result<()> {
         instructions::withdrawal_token(ctx, amounts)
     }
 }

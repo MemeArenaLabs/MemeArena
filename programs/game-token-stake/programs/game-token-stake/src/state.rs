@@ -6,5 +6,5 @@ pub struct EscrowAccount {
 }
 
 impl EscrowAccount {
-    pub const LEN: usize = 8 + 8; // Adjust size as needed
+    pub const LEN: usize = 8 + 32; // Adjust size as needed
 }

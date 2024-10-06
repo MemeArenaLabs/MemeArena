@@ -25,6 +25,10 @@
             "path": "./programs/token-vault",
         },
         {
+            "name": "Programs",
+            "path": "./programs/battle-logic",
+        },
+        {
             "name": "Root",
             "path": ".",
         },
