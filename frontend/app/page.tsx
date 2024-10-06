@@ -1,7 +1,8 @@
+import React from "react";
 import Link from "next/link";
 import { Button } from "../components/Button";
-import SvgIcon from "@/utils/SvgIcon";
 import { Close, Info } from "@nine-thirty-five/material-symbols-react/outlined";
+import SvgIcon from "@/utils/SvgIcon";
 
 export default function Home() {
   return (
@@ -36,9 +37,9 @@ export default function Home() {
         <div className="flex flex-col gap-2 p-2 bg-[#444444]">
           <p>Game Icons</p>
           <div className="flex gap-2">
-            <SvgIcon name="all-for-one" className="text-red-500 h-10 w-10" />
-            <SvgIcon name="broken-heart" className="text-blue h-8 w-8" />
-            <SvgIcon name="book-cover" className="text-red-600 h-10 w-10" />
+            <SvgIcon name="avoidance" className="text-blue h-12 w-12" />
+            <SvgIcon name="book-cover" className="text-red-600 h-12 w-12" />
+            <SvgIcon name="all-for-one" className="text-yellow h-12 w-12" />
           </div>
         </div>
         <div className="flex flex-col gap-2 p-2 bg-[#444444]">

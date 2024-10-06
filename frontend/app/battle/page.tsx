@@ -1,16 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import { ProposeSkillDto } from "@/types/server-types";
-import { Button } from "@/components/Button";
-import { useWebSocket } from "@/context/WebSocketProvider";
-import { useBattle } from "@/context/BattleProvider";
+import React, { useEffect } from "react";
 import TopBarGUI from "@/components/battleLayout/TopBarGUI";
 import BattleArena from "@/components/battleLayout/BattleArena";
 import BottomBarGUI from "@/components/battleLayout/BottomBarGUI";
+import { useWebSocket } from "@/context/WebSocketProvider";
+import { useRouter } from "next/navigation";
 
 export default function Battle() {
-  const { isConnected, lastMessage } = useWebSocket();
-  const { battleSessionId, userData, opponentData } = useBattle();
+  const router = useRouter();
+  const { lastMessage } = useWebSocket();
+
+  useEffect(() => {
+    if (lastMessage?.event === "FINISHED") {
+      router.push("/battle/result");
+    }
+  }, [lastMessage]);
 
   return (
     <main className="relative flex items-center justify-center bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/battle-layout/bg/flame-bg.png')]">

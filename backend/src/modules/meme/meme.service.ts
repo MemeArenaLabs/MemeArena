@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meme, Skill, UserMeme } from './meme.entity';
 import { Repository } from 'typeorm';
@@ -8,6 +8,8 @@ import { ELEMENTS } from '../battle/battle.constants';
 import { UserMemeState } from '../battle/battle.type';
 import { UserService } from '../user/user.service';
 import { UserMemeDetails } from './meme.types';
+import { CreateUserMemeDto } from './dto/meme.dto';
+import { User } from '../user/user.entity';
 @Injectable()
 export class MemeService {
   constructor(
@@ -208,5 +210,22 @@ export class MemeService {
         type: skill.skillType,
       })),
     }));
+  }
+
+  async createUserMeme(createUserMemeDto: CreateUserMemeDto): Promise<UserMeme> {
+    const { userId, memeId, tokensLocked = 0 } = createUserMemeDto;
+
+    const meme = await this.memeRepository.findOne({ where: { id: memeId } });
+    if (!meme) {
+      throw new NotFoundException(`Meme with ID '${memeId}' not found`);
+    }
+
+    const userMeme = this.userMemeRepository.create({
+      user: {id: userId} as User,
+      meme,
+      tokensLocked,
+    });
+    console.log('User meme created', userMeme)
+    return this.userMemeRepository.save(userMeme);
   }
 }

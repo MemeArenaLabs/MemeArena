@@ -1,39 +1,51 @@
 "use client";
-import { FindOpponentDto } from "@/types/server-types";
 import React, { useEffect, useState } from "react";
-import { formatTime } from "@/utils/utils";
+import { formatTime } from "@/utils/utilFunctions";
 import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
 import { useWebSocket } from "@/context/WebSocketProvider";
-import { useBattle } from "@/context/BattleProvider";
+import { transformUserMeme, useBattle } from "@/context/BattleProvider";
 import { getUserData } from "@/utils/api-service";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/navigation";
+import { FindOpponentDto } from "@/types/serverDTOs";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import SolanaConnectButton from "@/components/SolanaConnectButton";
 
 export default function FindBattle() {
-  const [walletAddress, setWalletAddress] = useState<string>("");
+  const [walletAddress, setWalletAddress] = useState<string | PublicKey>("");
   const [time, setTime] = useState<number>(0);
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const { isConnected, lastMessage, findOpponent } = useWebSocket();
-  const { setUserData, setOpponentData, userData, setBattleSessionId } =
-    useBattle();
+  const { setUserData, userData, userMemes, setUserMemes } = useBattle();
   const router = useRouter();
+  const { publicKey } = useWallet();
 
   useEffect(() => {
-    if (walletAddress) {
+    let addr: string | PublicKey = "";
+    if (publicKey) {
+      addr = publicKey;
+      setWalletAddress(publicKey);
+    }
+    if (addr) {
       const call = async () => {
-        const data = await getUserData(walletAddress);
-        console.log(data);
-        setUserData(data);
+        const data = await getUserData(addr);
+        setUserData({
+          id: data.id,
+          walletAddress: data.walletAddress,
+          username: data.username,
+        });
+        setUserMemes(
+          data.userMemes.map((memeDto) => transformUserMeme(memeDto))
+        );
       };
       call();
     }
-  }, [walletAddress]);
+  }, [walletAddress, publicKey]);
 
   useEffect(() => {
     if (lastMessage?.event === "JOINED") {
-      setBattleSessionId(lastMessage?.data?.battleSessionId);
-      setOpponentData(lastMessage?.data?.opponent);
       router.push("/battle/preparation");
       handleCloseModal();
     }
@@ -57,7 +69,7 @@ export default function FindBattle() {
     if (userData) {
       const findOpponentDto: FindOpponentDto = {
         userId: userData.id,
-        userMemeIds: userData.userMemes.map((meme) => meme.userMemeId),
+        userMemeIds: userMemes.map((meme) => meme.userMemeId),
       };
       findOpponent(findOpponentDto);
     } else {
@@ -72,16 +84,18 @@ export default function FindBattle() {
   };
 
   return (
-    <main className="flex flex-col gap-8 items-center">
+    <main className="flex flex-col gap-6 items-center">
       <h2>Find a Battle</h2>
       <p>Web socket: {isConnected ? "Connected" : "Disconnected"}</p>
       <section className="layout gap-4">
+        <SolanaConnectButton />
+        <p>Or</p>
         <div className="flex flex-col gap-2">
           <label htmlFor="walletAddress">Set wallet Address:</label>
           <input
             id="walletAddress"
             type="text"
-            value={walletAddress}
+            value={walletAddress.toString()}
             onChange={(e) => setWalletAddress(e.target.value)}
             placeholder="Enter your wallet address"
             className="p-2 border rounded-md w-96"

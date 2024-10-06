@@ -14,6 +14,10 @@
   }
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -28,13 +32,13 @@ body {
 }
 
 h1 {
-  @apply font-bold text-[96px] leading-[110px];
+  @apply font-bold text-[96px] leading-[104px];
 }
 h2 {
-  @apply font-bold text-[64px] leading-[72px];
+  @apply font-bold text-[64px] leading-[70px];
 }
 h3 {
-  @apply font-bold text-[32px] leading-[40px];
+  @apply font-bold text-[32px] leading-[36px];
 }
 p,
 label {
@@ -121,6 +125,14 @@ a {
   clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
+.clip-path-polygon-left-top {
+  clip-path: polygon(0% 0, 100% 0, 93% 100%, 0% 100%);
+}
+
+.clip-path-polygon-right-top {
+  clip-path: polygon(0% 0, 100% 0, 100% 100%, 7% 100%);
+}
+
 .clip-path-polygon-left-gui-info-player {
   clip-path: polygon(0% 0, 100% 0, 93% 100%, 0% 100%);
 }
@@ -135,4 +147,39 @@ a {
 
 .clip-path-polygon-right-market {
   clip-path: polygon(0% 0, 100% 0, 75% 100%, 0% 100%);
+}
+
+/* Profile Selection Cut Buttons
+ */
+.clip-path-polygon-left-gui-profile-selection {
+  clip-path: polygon(0% 0, 100% 0, 93% 100%, 0% 100%);
+}
+
+.clip-path-polygon-left-gui-profile-setting {
+  clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
+}
+/* Profile Selection Cut Buttons
+ */
+
+/* Buttons buttom bar menu
+ */
+
+.clip-path-buttom-bar-right {
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* Gladiator Stats
+ */
+
+.clip-path-bg-left {
+  clip-path: polygon(0% 0, 100% 0, 92% 100%, 0% 100%);
+}
+
+.tooltip:hover .tooltip-content {
+  display: block;
+  position: absolute;
+  z-index: 1000;
+  bottom: -200%;
+  left: 0%;
+  transform: translateX(-50%);
 }

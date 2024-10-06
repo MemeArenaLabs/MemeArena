@@ -12,7 +12,7 @@ import {
   FindOpponentDto,
   ProposeSkillDto,
   ProposeTeamDto,
-} from "@/types/server-types";
+} from "@/types/serverDTOs";
 
 const RECONNECT_INTERVAL = 3000;
 const RECONNECT_ATTEMPTS = Infinity;

@@ -5,6 +5,8 @@ import { BattleModule } from './modules/battle/battle.module';
 import { MemeModule } from './modules/meme/meme.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/ormconfig';
+import { AppController } from './app.controller';
+import { TeamModule } from './modules/team/team.module';
 
 @Module({
   imports: [
@@ -13,8 +15,9 @@ import { typeOrmConfig } from './config/ormconfig';
     TokenModule,
     BattleModule,
     MemeModule,
+    TeamModule
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

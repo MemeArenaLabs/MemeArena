@@ -1,5 +1,13 @@
+"use client";
+import { useWebSocket } from "@/context/WebSocketProvider";
 import React from "react";
 
 export default function BattleResult() {
-  return <div>BattleResult</div>;
+  const { lastMessage } = useWebSocket();
+  console.log(lastMessage);
+  return (
+    <main>
+      <h2>Battle result</h2>
+    </main>
+  );
 }

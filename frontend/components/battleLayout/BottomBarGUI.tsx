@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import SkillCard from "../gui/SkillCard";
-import { ProposeSkillDto } from "@/types/server-types";
+import React, { useEffect, useState } from "react";
+import SkillCard from "../cards/SkillCard";
+import { ProposeSkillDto } from "@/types/serverDTOs";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { useBattle } from "@/context/BattleProvider";
+import SvgIcon from "@/utils/SvgIcon";
 
 type MenuTab = "attack" | "team";
 
@@ -17,21 +17,33 @@ interface TabButtonProps {
 
 export default function BottomBarGUI() {
   const [activeTab, setActiveTab] = useState<MenuTab>("attack");
-  const [selectedSkillId, setSelectedSkillId] = useState<string | null>(null);
-  const [selectedMemeId, setSelectedMemeId] = useState<string | null>(null);
+  const [selectedSkillId, setSelectedSkillId] = useState<string>();
+  const [selectedMemeId, setSelectedMemeId] = useState<string>();
+  const { proposeSkill, lastMessage } = useWebSocket();
+  const { battleSessionId, userData, userMemes } = useBattle();
 
-  const { proposeSkill } = useWebSocket();
-  const { battleSessionId, userData } = useBattle();
+  const memesInBench = userMemes.filter((meme) => meme.status !== "ACTIVE");
+  const activeMeme = userMemes.find((meme) => meme.status === "ACTIVE");
+  const skillsInMenu = activeMeme?.skills?.filter(
+    (skill) => skill.type !== "SWITCH"
+  );
 
-  const currentMeme = userData?.userMemes[0];
-  const skills = currentMeme?.skills || [];
+  const swapSkillId =
+    activeMeme?.skills.find((skill) => skill.type === "SWITCH")?.skillId ?? "";
+
+  useEffect(() => {
+    if (lastMessage?.event === "RESOLVED_SKILLS") {
+      setSelectedSkillId(undefined);
+      setSelectedMemeId(undefined);
+    }
+  }, [lastMessage]);
 
   const handleSkillClick = (skillId: string) => {
-    setSelectedSkillId(skillId === selectedSkillId ? null : skillId);
+    setSelectedSkillId(skillId === selectedSkillId ? undefined : skillId);
   };
 
   const handleMemeClick = (memeId: string) => {
-    setSelectedMemeId(memeId === selectedMemeId ? null : memeId);
+    setSelectedMemeId(memeId === selectedMemeId ? undefined : memeId);
   };
 
   const handleAction = () => {
@@ -45,18 +57,20 @@ export default function BottomBarGUI() {
         skillId: selectedSkillId,
         battleSessionId,
         userId: userData.id,
-        userMemeId: currentMeme?.userMemeId || "",
+        userMemeId: activeMeme?.userMemeId || "",
       };
       console.log(proposeSkillDto);
       proposeSkill(proposeSkillDto);
     } else if (activeTab === "team" && selectedMemeId) {
-      // const swapMemeDto: SwapMemeDto = {
-      //   newMemeId: selectedMemeId,
-      //   battleSessionId,
-      //   userId: userData.id,
-      // };
-      // console.log(swapMemeDto);
-      // swapMeme(swapMemeDto);
+      const swapMemeDto: ProposeSkillDto = {
+        skillId: swapSkillId,
+        battleSessionId,
+        userId: userData.id,
+        userMemeId: activeMeme?.userMemeId || "",
+        newUserMemeId: selectedMemeId,
+      };
+      console.log(swapMemeDto);
+      proposeSkill(swapMemeDto);
     } else {
       console.log("No selected skill or meme");
     }
@@ -81,7 +95,7 @@ export default function BottomBarGUI() {
         </div>
         <div className="flex gap-1">
           {activeTab === "attack"
-            ? skills.map((skill) => (
+            ? skillsInMenu?.map((skill) => (
                 <SkillCard
                   key={skill.skillId}
                   skillName={skill.name}
@@ -89,10 +103,11 @@ export default function BottomBarGUI() {
                   onClick={() => handleSkillClick(skill.skillId)}
                 />
               ))
-            : userData?.userMemes.map((meme) => (
+            : memesInBench?.map((meme) => (
                 <SkillCard
                   key={meme.userMemeId}
                   skillName={meme.name}
+                  status={meme.status}
                   isSelected={meme.userMemeId === selectedMemeId}
                   onClick={() => handleMemeClick(meme.userMemeId)}
                 />
@@ -104,22 +119,25 @@ export default function BottomBarGUI() {
           <ActionButton
             label={activeTab === "attack" ? "ATTACK!" : "SWAP"}
             icon={
-              activeTab === "attack" ? "/icons/battered-axe.svg" : undefined
+              activeTab === "attack" ? (
+                // "/icons/battered-axe.svg"
+                <SvgIcon name="battered-axe" className="w-5 h-5" />
+              ) : (
+                <SvgIcon name="avoidance" className="w-5 h-5" />
+              )
             }
-            className={`${
-              activeTab === "attack"
-                ? "bg-yellow text-black"
-                : "bg-light-blue text-black"
-            } w-full max-h-[48px] mb-2 gap-2`}
+            className={`
+             bg-yellow text-black
+           w-full max-h-[48px] mb-2 gap-2`}
             onClick={handleAction}
             disabled={
               activeTab === "attack" ? !selectedSkillId : !selectedMemeId
             }
           />
-          <ActionButton
+          {/* <ActionButton
             label="SKIP"
             className="bg-dark-blue-80 text-white w-full max-h-[30px]"
-          />
+          /> */}
         </div>
       </div>
     </div>
@@ -146,7 +164,7 @@ const TabButton: React.FC<TabButtonProps> = ({
 
 interface ActionButtonProps {
   label: string;
-  icon?: string;
+  icon?: React.ReactNode;
   className: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -164,7 +182,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     onClick={onClick}
     disabled={disabled}
   >
-    {icon && <Image src={icon} width={20} height={20} alt={label} />}
+    {icon && icon}
+    {/* <Image src={icon} width={20} height={20} alt={label} /> */}
     {label}
   </button>
 );

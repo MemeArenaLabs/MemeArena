@@ -3,7 +3,7 @@ import { ELEMENTS } from './battle.constants';
 import { ProposeSkillDto } from './dto/battle.dto';
 import { WebSocket } from 'ws';
 
-export interface UserMemeState {
+export type UserMemeState = {
   attack: number;
   criticChance: number;
   currentHp: number;
@@ -18,8 +18,8 @@ export interface UserMemeState {
   speed: number;
   userMemeId: string;
   volume24h: number;
-  status?: string
-}
+  status?: string;
+};
 export interface ActiveBattle {
   battleSessionId: string;
   currentMemes?: Map<string, UserMemeState>; // userId => UserMemeState (meme actual)
@@ -33,16 +33,18 @@ export type UserInBattle = {
   client: WebSocket;
   proposed?: boolean;
   userId: string;
-  userMemes: { userMemeId: string; position?: number }[];
+  userMemes: { userMemeId: string; position?: number; }[];
 };
 
 export type ActiveBattles = Map<string, ActiveBattle>;
 
-
 export enum MemeBattleStatus {
   Active = 'ACTIVE',
-  Bench ='BENCH',
-  Defeated = 'DEFEATED'
+  Bench = 'BENCH',
+  Defeated = 'DEFEATED',
 }
 
-
+export enum WebSocketEventMessage {
+  Joined = 'JOINED',
+  TeamProposed = 'TEAM_PROPOSED'
+}
