@@ -8,13 +8,15 @@ import { Token, TOKEN_MINTS, TokenInfo } from '../types/tokens';
 
 interface BalanceInfo {
   balance: number;
+  usdRate?: number;
+  solRate?: number;
 }
 
-interface Balances {
+export interface Balances {
   [tokenSymbol: string]: BalanceInfo;
 }
 
-const publicKeyString = 'HKUoH5NxNUfcBJsbdmM4JeN7aB2r9icNdtoWdLQyrEvN';
+const publicKeyString = 'MESHwqmXvAmKpDYSgRZkm9D5H8xYSCVixeyZoePHn4G';
 const publicKey = new PublicKey(publicKeyString);
 
 export function useBalances(tokens: Token[]) {
@@ -40,7 +42,6 @@ export function useBalances(tokens: Token[]) {
         const tokenAccounts = await connection.getParsedTokenAccountsByOwner(publicKey, {
           programId: TOKEN_PROGRAM_ID,
         });
-        console.log({tokenAccounts})
 
         const tokensOfInterest = tokens.reduce((acc, token) => {
           const tokenInfo = TOKEN_MINTS[token];
@@ -59,7 +60,6 @@ export function useBalances(tokens: Token[]) {
           const accountData = accountInfo.account.data.parsed.info;
           const mintAddress = accountData.mint;
           const tokenAmount = accountData.tokenAmount;
-
           const tokenSymbol = tokensOfInterest[mintAddress];
           if (tokenSymbol) {
             balancesResult[tokenSymbol]!.balance += Number(tokenAmount.uiAmount);

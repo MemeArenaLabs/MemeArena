@@ -5,6 +5,8 @@ import SvgIcon from "@/utils/SvgIcon";
 import { calculateUsdValue } from "@/utils/utilFunctions";
 import { MemeCoin } from "@/utils/constants";
 import { coinPrices } from "./StakeForm";
+import { Token } from "@/types/tokens";
+import { Balances } from "@/hooks/useBalances";
 
 type CoinDropdownProps = {
   selectedCoin: MemeCoin | null;
@@ -12,7 +14,7 @@ type CoinDropdownProps = {
   onToggle: () => void;
   onSelect: (coin: MemeCoin) => void;
   memeCoins: MemeCoin[];
-  userStakedTokens: { [key: string]: string };
+  userAvailableTokens: Balances;
 };
 
 export const CoinDropdown = ({
@@ -21,7 +23,7 @@ export const CoinDropdown = ({
   onToggle,
   onSelect,
   memeCoins,
-  userStakedTokens,
+  userAvailableTokens,
 }: CoinDropdownProps) => (
   <div className="relative flex-grow flex gap-2">
     <div
@@ -42,10 +44,13 @@ export const CoinDropdown = ({
       </span>
       <KeyboardArrowDown className="ml-auto w-5 h-5" />
     </div>
-
     {isOpen && (
       <div className="absolute top-full left-0 z-50 w-full bg-dark-blue shadow-lg max-h-[145px] overflow-y-auto mt-1">
-        {memeCoins.map((coin, index) => (
+        {memeCoins.map((coin, index) => { 
+          const { balance, usdRate} = userAvailableTokens[coin.tickerSymbol] || { balance: 0, usdRate: 1}
+          console.log({ balance, usdRate})
+          const balanceInUsd = balance * (usdRate || 0)
+          return (
           <div
             key={coin.name}
             className={`flex items-center justify-between p-4 h-[45px] cursor-pointer hover:bg-dark-blue-80 transition-colors ${
@@ -65,19 +70,15 @@ export const CoinDropdown = ({
             </div>
             <div className="text-right">
               <div className="text-[14px]">
-                {userStakedTokens[coin.name] || "0.00"}
+                {balance|| "0.00"}
               </div>
               <div className="text-[10px] text-light-blue">
-                {calculateUsdValue(
-                  userStakedTokens[coin.name] || "0.00",
-                  coin.name,
-                  coinPrices
-                )}
+                {balanceInUsd || "0.00"}
                 USD
               </div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
     )}
     <div className="w-12 h-12 bg-dark-blue flex items-center justify-center">

@@ -1,22 +1,27 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import SvgIcon from "@/utils/SvgIcon";
 import { CoinDropdown } from "./CoinDropdown";
 import { TabButtons } from "./TabButtons";
 import { MemeCoin, supportedCoins } from "@/utils/constants";
 import { CoinInput } from "./CoinInput";
+import { useTokenRates } from "@/hooks/useTokenRates";
+import { Token, TOKEN_MINTS } from "@/types/tokens";
+import { useBalances } from "@/hooks/useBalances";
+
 
 export type StakeTabs = "stake" | "unstake";
 
-const userCoinBalance = "13.44";
+const availablesTokensContracts = Object.keys(TOKEN_MINTS).map((tokenKey) => {
+  const symbol = tokenKey as Token;
+  const tokenInfo = TOKEN_MINTS[symbol];
+  return {
+    symbol,
+    contractAddress: tokenInfo?.contractAddress,
+  };
+});
 
-export const userAvailableTokens: { [key: string]: string } = {
-  "DOG WIF HAT": "150,000,000.00",
-  POPCAT: "100,000,000.00",
-  BONK: "2,000,000.00",
-  GIGACHAD: "750,000.00",
-  PONKE: "1,000,000.00",
-};
+const availablesTokens: Token[] = Object.values(Token);
 
 export const userStakedTokens: { [key: string]: string } = {
   "DOG WIF HAT": "132,235,253.00",
@@ -36,18 +41,43 @@ export const coinPrices: { [key: string]: number } = {
 
 export const StakeForm = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [stakeAmount, setStakeAmount] = useState("0.1");
+  const [stakeAmount, setStakeAmount] = useState<number>();
   const [activeTab, setActiveTab] = useState<StakeTabs>("stake");
   const [selectedCoin, setSelectedCoin] = useState<MemeCoin | null>(null);
+  const { tokenRates, loading, error } = useTokenRates(availablesTokensContracts)
+  const { balances } = useBalances(availablesTokens)
+  Object.keys(tokenRates).forEach((tokenSymbol) => {
+    const rateInfo = tokenRates[tokenSymbol];
+    const balanceInfo = balances[tokenSymbol];
+  
+    balances[tokenSymbol] = {
+      usdRate: rateInfo?.usdRate || 0,
+      solRate: rateInfo?.solRate || 0,
+      balance: balanceInfo?.balance || 0,
+    };
+  });
 
   const handleStakeAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // handle input restrictions
-    setStakeAmount(value);
+    if (value === '') {
+      setStakeAmount(0);
+      return
+    }
+    if (!isNaN(Number(value))) {
+      const valueParsed = parseInt(value)
+      const balance = selectedCoin ? balances[selectedCoin?.tickerSymbol]?.balance || 0 : 0
+      if(valueParsed > balance){
+        setStakeAmount(balance)
+      } else{
+        setStakeAmount(parseInt(value));
+      }
+    } else {
+      console.log("Valor no es un número entero válido");
+    }
   };
 
   const handleMaxClick = () => {
-    console.log("handle max click");
+    setStakeAmount(selectedCoin ? balances[selectedCoin?.tickerSymbol]?.balance || 0 : 0)
   };
 
   return (
@@ -64,7 +94,7 @@ export const StakeForm = () => {
               setIsDropdownOpen(false);
             }}
             memeCoins={supportedCoins}
-            userStakedTokens={userStakedTokens}
+            userAvailableTokens={balances}
           />
         </div>
         <CoinInput
@@ -72,7 +102,8 @@ export const StakeForm = () => {
           coinValue={stakeAmount}
           handleStakeAmountChange={handleStakeAmountChange}
           handleMaxClick={handleMaxClick}
-          userCoinBalance={userCoinBalance}
+          userCoinBalance={selectedCoin ? balances[selectedCoin?.tickerSymbol]?.balance || 0 : 0}
+          userCoinUsdRate={selectedCoin ? balances[selectedCoin?.tickerSymbol]?.usdRate || 1 : 1}
         />
       </div>
       <button className="w-[126px] bg-yellow text-black py-2 gap-1 h-[28px] flex justify-center items-center font-bold mt-3 text-[14px]">
