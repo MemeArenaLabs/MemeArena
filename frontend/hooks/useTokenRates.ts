@@ -14,7 +14,7 @@ interface TokenRates {
   [tokenSymbol: string]: TokenRateInfo;
 }
 
-export function useTokenRates(tokens: { symbol: Token, contractAddress?: string }[] = []) {
+export function useTokenRates(tokens: { symbol: Token, contractAddress?: string, rateContractAddress?: string }[] = []) {
   const [tokenRates, setTokenRates] = useState<TokenRates>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -41,20 +41,16 @@ export function useTokenRates(tokens: { symbol: Token, contractAddress?: string 
 
 
             const { data } = await axios.get(
-              `https://api.dexscreener.com/latest/dex/tokens/${token.contractAddress}`
+              `https://api.dexscreener.com/latest/dex/tokens/${token.rateContractAddress}`
             );
-            
-            if (data?.pairs.length > 0) {
+            console.log({data})
+            if (data?.pairs.length === 0) {
               throw new Error(`No se encontraron pares para el token ${token.symbol}`);
             }
             const pairData = data?.pairs[0];
-
-
-            const usdtPair = pairData?.quoteToken.symbol === 'USDT' ? pairData : null;
-
             return {
               symbol: token.symbol,
-              usdRate: usdtPair?.priceUsd || 0,
+              usdRate: pairData?.priceUsd || 0,
               solRate: pairData?.priceNative || 0,
             };
           } catch (error) {
@@ -68,7 +64,7 @@ export function useTokenRates(tokens: { symbol: Token, contractAddress?: string 
         });
 
         const tokenRatesArray = await Promise.all(tokenPromises);
-
+        console.log({tokenRatesArray})
         const ratesResult: TokenRates = {};
         tokenRatesArray.forEach((rate) => {
           ratesResult[rate.symbol] = rate;

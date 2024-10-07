@@ -18,6 +18,7 @@ const availablesTokensContracts = Object.keys(TOKEN_MINTS).map((tokenKey) => {
   return {
     symbol,
     contractAddress: tokenInfo?.contractAddress,
+    rateContractAddress: tokenInfo?.rateContractAddress,
   };
 });
 
@@ -92,6 +93,7 @@ export const StakeForm = () => {
             onSelect={(coin) => {
               setSelectedCoin(coin);
               setIsDropdownOpen(false);
+              setStakeAmount(0)
             }}
             memeCoins={supportedCoins}
             userAvailableTokens={balances}
