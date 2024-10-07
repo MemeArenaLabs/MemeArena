@@ -32,6 +32,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   const [selectedMetadata, setSelectedMetadata] = useState<Metadata | null>(null);
   const [imageFile, setImageFile] = useState<string | Uint8Array>("/assets/mint/wifrix.png");
   
+  let imageUri: string[] | undefined; // Declare the variable outside the try block
 
 
   useEffect(() => {
@@ -100,26 +101,56 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       const metadata = metadataList[randomIndex] ?? null; // Use null if metadata is undefined
       setSelectedMetadata(metadata); // Store the selected metadata
 
-    
+      if (!selectedMetadata) {
+        console.error("Selected metadata is not set");
+        return;
+      }
+      if (!imageFile || typeof imageFile === 'string' && imageFile === "/assets/mint/wifrix.png") {
+        console.error("Image file is not set or is a placeholder");
+        return;
+      }
+
 
       //const imageFile = fs.readFileSync(path.join(__dirname, '.', metadata.image));
-      const umiImageFile = selectedMetadata?.image 
-      ? createGenericFile(imageFile, path.basename(selectedMetadata.image)) 
-      : null;      
-
-      console.log("umiImageFile done")
+      const umiImageFile = createGenericFile(imageFile, path.basename(selectedMetadata.image));
+      console.log("umiImageFile done", umiImageFile);
+     
       
       // const umiImageFile = createGenericFile(imageFile, path.basename(metadata.image), {
       //   tags: [{ name: 'Gladiator-dot-Meme-Profile', value: 'image/jpeg' }],
       // });
-      const imageUri = await umi.uploader.upload([umiImageFile ?? createGenericFile("arg1", "arg2")]);
-      console.log("imageUri", imageUri)
+
+      if (!umiImageFile) {
+        console.error("umiImageFile is null or undefined");
+        return;
+      }
+
+      console.log("Starting image upload...", umiImageFile);
+      
+
+      // try {
+      //   const imageUri = await umi.uploader.upload([umiImageFile]);
+      //   console.log("imageUri", imageUri);
+      // } catch (error) {
+      //   console.error("Error during image upload:", error);
+      // }
+      
+      try {
+        const imageUri = await umi.uploader.upload([umiImageFile]);
+        console.log("imageUri", imageUri);
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
+
+      console.log("Before metadata check:", metadata);
+
       if (metadata) {
-        const imageUriFirst = imageUri?.[0] ?? '';
+        const imageUriFirst = imageUri?.[0] ?? ''; // Use optional chaining and default empty string
         metadata.image = imageUriFirst;
         if (metadata.properties?.files?.[0]) {
           metadata.properties.files[0].uri = imageUriFirst;
-        }      }
+        }
+      }
 
       const metadataUri = await umi.uploader.uploadJson(metadata);
 
