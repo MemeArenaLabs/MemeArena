@@ -17,8 +17,8 @@ const TeamSelectionPanel = ({
   const [isCreateTeamModalOpen, setIsCreateTeamModalOpen] = useState(false);
   return (
     <div className="flex pl-2">
-      <div>
-        <div className="overflow-y-auto flex scrollbar-hide flex-col gap-[6px] h-[270px] pr-2">
+      <div className="pr-1">
+        <div className="overflow-y-auto flex scrollbar-hide flex-col gap-2 h-[270px] w-24">
           {teams.map((team, index) => (
             <TeamCard
               key={team.teamName + "_" + index}
@@ -31,7 +31,7 @@ const TeamSelectionPanel = ({
         <div className="pt-2">
           <button
             onClick={() => setIsCreateTeamModalOpen(true)}
-            className="bg-yellow text-black font-bold text-[14px] w-[97px] h-[28px] flex items-center justify-center gap-1"
+            className="bg-yellow text-black font-bold text-[14px] w-full h-[28px] flex items-center justify-center gap-1"
           >
             <SvgIcon name="all-for-one" className="text-dark h-4 w-4" />
             NEW
