@@ -1,0 +1,7 @@
+Token created with address: 9WjyyX3nPwDXRfDM4LmiZyezJKJdMX8xwnrrh391NNPg
+Token account created with address: GhzT9EFgDGcRfAXttR2XGQQ8vgXe3CGgFZymvAmV7PSo
+
+spl-token mint <TOKEN_ADDRESS> <AMOUNT> <RECIPIENT_ACCOUNT>
+
+spl-token mint 9WjyyX3nPwDXRfDM4LmiZyezJKJdMX8xwnrrh391NNPg 10000000 HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb
+
