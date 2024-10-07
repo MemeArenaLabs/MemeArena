@@ -10,11 +10,11 @@ export interface Metadata {
 }
 
 const gladiators = [
-  { name: 'Wifrix', image: '/public/assets/mint/wifrix.png' },
-  { name: 'Popcator', image: '/public/assets/mint/popcator.png' },
-  { name: 'Bongo', image: '/public/assets/mint/bongo.png' },
-  { name: 'Chadius', image: '/public/assets/mint/chadius.png'},
-  { name: 'Moodenkuro', image: '/public/assets/mint/moodenkuro.png'},
+  { name: 'Wifrix', image: '/assets/mint/wifrix.png' },
+  { name: 'Popcator', image: '/assets/mint/popcator.png' },
+  { name: 'Bongo', image: '/assets/mint/bongo.png' },
+  { name: 'Chadius', image: '/assets/mint/chadius.png'},
+  { name: 'Moodenkuro', image: '/assets/mint/moodenkuro.png'},
 ];
 
 const attributes = {

@@ -12,7 +12,6 @@ import { irysUploader } from '@metaplex-foundation/umi-uploader-irys';
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import { publicKey, generateSigner, keypairIdentity, createGenericFile } from '@metaplex-foundation/umi';
 import { useGenerateMetadata, Metadata } from "../../hooks/useGenerateMetadata";
-import fs from 'fs';
 import path from 'path';
 import { useWallet } from "@solana/wallet-adapter-react";
 
@@ -31,7 +30,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isMinted, setIsMinted] = useState(false);
   const [selectedMetadata, setSelectedMetadata] = useState<Metadata | null>(null);
-  const [imageFile, setImageFile] = useState<Blob | null>(null);
+  const [imageFile, setImageFile] = useState<string | Uint8Array>("/assets/mint/wifrix.png");
   
 
 
@@ -50,9 +49,10 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       const imageUrl = imagePath; // Since the public folder is served at the root
   
       fetch(imageUrl)
-        .then((response) => response.blob())
-        .then((blob) => setImageFile(blob))
-        .catch((error) => console.error('Error fetching image file:', error));
+      .then((response) => response.blob())
+      .then((blob) => blob.arrayBuffer())
+      .then((arrayBuffer) => setImageFile(new Uint8Array(arrayBuffer)))
+      .catch((error) => console.error('Error fetching image file:', error));
     }
   }, [selectedMetadata]);
 
@@ -78,25 +78,35 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       const metadata = metadataList[randomIndex] ?? null; // Use null if metadata is undefined
       setSelectedMetadata(metadata); // Store the selected metadata
 
+    
 
       //const imageFile = fs.readFileSync(path.join(__dirname, '.', metadata.image));
-      const umiImageFile = createGenericFile(imageFile, path.basename(selectedMetadata.image), {
-        onUpload: () => handleImageUpload(imageFile, selectedMetadata),
-      });
+      const umiImageFile = selectedMetadata?.image 
+      ? createGenericFile(imageFile, path.basename(selectedMetadata.image)) 
+      : null;      
+
+      console.log("umiImageFile done")
       
       // const umiImageFile = createGenericFile(imageFile, path.basename(metadata.image), {
       //   tags: [{ name: 'Gladiator-dot-Meme-Profile', value: 'image/jpeg' }],
       // });
-      const imageUri = await umi.uploader.upload([umiImageFile]);
-      metadata.image = imageUri[0];
-      metadata.properties.files[0].uri = imageUri[0];
+      const imageUri = await umi.uploader.upload([umiImageFile ?? createGenericFile("arg1", "arg2")]);
+      console.log("imageUri", imageUri)
+      if (metadata) {
+        const imageUriFirst = imageUri?.[0] ?? '';
+        metadata.image = imageUriFirst;
+        if (metadata.properties?.files?.[0]) {
+          metadata.properties.files[0].uri = imageUriFirst;
+        }      }
 
       const metadataUri = await umi.uploader.uploadJson(metadata);
+
+      console.log("metadataUri done")
 
       const asset = generateSigner(umi);
       const tx = await create(umi, {
         asset,
-        name: `${metadata.attributes.find(attr => attr.trait_type === 'Role')?.value} ${metadata.name} type ${metadata.attributes.find(attr => attr.trait_type === 'Element')?.value}`,
+        name: `${metadata?.attributes.find(attr => attr.trait_type === 'Role')?.value} ${metadata?.name} type ${metadata?.attributes.find(attr => attr.trait_type === 'Element')?.value}`,
         uri: metadataUri,
         collection,
       }).sendAndConfirm(umi);
@@ -105,7 +115,11 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       console.log('NFT Created:', signature);
       setIsMinted(true); // Set the state to true when minting is successful
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
