@@ -45,10 +45,10 @@ describe('Deposit liquidity', () => {
         poolAuthority: values.poolAuthority,
         depositor: values.admin.publicKey,
         mintLiquidity: values.mintLiquidity,
-        mintA: values.mintAKeypair.publicKey,
+        mintA: values.mintAKeypair.publicKey, //LP token
         poolAccountA: values.poolAccountA,
         depositorAccountLiquidity: values.liquidityAccount,
-        depositorAccountA: values.holderAccountA,
+        depositorAccountA: values.holderAccountA, //LP token address
       })
       .signers([values.admin])
       .rpc({ skipPreflight: true });
