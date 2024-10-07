@@ -43,16 +43,16 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
 
   useEffect(() => {
     if (selectedMetadata) {
-      fetch('/api/uploadImage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ imagePath: selectedMetadata.image })
-      })
-        .then(response => response.blob())
-        .then(blob => setImageFile(blob))
-        .catch(error => console.error('Error fetching image file:', error));
+      console.log(selectedMetadata)
+      const imagePath = selectedMetadata.image.startsWith('/')
+        ? selectedMetadata.image
+        : `/${selectedMetadata.image}`;
+      const imageUrl = imagePath; // Since the public folder is served at the root
+  
+      fetch(imageUrl)
+        .then((response) => response.blob())
+        .then((blob) => setImageFile(blob))
+        .catch((error) => console.error('Error fetching image file:', error));
     }
   }, [selectedMetadata]);
 
