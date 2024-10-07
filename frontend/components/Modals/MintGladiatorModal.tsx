@@ -10,7 +10,7 @@ import { create, fetchCollectionV1, mplCore } from '@metaplex-foundation/mpl-cor
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 import { irysUploader } from '@metaplex-foundation/umi-uploader-irys';
 import { base58 } from '@metaplex-foundation/umi/serializers';
-import { publicKey, generateSigner, keypairIdentity, createGenericFile } from '@metaplex-foundation/umi';
+import { publicKey, generateSigner, keypairIdentity, createGenericFile, GenericFileTag } from '@metaplex-foundation/umi';
 import { useGenerateMetadata, Metadata } from "../../hooks/useGenerateMetadata";
 import path from 'path';
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -32,8 +32,8 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   const [selectedMetadata, setSelectedMetadata] = useState<Metadata | null>(null);
   const [imageFile, setImageFile] = useState<Blob | null>(null);
   
-  let imageUri 
-  let umiImageFile
+  let imageUri: string[] 
+  let umiImageFile: { buffer: Uint8Array; fileName: string; displayName: string; uniqueName: string; contentType: string | null; extension: string | null; tags: GenericFileTag[]; }
 
   useEffect(() => {
     if (!isOpen) {
@@ -117,7 +117,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       //const imageFile = fs.readFileSync(path.join(__dirname, '.', metadata.image));
       if (imageFile) {
         const uint8Array = await blobToUint8Array(imageFile);
-        const umiImageFile = createGenericFile(uint8Array, path.basename(selectedMetadata.image));
+        umiImageFile = createGenericFile(uint8Array, path.basename(selectedMetadata.image));
         console.log("umiImageFile done", umiImageFile);
       } else {
         console.error("imageFile is undefined or null");
@@ -142,12 +142,9 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       // } catch (error) {
       //   console.error("Error during image upload:", error);
       // }
-      const imageUri = umi.uploader.upload([umiImageFile]);
-      console.log(imageUri)
-
       
       try {
-        const imageUri = await umi.uploader.upload([umiImageFile]);
+        imageUri = await umi.uploader.upload([umiImageFile]);
         console.log("imageUri", imageUri);
       } catch (error) {
         console.error("Upload failed:", error);
