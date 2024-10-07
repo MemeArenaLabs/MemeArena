@@ -56,6 +56,28 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
     }
   }, [selectedMetadata]);
 
+  async function blobToUint8Array(blob: Blob): Promise<Uint8Array> {
+    const reader = new FileReader();
+  
+    const arrayBuffer: ArrayBuffer = await new Promise((resolve, reject) => {
+      reader.onloadend = function() {
+        if (reader.result) {
+          resolve(reader.result as ArrayBuffer);
+        } else {
+          reject(new Error("Error reading the Blob"));
+        }
+      };
+  
+      reader.onerror = function() {
+        reject(new Error("Error reading the Blob"));
+      };
+  
+      reader.readAsArrayBuffer(blob);
+    });
+  
+    return new Uint8Array(arrayBuffer);
+  }
+
   const handleMintGladiator = async () => {
     setLoading(true);
     setError(null);
