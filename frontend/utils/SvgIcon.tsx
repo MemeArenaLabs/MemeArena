@@ -22,6 +22,9 @@ import ZeusSword from "@/public/icons/zeus-sword.svg";
 import Save from "@/public/icons/save.svg";
 import FountainPen from "@/public/icons/fountain-pen.svg";
 import Unplugged from "@/public/icons/unplugged.svg";
+import Exit from "@/public/icons/exit.svg"
+import Play from "@/public/icons/play.svg"
+import Wallet from "@/public/icons/wallet.svg"
 
 const IconComponents = {
   "all-for-one": AllForOne,
@@ -46,6 +49,9 @@ const IconComponents = {
   "save": Save,
   "unplugged": Unplugged,
   "fountain-pen": FountainPen,
+  "wallet": Wallet,
+  "exit": Exit,
+  "play": Play,
 };
 
 export type IconName = keyof typeof IconComponents;
