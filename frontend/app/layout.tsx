@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={` ${montserrat.className} font-montserrat`}>
-      <body className="min-h-screen p-2 flex flex-col">
+      <body className="flex items-center justify-center w-full flex-grow flex-col min-h-screen">
         <AppWalletProvider>{children}</AppWalletProvider>
       </body>
     </html>
