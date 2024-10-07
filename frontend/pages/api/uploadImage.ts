@@ -11,6 +11,8 @@ export const config = {
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
+        console.log("ERROR -----------------------")
+        console.log(req.body)
         const { imageFile, metadata } = req.body;
         const filePath = path.join(process.cwd(), 'uploads', path.basename(metadata.image));
 
