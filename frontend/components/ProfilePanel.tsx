@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
 import { Modal } from "@/components/Modal";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useRouter } from "next/navigation";
 
 interface ProfilePanelProps {
   userName: string;
@@ -34,6 +36,13 @@ export const Profile: React.FC<{
 }> = ({ username, readOnly = false, isOpponent = false }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState(username);
+  const { disconnect } = useWallet();
+  const router = useRouter();
+
+  function handleDisconnectWallet(): void {
+    disconnect();
+    router.push("/");
+  }
 
   const userClasses = "clip-path-polygon-left-top pr-20";
   const enemyClasses = "clip-path-polygon-right-top flex-row-reverse pl-20";
@@ -85,7 +94,10 @@ export const Profile: React.FC<{
                 </div>
               </div>
               <div className="flex gap-2 h-7">
-                <button className="bg-light-blue w-1/2 flex justify-center gap-2 items-center text-black font-bold px-4 py-2 text-[14px]">
+                <button
+                  className="bg-light-blue w-1/2 flex justify-center gap-2 items-center text-black font-bold px-4 py-2 text-[14px]"
+                  onClick={handleDisconnectWallet}
+                >
                   <SvgIcon name="unplugged" className="ml-2 w-6 h-6" />{" "}
                   DISCONNECT
                 </button>

@@ -1,3 +1,5 @@
+import { PublicKey } from "@solana/web3.js";
+
 export const formatTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
@@ -15,3 +17,11 @@ export const calculateUsdValue = (
   const usdValue = parseFloat(amount.replace(/,/g, "")) * price;
   return isNaN(usdValue) ? "0.00" : usdValue.toFixed(2);
 };
+
+export function truncateSolanaAddress(address: PublicKey | string): string {
+  address = address.toString();
+  const prefix = address.slice(0, 4);
+  const suffix = address.slice(-4);
+
+  return `${prefix}...${suffix}`;
+}
