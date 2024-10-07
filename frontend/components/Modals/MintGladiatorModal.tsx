@@ -41,7 +41,16 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
     }
   }, [isOpen]);
 
+
+  useEffect(()=>{
+    const metadataList = useGenerateMetadata();
+    const randomIndex = Math.floor(Math.random() * metadataList.length);
+    const metadata = metadataList[randomIndex] ?? null; // Use null if metadata is undefined
+    setSelectedMetadata(metadata); 
+  },[])
+
   useEffect(() => {
+    console.log({selectedMetadata})
     if (selectedMetadata) {
       console.log(selectedMetadata)
       const imagePath = selectedMetadata.image.startsWith('/')
@@ -85,99 +94,28 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   const handleMintGladiator = async () => {
     setLoading(true);
     setError(null);
-
+  
     try {
-      const umi = createUmi('https://api.devnet.solana.com')
-        .use(mplCore())
-        .use(irysUploader({ address: 'https://devnet.irys.xyz' }));
-
-      //const keypair = umi.eddsa.createKeypairFromSecretKey(new Uint8Array([/* your secret key array */]));
-      const keypair = umi.eddsa.createKeypairFromSecretKey(new Uint8Array([57,49,154,35,35,201,219,82,52,36,3,82,89,128,55,182,15,203,250,215,56,2,46,84,75,179,58,206,56,146,208,2,140,41,83,153,21,205,164,237,139,129,74,55,68,29,96,28,156,7,108,59,237,58,98,181,211,56,125,192,42,237,44,174]));
-
-      umi.use(keypairIdentity(keypair));
-
-      const collectionAddress = publicKey('ENc8zjHjmipY3ZeccvxAG8Z8wudVmbWcyjLrjNug4NDy');
-      const collection = await fetchCollectionV1(umi, collectionAddress);
-
-      const metadataList = useGenerateMetadata();
-      const randomIndex = Math.floor(Math.random() * metadataList.length);
-      const metadata = metadataList[randomIndex] ?? null; // Use null if metadata is undefined
-      setSelectedMetadata(metadata); // Store the selected metadata
-
-      if (!selectedMetadata) {
-        console.error("Selected metadata is not set");
-        return;
+      const gladiatorName = selectedMetadata?.image;
+      console.log({gladiatorName})
+      const response = await fetch('/api/mintGladiator', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageName: gladiatorName }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.error || 'Error in minting');
       }
-      // if (!imageFile || typeof imageFile === 'string' && imageFile === "/assets/mint/wifrix.png") {
-      //   console.error("Image file is not set or is a placeholder");
-      //   return;
-      // }
-
-
-      //const imageFile = fs.readFileSync(path.join(__dirname, '.', metadata.image));
-      if (imageFile) {
-        const uint8Array = await blobToUint8Array(imageFile);
-        const umiImageFile = createGenericFile(uint8Array, path.basename(selectedMetadata.image));
-        console.log("umiImageFile done", umiImageFile);
-      } else {
-        console.error("imageFile is undefined or null");
-      }
-     
-      
-      // const umiImageFile = createGenericFile(imageFile, path.basename(metadata.image), {
-      //   tags: [{ name: 'Gladiator-dot-Meme-Profile', value: 'image/jpeg' }],
-      // });
-
-      // if (!umiImageFile) {
-      //   console.error("umiImageFile is null or undefined");
-      //   return;
-      // }
-
-      console.log("Starting image upload...", umiImageFile);
-      
-
-      // try {
-      //   const imageUri = await umi.uploader.upload([umiImageFile]);
-      //   console.log("imageUri", imageUri);
-      // } catch (error) {
-      //   console.error("Error during image upload:", error);
-      // }
-      const imageUri = umi.uploader.upload([umiImageFile]);
-      console.log(imageUri)
-
-      
-      try {
-        const imageUri = await umi.uploader.upload([umiImageFile]);
-        console.log("imageUri", imageUri);
-      } catch (error) {
-        console.error("Upload failed:", error);
-      }
-
-      console.log("Before metadata check:", metadata);
-
-      if (metadata) {
-        const imageUriFirst = imageUri?.[0] ?? ''; // Use optional chaining and default empty string
-        metadata.image = imageUriFirst;
-        if (metadata.properties?.files?.[0]) {
-          metadata.properties.files[0].uri = imageUriFirst;
-        }
-      }
-
-      const metadataUri = await umi.uploader.uploadJson(metadata);
-
-      console.log("metadataUri done")
-
-      const asset = generateSigner(umi);
-      const tx = await create(umi, {
-        asset,
-        name: `${metadata?.attributes.find(attr => attr.trait_type === 'Role')?.value} ${metadata?.name} type ${metadata?.attributes.find(attr => attr.trait_type === 'Element')?.value}`,
-        uri: metadataUri,
-        collection,
-      }).sendAndConfirm(umi);
-
-      const signature = base58.deserialize(tx.signature)[0];
-      console.log('NFT Created:', signature);
-      setIsMinted(true); // Set the state to true when minting is successful
+  
+      console.log('Minting successful:', data);
+  
+      // Actualiza el estado según sea necesario
+      setIsMinted(true);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
