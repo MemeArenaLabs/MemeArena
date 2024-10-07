@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#Private key dueña
+#[57,49,154,35,35,201,219,82,52,36,3,82,89,128,55,182,15,203,250,215,56,2,46,84,75,179,58,206,56,146,208,2,140,41,83,153,21,205,164,237,139,129,74,55,68,29,96,28,156,7,108,59,237,58,98,181,211,56,125,192,42,237,44,174]
+
 # WIF
 #Token created with address: 4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY
 #Token account created with address: 3kL2DgRZmcbb4PXE42FivG73uWNHF829CzsnwcJdNSo7
@@ -8,6 +11,8 @@ TOKEN_ADDRESS_WIF="4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY"
 TOKEN_ACCOUNT_WIF="3kL2DgRZmcbb4PXE42FivG73uWNHF829CzsnwcJdNSo7"
 # Mint some tokens to the token account
 #spl-token mint $TOKEN_ADDRESS_WIF 10000000000 $TOKEN_ACCOUNT_WIF
+
+
 
 # Transfer tokens from the token account to another address
 RECIPIENT_ADDRESS_FRANCO="HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb"
