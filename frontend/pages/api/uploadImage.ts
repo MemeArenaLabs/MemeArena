@@ -2,6 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+// Disable bodyParser so Next.js can handle file uploads
+export const config = {
+    api: {
+      bodyParser: false,
+    },
+  };
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { imageFile, metadata } = req.body;
@@ -11,6 +18,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         fs.writeFileSync(filePath, imageFile);
 
         res.status(200).json({ message: 'File uploaded successfully' });
+    } else if (req.method === 'GET') {
+        // Handle GET request logic here if needed
+        res.status(200).json({ message: 'GET request received' });
     } else {
         res.status(405).json({ message: 'Method not allowed' });
     }

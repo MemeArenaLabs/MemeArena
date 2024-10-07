@@ -43,7 +43,13 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
 
   useEffect(() => {
     if (selectedMetadata) {
-      fetch(`../../utils/api/uploadImage?imagePath=${selectedMetadata.image}`)
+      fetch('/api/uploadImage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imagePath: selectedMetadata.image })
+      })
         .then(response => response.blob())
         .then(blob => setImageFile(blob))
         .catch(error => console.error('Error fetching image file:', error));
