@@ -30,10 +30,10 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isMinted, setIsMinted] = useState(false);
   const [selectedMetadata, setSelectedMetadata] = useState<Metadata | null>(null);
-  const [imageFile, setImageFile] = useState<string | Uint8Array>("/assets/mint/wifrix.png");
+  const [imageFile, setImageFile] = useState<Blob | null>(null);
   
-  let imageUri: string[] | undefined; // Declare the variable outside the try block
-
+  let imageUri 
+  let umiImageFile
 
   useEffect(() => {
     if (!isOpen) {
@@ -50,9 +50,12 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       const imageUrl = imagePath; // Since the public folder is served at the root
   
       fetch(imageUrl)
-      .then((response) => response.blob())
       .then((blob) => blob.arrayBuffer())
-      .then((arrayBuffer) => setImageFile(new Uint8Array(arrayBuffer)))
+      .then((arrayBuffer) => {
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const newBlob = new Blob([uint8Array]);
+        setImageFile(newBlob);
+      })
       .catch((error) => console.error('Error fetching image file:', error));
     }
   }, [selectedMetadata]);
@@ -105,25 +108,30 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
         console.error("Selected metadata is not set");
         return;
       }
-      if (!imageFile || typeof imageFile === 'string' && imageFile === "/assets/mint/wifrix.png") {
-        console.error("Image file is not set or is a placeholder");
-        return;
-      }
+      // if (!imageFile || typeof imageFile === 'string' && imageFile === "/assets/mint/wifrix.png") {
+      //   console.error("Image file is not set or is a placeholder");
+      //   return;
+      // }
 
 
       //const imageFile = fs.readFileSync(path.join(__dirname, '.', metadata.image));
-      const umiImageFile = createGenericFile(imageFile, path.basename(selectedMetadata.image));
-      console.log("umiImageFile done", umiImageFile);
+      if (imageFile) {
+        const uint8Array = await blobToUint8Array(imageFile);
+        const umiImageFile = createGenericFile(uint8Array, path.basename(selectedMetadata.image));
+        console.log("umiImageFile done", umiImageFile);
+      } else {
+        console.error("imageFile is undefined or null");
+      }
      
       
       // const umiImageFile = createGenericFile(imageFile, path.basename(metadata.image), {
       //   tags: [{ name: 'Gladiator-dot-Meme-Profile', value: 'image/jpeg' }],
       // });
 
-      if (!umiImageFile) {
-        console.error("umiImageFile is null or undefined");
-        return;
-      }
+      // if (!umiImageFile) {
+      //   console.error("umiImageFile is null or undefined");
+      //   return;
+      // }
 
       console.log("Starting image upload...", umiImageFile);
       
@@ -134,6 +142,9 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       // } catch (error) {
       //   console.error("Error during image upload:", error);
       // }
+      const imageUri = umi.uploader.upload([umiImageFile]);
+      console.log(imageUri)
+
       
       try {
         const imageUri = await umi.uploader.upload([umiImageFile]);
