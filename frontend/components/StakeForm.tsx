@@ -20,8 +20,6 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
 
 
-
-
 export type StakeTabs = "stake" | "unstake";
 
 const availablesTokensContracts = Object.keys(TOKEN_MINTS).map((tokenKey) => {
@@ -74,23 +72,20 @@ export const StakeForm = () => {
   const { depositLiquidity, loading: depositLoading, error: depositError } = useDepositLiquidity();
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
+  
+  const handleStake = async () => {
+    if (!publicKey || !selectedCoin || !stakeAmount) return;
 
-  const createTransaction = async () => {
-    if (!publicKey) return;
-  
-    const transaction = new Transaction().add(
-      SystemProgram.transfer({
-        fromPubkey: publicKey,
-        toPubkey: new PublicKey('RecipientPublicKey'), // Replace with actual recipient
-        lamports: 1000, // Amount in lamports
-      })
-    );
-  
     try {
-      const signature = await sendTransaction(transaction, connection);
-      console.log("Transaction sent with signature:", signature);
+      // Call the depositLiquidity function with the necessary parameters
+      const depLiq = await depositLiquidity(stakeAmount, {
+        publicKey,
+        selectedCoin, // Ensure this is the correct token information
+      });
+      console.log("depositLiquidity", depLiq)
+      console.log("Liquidity deposited successfully");
     } catch (error) {
-      console.error("Transaction failed:", error);
+      console.error("Failed to deposit liquidity:", error);
     }
   };
 
@@ -144,10 +139,15 @@ export const StakeForm = () => {
           userCoinUsdRate={selectedCoin ? balances[selectedCoin?.tickerSymbol]?.usdRate || 1 : 1}
         />
       </div>
-      <button className="w-[126px] bg-yellow text-black py-2 gap-1 h-[28px] flex justify-center items-center font-bold mt-3 text-[14px]">
+      <button
+        className="w-[126px] bg-yellow text-black py-2 gap-1 h-[28px] flex justify-center items-center font-bold mt-3 text-[14px]"
+        onClick={handleStake}
+        disabled={depositLoading}
+      >
         <SvgIcon name="hand-money" className="text-black h-5 w-5" />{" "}
         {activeTab.toUpperCase()}
       </button>
+      {depositError && <div className="text-red-500">{depositError}</div>}
     </div>
   );
 };
