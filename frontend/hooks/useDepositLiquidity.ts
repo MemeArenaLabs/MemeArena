@@ -95,15 +95,18 @@ export const useDepositLiquidity = () => {
 
        const latestBlockhash = await connection.getLatestBlockhash();
 
-       const targetBlockHeight = latestBlockhash.lastValidBlockHeight + 5; // Wait for 5 more blocks
-       
-       while (true) {
-        const currentBlockhash = await connection.getLatestBlockhash();
-        if (currentBlockhash.lastValidBlockHeight >= targetBlockHeight) {
-          break;
-        }
         await new Promise(resolve => setTimeout(resolve, 100000)); // Wait for 1 second before checking again
-      }
+
+
+    //    const targetBlockHeight = latestBlockhash.lastValidBlockHeight + 5; // Wait for 5 more blocks
+       
+    //    while (true) {
+    //     const currentBlockhash = await connection.getLatestBlockhash();
+    //     if (currentBlockhash.lastValidBlockHeight >= targetBlockHeight) {
+    //       break;
+    //     }
+    //     await new Promise(resolve => setTimeout(resolve, 100000)); // Wait for 1 second before checking again
+    //   }
        // Confirm the transaction using the new strategy
        await connection.confirmTransaction({
         signature,
