@@ -219,7 +219,7 @@ export async function seedSkills(dataSource: DataSource, memes: Meme[]): Promise
         await skillRepository.save(skill);
       }
       const switchSkill = skillRepository.create({
-        name: `${meme.token.symbol.toLowerCase().replace(/\s+/g, '')}Skill5`,
+        name: `${meme.token.name.toLowerCase().replace(/\s+/g, '')}Skill5`,
         title: 'Switch Meme',
         quote: '“Swap out to a fresh meme ally.”',
         description: 'Switches to another meme in your collection.',
