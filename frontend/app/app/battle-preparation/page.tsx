@@ -31,15 +31,15 @@ export const MOCKED_TEAMS: Team[] = [
     gladiators: [
       {
         name: "bear",
-        imageUrl: "/assets/team-selection/gladiators/bear-no-bg.png",
+        imageUrl: "/assets/gladiators/no-bg/moodeng.png",
       },
       {
         name: "bonk",
-        imageUrl: "/assets/team-selection/gladiators/bonk.png",
+        imageUrl: "/assets/gladiators/no-bg/bonk.png",
       },
       {
         name: "mog",
-        imageUrl: "/assets/team-selection/gladiators/mog-no-bg.png",
+        imageUrl: "/assets/gladiators/no-bg/gigachad.png",
       },
     ],
   },

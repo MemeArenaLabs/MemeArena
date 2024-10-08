@@ -42,7 +42,7 @@ export function TeamDetailsPanel({ team }: TeamDetailsPanelProps) {
                   <DetailedCard
                     onClick={() => setIsGladiatorModalOpen(true)}
                     name={gladiator.name}
-                    imageUrl={gladiator.imageUrl}
+                    imageUrl={gladiator.imagePfpUrl   }
                   />
                 </div>
               ))}

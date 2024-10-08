@@ -50,7 +50,7 @@ const GladiatorList: React.FC<GladiatorListProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userMemes } = useUserData();
-
+  console.log(userMemes);
   return (
     <div className="flex flex-col">
       <div className="overflow-y-auto scrollbar-hide max-h-[271px] flex-grow">
@@ -67,7 +67,10 @@ const GladiatorList: React.FC<GladiatorListProps> = ({
               width={78}
               height={78}
               alt={`${gladiator.name} avatar`}
-              onClick={() => onGladiatorSelect(gladiator)}
+              onClick={() => {
+                onGladiatorSelect(gladiator);
+                console.log(onGladiatorSelect(gladiator));
+              }}
             />
           ))}
         </div>
