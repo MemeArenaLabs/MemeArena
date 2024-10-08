@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
-import { Team } from "@/mockedData/mockedData";
 import { TeamResponseDto } from "@/types/serverDTOs";
 import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
 

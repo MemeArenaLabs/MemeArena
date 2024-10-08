@@ -9,16 +9,17 @@ import { useTokenRates } from "@/hooks/useTokenRates";
 import { Token, TOKEN_MINTS } from "@/types/tokens";
 import { useBalances } from "@/hooks/useBalances";
 
-import { Connection, PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
+import {
+  Connection,
+  PublicKey,
+  Transaction,
+  SystemProgram,
+} from "@solana/web3.js";
 
-
-import idl from '../../programs/token-vault/target/idl/token_vault.json'; // Import your IDL
-
+import idl from "../../programs/token-vault/target/idl/token_vault.json"; // Import your IDL
 
 import { useDepositLiquidity } from "@/hooks/useDepositLiquidity";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-
-
 
 export type StakeTabs = "stake" | "unstake";
 
@@ -55,13 +56,15 @@ export const StakeForm = () => {
   const [stakeAmount, setStakeAmount] = useState<number>();
   const [activeTab, setActiveTab] = useState<StakeTabs>("stake");
   const [selectedCoin, setSelectedCoin] = useState<MemeCoin | null>(null);
-  const { tokenRates, loading, error } = useTokenRates(availablesTokensContracts)
-  const { balances } = useBalances(availablesTokens)
+  const { tokenRates, loading, error } = useTokenRates(
+    availablesTokensContracts
+  );
+  const { balances } = useBalances(availablesTokens);
 
   Object.keys(tokenRates).forEach((tokenSymbol) => {
     const rateInfo = tokenRates[tokenSymbol];
     const balanceInfo = balances[tokenSymbol];
-  
+
     balances[tokenSymbol] = {
       usdRate: rateInfo?.usdRate || 0,
       solRate: rateInfo?.solRate || 0,
@@ -69,10 +72,14 @@ export const StakeForm = () => {
     };
   });
 
-  const { depositLiquidity, loading: depositLoading, error: depositError } = useDepositLiquidity();
+  const {
+    depositLiquidity,
+    loading: depositLoading,
+    error: depositError,
+  } = useDepositLiquidity();
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
-  
+
   const handleStake = async () => {
     if (!publicKey || !selectedCoin || !stakeAmount) return;
 
@@ -82,7 +89,7 @@ export const StakeForm = () => {
         publicKey,
         selectedCoin, // Ensure this is the correct token information
       });
-      console.log("depositLiquidity", depLiq)
+      console.log("depositLiquidity", depLiq);
       console.log("Liquidity deposited successfully");
     } catch (error) {
       console.error("Failed to deposit liquidity:", error);
@@ -91,16 +98,18 @@ export const StakeForm = () => {
 
   const handleStakeAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === '') {
+    if (value === "") {
       setStakeAmount(0);
-      return
+      return;
     }
     if (!isNaN(Number(value))) {
-      const valueParsed = parseInt(value)
-      const balance = selectedCoin ? balances[selectedCoin?.tickerSymbol]?.balance || 0 : 0
-      if(valueParsed > balance){
-        setStakeAmount(balance)
-      } else{
+      const valueParsed = parseInt(value);
+      const balance = selectedCoin
+        ? balances[selectedCoin?.tickerSymbol]?.balance || 0
+        : 0;
+      if (valueParsed > balance) {
+        setStakeAmount(balance);
+      } else {
         setStakeAmount(parseInt(value));
       }
     } else {
@@ -109,7 +118,9 @@ export const StakeForm = () => {
   };
 
   const handleMaxClick = () => {
-    setStakeAmount(selectedCoin ? balances[selectedCoin?.tickerSymbol]?.balance || 0 : 0)
+    setStakeAmount(
+      selectedCoin ? balances[selectedCoin?.tickerSymbol]?.balance || 0 : 0
+    );
   };
 
   return (
@@ -124,7 +135,7 @@ export const StakeForm = () => {
             onSelect={(coin) => {
               setSelectedCoin(coin);
               setIsDropdownOpen(false);
-              setStakeAmount(0)
+              setStakeAmount(0);
             }}
             memeCoins={supportedCoins}
             userAvailableTokens={balances}
@@ -135,8 +146,16 @@ export const StakeForm = () => {
           coinValue={stakeAmount}
           handleStakeAmountChange={handleStakeAmountChange}
           handleMaxClick={handleMaxClick}
-          userCoinBalance={selectedCoin ? balances[selectedCoin?.tickerSymbol]?.balance || 0 : 0}
-          userCoinUsdRate={selectedCoin ? balances[selectedCoin?.tickerSymbol]?.usdRate || 1 : 1}
+          userCoinBalance={
+            selectedCoin
+              ? balances[selectedCoin?.tickerSymbol]?.balance || 0
+              : 0
+          }
+          userCoinUsdRate={
+            selectedCoin
+              ? balances[selectedCoin?.tickerSymbol]?.usdRate || 1
+              : 1
+          }
         />
       </div>
       <button

@@ -3,7 +3,6 @@ import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
 import { Modal } from "../Modal";
 import { CoinInput } from "../CoinInput";
-import { GladiatorInfo } from "@/mockedData/mockedData";
 
 //Mint logic imports
 import {

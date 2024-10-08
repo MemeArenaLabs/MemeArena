@@ -2,7 +2,6 @@ import React from "react";
 import { BottomMenu } from "@/components/gui/BottomMenu";
 import ProfilePanel from "@/components/ProfilePanel";
 import { StakeForm } from "@/components/StakeForm";
-import { userName } from "@/mockedData/mockedData";
 
 export default function Stakes() {
   return (

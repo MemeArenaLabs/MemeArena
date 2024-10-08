@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import { Modal } from "../Modal";
 import StatDisplay from "../StatDisplay";
-import { GladiatorInfo } from "@/mockedData/mockedData";
 import { UserMemeDetails } from "@/types/serverDTOs";
 import { Stat } from "../GladiatorDetails";
 

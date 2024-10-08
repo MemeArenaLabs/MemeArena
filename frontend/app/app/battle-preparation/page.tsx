@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import ProfilePanel from "@/components/ProfilePanel";
 import { TeamSelector } from "@/components/TeamSelector";
 import { BettingForm } from "@/components/BettingForm";
-import { Team } from "@/mockedData/mockedData";
 import Image from "next/image";
 import { BACKGROUND_IMAGE } from "@/utils/constants";
 import { useUserData } from "@/context/UserDataProvider";

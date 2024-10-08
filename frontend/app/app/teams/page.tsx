@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { BottomMenu } from "@/components/gui/BottomMenu";
 import ProfilePanel from "@/components/ProfilePanel";
 import { TeamDetailsPanel } from "@/components/TeamDetailsPanel";
-import { mockedTeams, userName } from "@/mockedData/mockedData";
 import TeamSelectionPanel from "@/components/TeamSelectionPanel";
 import { useUserData } from "@/context/UserDataProvider";
 import { useUserTeams } from "@/hooks/useUserTeams";
