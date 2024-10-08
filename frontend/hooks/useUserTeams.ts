@@ -1,4 +1,4 @@
-import { Team } from "@/types/serverDTOs";
+import { TeamResponseDto } from "@/types/serverDTOs";
 import { useState, useEffect } from "react";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "";
@@ -25,7 +25,7 @@ export async function getUserTeams(userId: string) {
 }
 
 export function useUserTeams(userId: string) {
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<TeamResponseDto[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error>();
 

@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Connection, PublicKey, Transaction, SystemProgram, TransactionInstruction, sendAndConfirmTransaction } from '@solana/web3.js';
+import { Connection, PublicKey, Transaction, SystemProgram, TransactionInstruction, sendAndConfirmTransaction, Signer, Keypair } from '@solana/web3.js';
 import { MemeCoin, supportedCoins } from "@/utils/constants";
 import { TOKEN_WIF, TOKEN_BONK, TOKEN_MOO, TOKEN_POP, TOKEN_GIGA, POOL_WIF, POOL_BONK, POOL_MOO, POOL_POP, POOL_GIGA } from '@/utils/tokenConstants';
 import BN from 'bn.js';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
+import { WalletSendTransactionError } from '@solana/wallet-adapter-base';
 
 
 
@@ -13,12 +15,26 @@ export const useDepositLiquidity = () => {
 
   const programId = new PublicKey('FqvM2PgVPQED3GLNJK1GNrFvDodVtH7SRZKPVxafvfTV'); // Your program ID
   const ammId = new PublicKey('DDTWGUxUysQtJ2PJJdjYFN7Doedt5oLVE8T3hedES8iM'); // Example AMM ID
-  const mintA = new PublicKey('4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY'); // Example token mint address
+  //const mintA = new PublicKey('4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY'); // Example token mint address
   const authoritySeed = Buffer.from('authority'); // Example seed
 
   const { publicKey, sendTransaction } = useWallet(); // Destructure publicKey and sendTransaction from useWallet
 
-
+    // Ensure the associated token account exists
+    const ensureTokenAccount = async (connection: Connection, payer: Signer, mint: PublicKey, owner: PublicKey) => {
+        try {
+        const tokenAccount = await getOrCreateAssociatedTokenAccount(
+            connection,
+            payer,
+            mint,
+            owner
+        );
+        return tokenAccount;
+        } catch (error) {
+        console.error("Failed to get or create token account:", error);
+        throw error;
+        }
+    };
 
 
   const depositLiquidity = async (amount: number, meme: { publicKey: PublicKey, selectedCoin: MemeCoin }) => {
@@ -30,13 +46,8 @@ export const useDepositLiquidity = () => {
     try {
         const connection = new Connection('https://api.devnet.solana.com');
         const transaction = new Transaction();
-  
-        const [poolAuthority, _bump] = PublicKey.findProgramAddressSync(
-          [ammId.toBuffer(), mintA.toBuffer(), authoritySeed],
-          programId
-        );
 
-        console.log("poolAuthority:", poolAuthority)
+
   
         // Mapping of MemeCoin to their respective pool and token constants
         const coinMapping = {
@@ -47,11 +58,48 @@ export const useDepositLiquidity = () => {
           GIGA: { pool: POOL_GIGA, token: TOKEN_GIGA },
         };
 
+       
+
         console.log("coinMapping",coinMapping)
 
         const selectedCoin = coinMapping[meme.selectedCoin.tickerSymbol as keyof typeof coinMapping];
 
+        const [poolAuthority, _bump] = PublicKey.findProgramAddressSync(
+            [ammId.toBuffer(), selectedCoin.token.ADDRESS.toBuffer(), authoritySeed],
+            programId
+        );
+        console.log("poolAuthority:", poolAuthority)
+
+        
+        const payerPrivateKey = Uint8Array.from([57,49,154,35,35,201,219,82,52,36,3,82,89,128,55,182,15,203,250,215,56,2,46,84,75,179,58,206,56,146,208,2,140,41,83,153,21,205,164,237,139,129,74,55,68,29,96,28,156,7,108,59,237,58,98,181,211,56,125,192,42,237,44,174]);
+        const payerKeypair = Keypair.fromSecretKey(payerPrivateKey);
+
+        const tokenAccount = await ensureTokenAccount(
+            connection,
+            payerKeypair, // payer
+            selectedCoin.token.ADDRESS, // mint
+            payerKeypair.publicKey // owner
+          );
+
         console.log("selectedCoin", selectedCoin)
+
+        // Ensure the user's associated token account for the deposit token exists
+        const depositorAccountA = await getOrCreateAssociatedTokenAccount(
+            connection,
+            payerKeypair, // payer
+            selectedCoin.token.ADDRESS, // mint
+            payerKeypair.publicKey // owner
+        );
+
+        // Ensure the user's associated token account for the LP token exists
+        const depositorAccountLiquidity = await getOrCreateAssociatedTokenAccount(
+            connection,
+            payerKeypair, // payer
+            selectedCoin.pool.LP_TOKEN_MINT, // LP token mint
+            payerKeypair.publicKey // owner
+        );
+
+        
         const values = {
             poolKey: selectedCoin.pool.ACCOUNT,
             poolAuthority,
@@ -60,7 +108,7 @@ export const useDepositLiquidity = () => {
             depositorAccountA: selectedCoin.token.ACCOUNT,
             depositorAccountLiquidity: selectedCoin.pool.TOKEN_ACCOUNT,
             tokenProgram: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),
-            associatedTokenProgram: new PublicKey('ATokenGPvR93p2Fb2a85kecGGn8k2tHm5uLrS8Z7pRz5'),
+            associatedTokenProgram: new PublicKey('ATokenGPvR93CXYgD5RZkUoqDkLx5n7GVe44mL8BPpRY'),
             systemProgram: SystemProgram.programId,
             admin: meme.publicKey,
         };
@@ -80,30 +128,69 @@ export const useDepositLiquidity = () => {
           { pubkey: values.associatedTokenProgram, isSigner: false, isWritable: false },
           { pubkey: values.systemProgram, isSigner: false, isWritable: false },
           { pubkey: values.admin, isSigner: true, isWritable: false },
+          { pubkey: new PublicKey('ETqMTjGZUj2a3Jhp41X7PtNUMFDVJfnmdXRihy6rTxtG'), isSigner: true, isWritable: false }, // Add feePayer as a signer
+
         ],
         programId: new PublicKey('FqvM2PgVPQED3GLNJK1GNrFvDodVtH7SRZKPVxafvfTV'),
-        data: Buffer.from(Uint8Array.of(0, ...new BN(amount).toArray("le", 8))),
+        data: Buffer.from(Uint8Array.of(0, ...new BN(100).toArray("le", 8))),
       });
       console.log("instruction", instruction)
 
        // Add the instruction to the transaction
        transaction.add(instruction);
 
-       // Ensure the transaction is signed using the wallet's sendTransaction method
-       if (!publicKey) throw new Error('Wallet not connected');
-       const signature = await sendTransaction(transaction, connection);
-
        const latestBlockhash = await connection.getLatestBlockhash();
+        transaction.recentBlockhash = latestBlockhash.blockhash;
+        transaction.lastValidBlockHeight = latestBlockhash.lastValidBlockHeight;
 
-       const targetBlockHeight = latestBlockhash.lastValidBlockHeight + 5; // Wait for 5 more blocks
-       
-       while (true) {
-        const currentBlockhash = await connection.getLatestBlockhash();
-        if (currentBlockhash.lastValidBlockHeight >= targetBlockHeight) {
-          break;
+        if (publicKey) {
+            transaction.feePayer = publicKey;
+            console.log("Fee payer set to:", transaction.feePayer.toString());
+        } else {
+            console.error("Public key is null. Cannot proceed with the transaction.");
+            // Optionally, throw an error or return early
+            return;
         }
-        await new Promise(resolve => setTimeout(resolve, 100000)); // Wait for 1 second before checking again
-      }
+
+        console.log("Transaction details:", {
+            feePayer: transaction.feePayer.toString(),
+            recentBlockhash: transaction.recentBlockhash,
+            instructions: transaction.instructions,
+            signatures: transaction.signatures,
+        });
+
+
+
+        //transaction.feePayer = publicKey;
+
+       console.log('Transaction:', transaction);
+
+       // Ensure the transaction is signed using the wallet's sendTransaction method
+       if (!publicKey) {
+        console.error('Wallet not connected');
+        throw new Error('Wallet not connected');
+        }
+
+        console.log('Public Key:', publicKey.toBase58());
+        const signature = await sendTransaction(transaction, connection);
+        console.log('Transaction:', transaction);
+
+
+        
+
+
+        //await new Promise(resolve => setTimeout(resolve, 100000)); // Wait for 1 second before checking again
+
+
+        //const targetBlockHeight = latestBlockhash.lastValidBlockHeight + 5; // Wait for 5 more blocks
+       
+    //    while (true) {
+    //     const currentBlockhash = await connection.getLatestBlockhash();
+    //     if (currentBlockhash.lastValidBlockHeight >= targetBlockHeight) {
+    //       break;
+    //     }
+    //     await new Promise(resolve => setTimeout(resolve, 100000)); // Wait for 1 second before checking again
+    //   }
        // Confirm the transaction using the new strategy
        await connection.confirmTransaction({
         signature,
@@ -111,14 +198,19 @@ export const useDepositLiquidity = () => {
         lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
       }, 'processed');
 
+
        
 
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+    } catch (error) {
+        console.error("Transaction Error:", error);
+        if (error instanceof WalletSendTransactionError) {
+        // Handle specific wallet send transaction errors
+        console.error("WalletSendTransactionError details:", error.message);
+        } else {
+        // Handle other types of errors
+        console.error("Unexpected error:", error);
+        }
+
     } finally {
       setLoading(false);
     }

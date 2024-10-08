@@ -137,9 +137,9 @@ export type ProposeTeamDto = {
   team: { userMemeId: string; position: number }[];
 };
 
-export type Team = {
+export type TeamResponseDto = {
   id: string;
   name: string;
   user: UserDataDto;
-  userMemes: UserMeme[];
+  userMemes: { id: string; meme: UserMemeDetails; tokensLocked: number }[];
 };

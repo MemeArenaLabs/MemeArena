@@ -1,11 +1,11 @@
-import { Team } from "@/mockedData/mockedData";
 import React from "react";
 import TeamCard from "./cards/TeamCard";
+import { TeamResponseDto } from "@/types/serverDTOs";
 
 interface TeamSelectorProps {
-  teams: Team[];
-  selectedTeam?: Team;
-  onTeamSelect: (team: Team) => void;
+  teams: TeamResponseDto[];
+  selectedTeam?: TeamResponseDto;
+  onTeamSelect: (team: TeamResponseDto) => void;
 }
 
 export const TeamSelector: React.FC<TeamSelectorProps> = React.memo(
@@ -14,13 +14,11 @@ export const TeamSelector: React.FC<TeamSelectorProps> = React.memo(
       <div className="mt-11">
         <h3 className="uppercase pb-3">Select your team</h3>
         <div className="grid grid-cols-3 gap-2 overflow-y-scroll overflow-x-hidden snap-y max-h-[234px]">
-          {teams.map(({ id, teamName, gladiators }) => (
+          {teams.map((team) => (
             <TeamCard
-              team={{
-                id: id,
-                teamName: teamName,
-                gladiators: gladiators,
-              }}
+              key={team.id}
+              team={team}
+              isSelected={team.id === selectedTeam?.id}
             />
           ))}
         </div>
