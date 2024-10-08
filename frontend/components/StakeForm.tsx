@@ -9,6 +9,16 @@ import { useTokenRates } from "@/hooks/useTokenRates";
 import { Token, TOKEN_MINTS } from "@/types/tokens";
 import { useBalances } from "@/hooks/useBalances";
 
+import { Connection, PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
+
+
+import idl from '../../programs/token-vault/target/idl/token_vault.json'; // Import your IDL
+
+
+import { useDepositLiquidity } from "@/hooks/useDepositLiquidity";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+
+
 
 export type StakeTabs = "stake" | "unstake";
 
@@ -47,6 +57,7 @@ export const StakeForm = () => {
   const [selectedCoin, setSelectedCoin] = useState<MemeCoin | null>(null);
   const { tokenRates, loading, error } = useTokenRates(availablesTokensContracts)
   const { balances } = useBalances(availablesTokens)
+
   Object.keys(tokenRates).forEach((tokenSymbol) => {
     const rateInfo = tokenRates[tokenSymbol];
     const balanceInfo = balances[tokenSymbol];
@@ -57,6 +68,26 @@ export const StakeForm = () => {
       balance: balanceInfo?.balance || 0,
     };
   });
+
+  const { depositLiquidity, loading: depositLoading, error: depositError } = useDepositLiquidity();
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction } = useWallet();
+  
+  const handleStake = async () => {
+    if (!publicKey || !selectedCoin || !stakeAmount) return;
+
+    try {
+      // Call the depositLiquidity function with the necessary parameters
+      const depLiq = await depositLiquidity(stakeAmount, {
+        publicKey,
+        selectedCoin, // Ensure this is the correct token information
+      });
+      console.log("depositLiquidity", depLiq)
+      console.log("Liquidity deposited successfully");
+    } catch (error) {
+      console.error("Failed to deposit liquidity:", error);
+    }
+  };
 
   const handleStakeAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -108,10 +139,15 @@ export const StakeForm = () => {
           userCoinUsdRate={selectedCoin ? balances[selectedCoin?.tickerSymbol]?.usdRate || 1 : 1}
         />
       </div>
-      <button className="w-[126px] bg-yellow text-black py-2 gap-1 h-[28px] flex justify-center items-center font-bold mt-3 text-[14px]">
+      <button
+        className="w-[126px] bg-yellow text-black py-2 gap-1 h-[28px] flex justify-center items-center font-bold mt-3 text-[14px]"
+        onClick={handleStake}
+        disabled={depositLoading}
+      >
         <SvgIcon name="hand-money" className="text-black h-5 w-5" />{" "}
         {activeTab.toUpperCase()}
       </button>
+      {depositError && <div className="text-red-500">{depositError}</div>}
     </div>
   );
 };

@@ -66,19 +66,18 @@ const createNft = async () => {
 
    // const collection = fetchCollection(umi, collectionPub);
 
-     // Randomly select an attribute set
-      // Generate all metadata combinations
-        //// Creating the Metadata for the Asset ////
+    // Randomly select an attribute set
+    // Generate all metadata combinations
+    //// Creating the Metadata for the Asset ////
     const metadataList = generateMetadata();
 
 
     // Select a random metadata
-
-
     const randomIndex = Math.floor(Math.random() * metadataList.length);
     const metadata = metadataList[randomIndex];
   
     // Read the image file for the selected creature
+    console.log("METADATA.IMAGE ---",metadata.image)
     const imageFile = fs.readFileSync(
         path.join(__dirname, '.', metadata.image)
     );
