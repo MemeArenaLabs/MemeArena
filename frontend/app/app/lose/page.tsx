@@ -43,14 +43,11 @@ export default function TeamSelection() {
         </div>
         {/* Left side and Center - Characters */}
         <div className=" flex w-full justify-center items-center">
-          
           <div>
-          <div className="flex justify-center">
-                                <h2 className=" ">YOU LOSE!  :(</h2>
-                              </div>
-                            <div>
-              
-
+            <div className="flex justify-center">
+              <h2 className=" ">YOU LOSE! :(</h2>
+            </div>
+            <div>
               <div className="flex  justify-center pt-2">
                 <div className="w-full">
                   <div className="grid  mx-auto w-full  justify-center h-40">
@@ -136,27 +133,6 @@ export default function TeamSelection() {
           </div>
         </div>
       </Modal>
-
-      <TeamModal
-        initialTitle={newTeamName}
-        isOpen={isNewTeamModalOpen}
-        onClose={closeNewTeamModal}
-        onSave={handleSaveNewTeamName}
-      >
-        <div>
-          {/* Añade aquí los componentes necesarios para crear un nuevo equipo */}
-        </div>
-      </TeamModal>
-
-      <TeamModal
-        initialTitle={editTeamName}
-        isOpen={isEditTeamModalOpen}
-        onClose={closeEditTeamModal}
-        onSave={handleSaveEditTeamName}
-      >
-        <div></div>
-        {/* Añade aquí los componentes necesarios para editar el equipo */}
-      </TeamModal>
     </main>
   );
 }

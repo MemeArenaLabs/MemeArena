@@ -16,7 +16,7 @@ import {
   SystemProgram,
 } from "@solana/web3.js";
 
-import idl from "../../programs/token-vault/target/idl/token_vault.json"; // Import your IDL
+// import idl from "../../programs/token-vault/target/idl/token_vault.json"; // Import your IDL
 
 import { useDepositLiquidity } from "@/hooks/useDepositLiquidity";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";

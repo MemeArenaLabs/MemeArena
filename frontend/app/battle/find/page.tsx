@@ -11,7 +11,7 @@ import { FindOpponentDto } from "@/types/serverDTOs";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import SolanaConnectButton from "@/components/SolanaConnectButton";
-import { getUserData } from "@/hooks/useUserData";
+import { getUserData } from "@/utils/api-service";
 
 export default function FindBattle() {
   const [walletAddress, setWalletAddress] = useState<string | PublicKey>("");
