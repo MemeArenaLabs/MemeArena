@@ -9,6 +9,18 @@ import { useTokenRates } from "@/hooks/useTokenRates";
 import { Token, TOKEN_MINTS } from "@/types/tokens";
 import { useBalances } from "@/hooks/useBalances";
 
+import { Connection, PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
+
+
+import idl from '../../programs/token-vault/target/idl/token_vault.json'; // Import your IDL
+
+
+import { useDepositLiquidity } from "@/hooks/useDepositLiquidity";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+
+
+
+
 
 export type StakeTabs = "stake" | "unstake";
 
@@ -46,6 +58,7 @@ export const StakeForm = () => {
   const [selectedCoin, setSelectedCoin] = useState<MemeCoin | null>(null);
   const { tokenRates, loading, error } = useTokenRates(availablesTokensContracts)
   const { balances } = useBalances(availablesTokens)
+
   Object.keys(tokenRates).forEach((tokenSymbol) => {
     const rateInfo = tokenRates[tokenSymbol];
     const balanceInfo = balances[tokenSymbol];
@@ -56,6 +69,29 @@ export const StakeForm = () => {
       balance: balanceInfo?.balance || 0,
     };
   });
+
+  const { depositLiquidity, loading: depositLoading, error: depositError } = useDepositLiquidity();
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction } = useWallet();
+
+  const createTransaction = async () => {
+    if (!publicKey) return;
+  
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: new PublicKey('RecipientPublicKey'), // Replace with actual recipient
+        lamports: 1000, // Amount in lamports
+      })
+    );
+  
+    try {
+      const signature = await sendTransaction(transaction, connection);
+      console.log("Transaction sent with signature:", signature);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    }
+  };
 
   const handleStakeAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

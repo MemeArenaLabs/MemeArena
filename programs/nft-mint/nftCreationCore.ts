@@ -66,15 +66,13 @@ const createNft = async () => {
 
    // const collection = fetchCollection(umi, collectionPub);
 
-     // Randomly select an attribute set
-      // Generate all metadata combinations
-        //// Creating the Metadata for the Asset ////
+    // Randomly select an attribute set
+    // Generate all metadata combinations
+    //// Creating the Metadata for the Asset ////
     const metadataList = generateMetadata();
 
 
     // Select a random metadata
-
-
     const randomIndex = Math.floor(Math.random() * metadataList.length);
     const metadata = metadataList[randomIndex];
   
