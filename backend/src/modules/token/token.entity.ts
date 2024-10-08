@@ -7,6 +7,9 @@ export class Token {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ nullable: true })
+  name: string;
+
   @Column({ unique: true })
   symbol: string;
 

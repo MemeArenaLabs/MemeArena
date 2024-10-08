@@ -13,16 +13,17 @@ const DetailedCard: React.FC<DetailedCardProps> = ({
   imageUrl,
   onClick,
 }) => {
+  const handleClick = () => {
+    onClick();
+    console.log("click");
+  };
   return (
-    <div className="flex items-center">
-      <div
-        className="w-full max-w-[98px] border-2 border-transparent hover:border-2 hover:border-yellow"
-        onClick={onClick}
-      >
+    <div className="flex items-center" onClick={handleClick}>
+      <div className="w-full max-w-[98px] border-2 border-transparent hover:border-2 hover:border-yellow">
         <div className="w-[94px] h-[100px] cursor-pointer border-4 border-dark-blue-70 border-opacity-70 relative overflow-hidden">
           <Image
             src={imageUrl}
-            alt={`${name} skill`}
+            alt={`${name}`}
             layout="fill"
             objectFit="cover"
             quality={90}

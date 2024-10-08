@@ -9,7 +9,7 @@ interface GladiatorDetailsProps {
   gladiator: UserMemeDetails;
 }
 
-type Stat = {
+export type Stat = {
   icon: IconName;
   label: string;
   value: number;

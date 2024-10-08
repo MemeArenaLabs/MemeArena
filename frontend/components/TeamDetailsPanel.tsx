@@ -1,25 +1,24 @@
 import React, { useState } from "react";
 import SvgIcon from "@/utils/SvgIcon";
 import DetailedCard from "./cards/DetailedCard";
-import { Modal } from "./Modal";
-import Image from "next/image";
-import {
-  GladiatorInfo,
-  mockGladiatorInfo,
-  Team,
-} from "@/mockedData/mockedData";
 import GladiatorInfoModal from "./Modals/GladiatorInfoModal";
 import { TeamModal } from "./gui/TeamModal";
+import { TeamResponseDto, UserMemeDetails } from "@/types/serverDTOs";
+import { getGladiatorColosseumBgImgUri } from "@/utils/getGladiatorAssets";
 
 type TeamDetailsPanelProps = {
-  team: Team;
+  team: TeamResponseDto;
 };
 
 export function TeamDetailsPanel({ team }: TeamDetailsPanelProps) {
-  const [selectedGladiator, setSelectedGladiator] =
-    useState<GladiatorInfo>(mockGladiatorInfo);
-  const [isGladiatorModalOpen, setIsGladiatorModalOpen] = useState(false);
+  const [selectedGladiator, setSelectedGladiator] = useState<UserMemeDetails>();
+  const [isGladiatorModalOpen, setIsGladiatorModalOpen] = useState(true);
   const [isEditTeamModalOpen, setIsEditTeamModalOpen] = useState(false);
+
+  const handleGladiatorCardClick = (gladiator: UserMemeDetails) => {
+    setSelectedGladiator(gladiator);
+    setIsGladiatorModalOpen(true);
+  };
 
   return (
     <div className="w-full flex justify-end">
@@ -37,12 +36,14 @@ export function TeamDetailsPanel({ team }: TeamDetailsPanelProps) {
 
           <div className="flex justify-end">
             <div className="grid grid-cols-1 gap-1">
-              {team.gladiators.map((gladiator, index) => (
-                <div key={gladiator.name + index} className="flex items-center">
+              {team.userMemes.map(({ meme }, index) => (
+                <div key={meme.name + index} className="flex items-center">
                   <DetailedCard
-                    onClick={() => setIsGladiatorModalOpen(true)}
-                    name={gladiator.name}
-                    imageUrl={gladiator.imageUrl}
+                    onClick={() => handleGladiatorCardClick(meme)}
+                    name={meme.name}
+                    imageUrl={getGladiatorColosseumBgImgUri(
+                      meme.token?.symbol ?? ""
+                    )}
                   />
                 </div>
               ))}
@@ -54,7 +55,7 @@ export function TeamDetailsPanel({ team }: TeamDetailsPanelProps) {
         <GladiatorInfoModal
           isOpen={isGladiatorModalOpen}
           onClose={() => setIsGladiatorModalOpen(false)}
-          gladiatorInfo={selectedGladiator}
+          gladiator={selectedGladiator}
         />
       )}
       <TeamModal

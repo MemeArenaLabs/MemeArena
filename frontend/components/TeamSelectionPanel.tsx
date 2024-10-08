@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import TeamDisplay from "./TeamDisplay";
 import SvgIcon from "@/utils/SvgIcon";
-import { Team } from "@/mockedData/mockedData";
 import TeamCard from "./cards/TeamCard";
 import { TeamModal } from "./gui/TeamModal";
+import { TeamResponseDto } from "@/types/serverDTOs";
 
 const TeamSelectionPanel = ({
   teams,
   selectedTeam,
   setSelectTeamCallBack,
 }: {
-  teams: Team[];
-  selectedTeam?: Team;
-  setSelectTeamCallBack: React.Dispatch<React.SetStateAction<Team | undefined>>;
+  teams: TeamResponseDto[];
+  selectedTeam?: TeamResponseDto;
+  setSelectTeamCallBack: React.Dispatch<
+    React.SetStateAction<TeamResponseDto | undefined>
+  >;
 }) => {
   const [isCreateTeamModalOpen, setIsCreateTeamModalOpen] = useState(false);
   return (
@@ -21,7 +23,8 @@ const TeamSelectionPanel = ({
         <div className="overflow-y-auto flex scrollbar-hide flex-col gap-2 h-[270px] w-24">
           {teams.map((team, index) => (
             <TeamCard
-              key={team.teamName + "_" + index}
+              isSelected={team.id === selectedTeam?.id}
+              key={team.name + "_" + index}
               team={team}
               onClick={() => setSelectTeamCallBack(team)}
             />

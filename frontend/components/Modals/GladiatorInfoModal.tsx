@@ -2,25 +2,40 @@ import React from "react";
 import Image from "next/image";
 import { Modal } from "../Modal";
 import StatDisplay from "../StatDisplay";
-import { GladiatorInfo } from "@/mockedData/mockedData";
+import { UserMemeDetails } from "@/types/serverDTOs";
+import { Stat } from "../GladiatorDetails";
+import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
 
 interface GladiatorInfoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  gladiatorInfo: GladiatorInfo;
+  gladiator: UserMemeDetails;
 }
 
 const GladiatorInfoModal: React.FC<GladiatorInfoModalProps> = ({
   isOpen,
   onClose,
-  gladiatorInfo,
+  gladiator,
 }) => {
+  const GLADIATOR_STATS: Stat[] = [
+    { icon: "broken-heart", label: "HP", value: gladiator.hpBase },
+    { icon: "battered-axe", label: "ATTACK", value: gladiator.attackBase },
+    // TODO: Critical Chance not coming from backend
+    // { icon: "crossed-swords", label: "CRITIC CHANCE", value: gladiator.defenseBase },
+    {
+      icon: "shield-impact",
+      label: "DEFENSE",
+      value: gladiator.defenseBase,
+    },
+    { icon: "speedometer", label: "SPEED", value: gladiator.speedBase },
+  ];
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Gladiator Info">
       <div className="flex w-[600px] gap-4">
         <div className="min-w-[226px]">
           <Image
-            src="/assets/mint/mog.png"
+            src={getGladiatorImgUri(gladiator.token.symbol)}
             width={226}
             height={226}
             alt="MOG"
@@ -28,13 +43,13 @@ const GladiatorInfoModal: React.FC<GladiatorInfoModalProps> = ({
         </div>
         <div className="w-full max-w-" id="gladiator-info">
           <div>
-            <p className="pb-1 text-[40px]">{gladiatorInfo.name}</p>
+            <p className="pb-1 text-[40px]">{gladiator.name}</p>
             <p className="pt-2 pb-3 text-yellow text-[20px]">
-              {gladiatorInfo.type}
+              {gladiator.profession} / {gladiator.element}
             </p>
           </div>
           <div className="flex flex-col gap-[6px]">
-            {gladiatorInfo.stats.map(({ label, icon, value }) => (
+            {GLADIATOR_STATS.map(({ label, icon, value }) => (
               <StatDisplay
                 key={label}
                 label={label.toUpperCase()}
