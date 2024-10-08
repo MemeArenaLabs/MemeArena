@@ -10,11 +10,11 @@ const Teams: React.FC = () => {
   const [selectedTeam, setSelectedTeam] = useState(mockedTeams[0]);
 
   return (
-    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
+    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="flex flex-grow">
         <div className="">
           <div className="p-2">
-            <ProfilePanel userName={userName} />
+            <ProfilePanel />
           </div>
           <TeamSelectionPanel
             teams={mockedTeams}

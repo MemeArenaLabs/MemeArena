@@ -8,11 +8,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { truncateSolanaAddress } from "@/utils/utilFunctions";
 
-type WalletState = {
-  connected: boolean;
-  address: string;
-};
-
 export default function Landing() {
   const router = useRouter();
   const { setVisible: setModalVisible } = useWalletModal();

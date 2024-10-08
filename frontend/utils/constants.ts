@@ -1,5 +1,7 @@
 import { Token } from "@/types/tokens";
 
+export const BACKGROUND_IMAGE = "/assets/backgrounds/main-bg.png";
+
 export type Coin = {
   name: string;
   tickerSymbol: Token;

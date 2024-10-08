@@ -1,11 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import { Gladiator } from "@/types/types";
-import StatDisplay from "./StatDisplay";
 import { IconName } from "@/utils/SvgIcon";
+import { UserMemeDetails } from "@/types/serverDTOs";
+import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
+import StatDisplay from "./StatDisplay";
 
 interface GladiatorDetailsProps {
-  gladiator: Gladiator;
+  gladiator: UserMemeDetails;
 }
 
 type Stat = {
@@ -14,25 +15,30 @@ type Stat = {
   value: number;
 };
 
-export const GLADIATOR_STATS: Stat[] = [
-  { icon: "broken-heart", label: "HP", value: 100 },
-  { icon: "battered-axe", label: "ATTACK", value: 50 },
-  { icon: "crossed-swords", label: "CRITICAL CHANCE", value: 15 },
-  { icon: "shield-impact", label: "DEFENSE", value: 30 },
-  { icon: "speedometer", label: "SPEED", value: 80 },
-];
+export default function GladiatorDetails({ gladiator }: GladiatorDetailsProps) {
+  const GLADIATOR_STATS: Stat[] = [
+    { icon: "broken-heart", label: "HP", value: gladiator.hpBase },
+    { icon: "battered-axe", label: "ATTACK", value: gladiator.attackBase },
+    // TODO: Critical Chance not coming from backend
+    // { icon: "crossed-swords", label: "CRITIC CHANCE", value: gladiator.defenseBase },
+    {
+      icon: "shield-impact",
+      label: "DEFENSE",
+      value: gladiator.defenseBase,
+    },
+    { icon: "speedometer", label: "SPEED", value: gladiator.speedBase },
+  ];
 
-const GladiatorDetails: React.FC<GladiatorDetailsProps> = ({ gladiator }) => {
   return (
     <div>
       <div className="flex flex-col gap-2">
         <h1 className="relative mt-[-16px]">{gladiator.name.toUpperCase()}</h1>
         <h3 className="relative mt-[-16px] text-yellow">
-          {gladiator.type} / {gladiator.subtype}
+          {gladiator.profession} / {gladiator.element}
         </h3>
       </div>
       <div className="flex">
-        <div className="min-w-[229px] flex flex-col gap-1">
+        <div className="min-w-[229px] w-52 flex flex-col gap-1">
           {GLADIATOR_STATS.map(({ icon, label, value }) => (
             <StatDisplay key={label} icon={icon} label={label} value={value} />
           ))}
@@ -41,7 +47,7 @@ const GladiatorDetails: React.FC<GladiatorDetailsProps> = ({ gladiator }) => {
           <div className="mt-[-100px] mx-auto w-full justify-center h-40">
             <Image
               className="relative z-10"
-              src={gladiator.fullImage}
+              src={getGladiatorImgUri(gladiator.token.symbol)}
               width={226}
               height={226}
               alt={`${gladiator.name} full image`}
@@ -58,6 +64,4 @@ const GladiatorDetails: React.FC<GladiatorDetailsProps> = ({ gladiator }) => {
       </div>
     </div>
   );
-};
-
-export default GladiatorDetails;
+}
