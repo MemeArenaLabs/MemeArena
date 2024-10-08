@@ -6,6 +6,7 @@ import SvgIcon from "@/utils/SvgIcon";
 import { useUserData } from "@/context/UserDataProvider";
 import { UserMemeDetails } from "@/types/serverDTOs";
 import { getGladiatorColosseumBgImgUri } from "@/utils/getGladiatorAssets";
+import { createTeam } from "@/utils/api-service";
 
 interface TeamModalProps {
   initialTitle: string;
@@ -19,7 +20,7 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(initialTitle);
   const [selectedGladiators, setSelectedGladiators] = useState<string[]>([]);
-  const { userMemes } = useUserData();
+  const { userMemes, id } = useUserData();
   const handleTitleClick = () => setIsEditing(true);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,8 +63,8 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
   );
 
   const renderGladiatorSlot = (userMeme: UserMemeDetails, index: number) => {
-    const isSelected = selectedGladiators.includes(index);
-    const selectionOrder = selectedGladiators.indexOf(index) + 1;
+    const isSelected = selectedGladiators.includes(userMeme.userMemeId);
+    const selectionOrder = selectedGladiators.indexOf(userMeme.userMemeId) + 1;
     const imageUri = getGladiatorColosseumBgImgUri(userMeme.token.name)
     return (
       <div
@@ -110,7 +111,15 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
       <div>
         <button
           className="bg-yellow text-black font-bold text-[14px] w-36 h-[28px] flex items-center justify-center gap-2"
-          onClick={() => console.log({title, selectedGladiators})}
+          onClick={async () => {
+            const body = { name: title, userMemeIds: selectedGladiators, userId: id || '' };
+            try {
+              const response = await createTeam(body);
+              console.log("Team saved successfully:", response);
+            } catch (error) {
+              console.error("Failed to save team:", error);
+            }
+          }}
         >
           <SvgIcon name="battle-gear" className="text-dark h-5 w-5" />
           SAVE TEAM
