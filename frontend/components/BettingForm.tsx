@@ -66,12 +66,14 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
           {selectedTeam.gladiators.map((gladiator, index) => (
             <div key={index} className="bg-dark-blue-50 w-[113px]">
               <div className="p-1">
+                <div className="">
                 <Image
                   src={gladiator.imageUrl}
                   width={106}
                   height={106}
+                  className="bg-[#00000066]"
                   alt={`${gladiator.name} Gladiator`}
-                />
+                /></div>
                 <div className="bg-dark-blue-70  flex justify-center">
                   <p className="font-bold text-[10px]">{gladiator.name}</p>
                 </div>
