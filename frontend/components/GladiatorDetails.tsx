@@ -15,6 +15,7 @@ export type Stat = {
   value: number;
 };
 
+
 export default function GladiatorDetails({ gladiator }: GladiatorDetailsProps) {
   const GLADIATOR_STATS: Stat[] = [
     { icon: "broken-heart", label: "HP", value: gladiator.hpBase * 100 },
