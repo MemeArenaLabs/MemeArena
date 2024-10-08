@@ -10,6 +10,7 @@ import { UserService } from '../user/user.service';
 import { UserMemeDetails } from './meme.types';
 import { CreateUserMemeDto } from './dto/meme.dto';
 import { User } from '../user/user.entity';
+import { title } from 'process';
 @Injectable()
 export class MemeService {
   constructor(
@@ -205,6 +206,9 @@ export class MemeService {
       skills: userMeme.meme.skills.map((skill) => ({
         skillId: skill.id,
         name: skill.name,
+        title: skill.title,
+        quote: skill.quote,
+        description: skill.description,
         damage: skill.damage,
         speed: skill.speed,
         type: skill.skillType,

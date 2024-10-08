@@ -17,7 +17,7 @@ export async function seedMemes(
     WIF: { name: 'Wifrix' },
     POPCAT: { name: 'Popcator' },
     BONK: { name: 'Bongo' },
-    CHAD: { name: 'Chadius' },
+    GIGA: { name: 'Chadius' },
     MOODENG: { name: 'Moodenkuro' },
   };
 
