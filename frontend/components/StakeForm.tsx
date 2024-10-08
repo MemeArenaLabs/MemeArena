@@ -78,10 +78,11 @@ export const StakeForm = () => {
 
     try {
       // Call the depositLiquidity function with the necessary parameters
-      await depositLiquidity(stakeAmount, {
+      const depLiq = await depositLiquidity(stakeAmount, {
         publicKey,
         selectedCoin, // Ensure this is the correct token information
       });
+      console.log("depositLiquidity", depLiq)
       console.log("Liquidity deposited successfully");
     } catch (error) {
       console.error("Failed to deposit liquidity:", error);

@@ -25,6 +25,8 @@ export const useDepositLiquidity = () => {
     setLoading(true);
     setError(null);
 
+    console.log("depositLiquidity entered")
+
     try {
         const connection = new Connection('https://api.devnet.solana.com');
         const transaction = new Transaction();
@@ -33,6 +35,8 @@ export const useDepositLiquidity = () => {
           [ammId.toBuffer(), mintA.toBuffer(), authoritySeed],
           programId
         );
+
+        console.log("poolAuthority:", poolAuthority)
   
         // Mapping of MemeCoin to their respective pool and token constants
         const coinMapping = {
@@ -43,9 +47,11 @@ export const useDepositLiquidity = () => {
           GIGA: { pool: POOL_GIGA, token: TOKEN_GIGA },
         };
 
+        console.log("coinMapping",coinMapping)
+
         const selectedCoin = coinMapping[meme.selectedCoin.tickerSymbol as keyof typeof coinMapping];
 
-
+        console.log("selectedCoin", selectedCoin)
         const values = {
             poolKey: selectedCoin.pool.ACCOUNT,
             poolAuthority,
@@ -58,6 +64,8 @@ export const useDepositLiquidity = () => {
             systemProgram: SystemProgram.programId,
             admin: meme.publicKey,
         };
+
+        console.log("values", values)
 
        // Create the instruction to call your on-chain program
        const instruction = new TransactionInstruction({
@@ -76,16 +84,34 @@ export const useDepositLiquidity = () => {
         programId: new PublicKey('FqvM2PgVPQED3GLNJK1GNrFvDodVtH7SRZKPVxafvfTV'),
         data: Buffer.from(Uint8Array.of(0, ...new BN(amount).toArray("le", 8))),
       });
+      console.log("instruction", instruction)
 
        // Add the instruction to the transaction
        transaction.add(instruction);
 
        // Ensure the transaction is signed using the wallet's sendTransaction method
        if (!publicKey) throw new Error('Wallet not connected');
-        const signature = await sendTransaction(transaction, connection);
-        await connection.confirmTransaction(signature, 'processed');
-       //const signature = await sendAndConfirmTransaction(connection, transaction, [payerKeypair]);
+       const signature = await sendTransaction(transaction, connection);
 
+       const latestBlockhash = await connection.getLatestBlockhash();
+
+       const targetBlockHeight = latestBlockhash.lastValidBlockHeight + 5; // Wait for 5 more blocks
+       
+       while (true) {
+        const currentBlockhash = await connection.getLatestBlockhash();
+        if (currentBlockhash.lastValidBlockHeight >= targetBlockHeight) {
+          break;
+        }
+        await new Promise(resolve => setTimeout(resolve, 100000)); // Wait for 1 second before checking again
+      }
+       // Confirm the transaction using the new strategy
+       await connection.confirmTransaction({
+        signature,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+      }, 'processed');
+
+       
 
     } catch (err) {
       if (err instanceof Error) {
