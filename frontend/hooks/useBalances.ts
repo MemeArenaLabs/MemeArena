@@ -16,7 +16,7 @@ export interface Balances {
   [tokenSymbol: string]: BalanceInfo;
 }
 
-const publicKeyString = 'MESHwqmXvAmKpDYSgRZkm9D5H8xYSCVixeyZoePHn4G';
+const publicKeyString = 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb';
 const publicKey = new PublicKey(publicKeyString);
 
 export function useBalances(tokens: Token[]) {
