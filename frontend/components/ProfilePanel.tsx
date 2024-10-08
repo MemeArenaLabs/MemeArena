@@ -5,22 +5,22 @@ import SvgIcon from "@/utils/SvgIcon";
 import { Modal } from "@/components/Modal";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
+import { useUserData } from "@/context/UserDataProvider";
 
 interface ProfilePanelProps {
-  userName: string;
   isOpponent?: boolean;
   readOnly?: boolean;
 }
 
 export default function ProfilePanel({
-  userName,
   isOpponent = false,
   readOnly = false,
 }: ProfilePanelProps) {
+  const { username } = useUserData();
   return (
     <div className={`flex  ${isOpponent ? "flex-row-reverse" : ""}`}>
       <Profile
-        username={userName}
+        username={username ?? "Data error"}
         readOnly={readOnly}
         isOpponent={isOpponent}
       />

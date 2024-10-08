@@ -54,11 +54,11 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
           </p>
           <p className="text-white my-2">ENTER AMOUNT</p>
           <CoinInput
-            coinSymbol={"SOL"}
-            coinValue={mintAmount}
             handleStakeAmountChange={(e) => setMintAmount(e.target.value)}
             handleMaxClick={handleMaxAmount}
-            userCoinBalance={"123"}
+            coinValue={undefined}
+            userCoinBalance={0}
+            userCoinUsdRate={0}
           />
           <p className="pb-2 pt-1 font-medium text-[12px]">
             Min amount: {mintAmount} SOL
