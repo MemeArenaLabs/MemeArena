@@ -24,3 +24,8 @@ Content-Type: application/json
   "userId": "c54f7460-2dcb-4795-ac66-ca5bf9b7077d",
   "memeId": "8ab2fac4-3ca4-474d-ac09-7ae655fb14fd"
 }
+
+###
+
+GET http://localhost:3001/teams/users/d5741be6-50df-4cec-a634-12479bf50cc0
+Accept: application/json
