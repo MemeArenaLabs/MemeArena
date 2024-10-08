@@ -1,5 +1,5 @@
 export interface Gladiator {
-  id: number;
+  id: string;
   name: string;
   image: string;
   fullImage: string;

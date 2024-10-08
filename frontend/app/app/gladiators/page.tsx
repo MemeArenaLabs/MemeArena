@@ -1,46 +1,55 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { BottomMenu } from "@/components/gui/BottomMenu";
 import SkillsPanel from "@/components/SkillsPanel";
 import ProfilePanel from "@/components/ProfilePanel";
 import GladiatorSelectionPanel from "@/components/GladiatorSelectionPanel";
-import { userName } from "@/mockedData/mockedData";
+import { BACKGROUND_IMAGE } from "@/utils/constants";
+import { UserMemeDetails } from "@/types/serverDTOs";
 
-const mockSkills = [
-  {
-    name: "Skill Name",
-    imageUrl: "/assets/battle-layout/skills/magaiba-card.png",
-  },
-  {
-    name: "Skill Name",
-    imageUrl: "/assets/battle-layout/skills/magaiba-card.png",
-  },
-  {
-    name: "Skill Name",
-    imageUrl: "/assets/battle-layout/skills/magaiba-card.png",
-  },
-  {
-    name: "Skill Name",
-    imageUrl: "/assets/battle-layout/skills/magaiba-card.png",
-  },
-];
+// const mockSkills = [
+//   {
+//     name: "Skill Name",
+//     imageUrl: "/assets/battle-layout/skills/magaiba-card.png",
+//   },
+//   {
+//     name: "Skill Name",
+//     imageUrl: "/assets/battle-layout/skills/magaiba-card.png",
+//   },
+//   {
+//     name: "Skill Name",
+//     imageUrl: "/assets/battle-layout/skills/magaiba-card.png",
+//   },
+//   {
+//     name: "Skill Name",
+//     imageUrl: "/assets/battle-layout/skills/magaiba-card.png",
+//   },
+// ];
 
 const mockStakedInfo = {
   stakedAmount: 458288852.58,
   stakedUsd: 12,
 };
 
-export default function TeamSelection() {
+export default function Gladiators() {
+  const [selectedGladiator, setSelectedGladiator] = useState<UserMemeDetails>();
   return (
-    <main className="flex flex-col justify-between bg-gray-900 text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
-      <div className="flex justify-between">
+    <main
+      className="flex flex-col justify-between bg-gray-900 text-white bg-cover bg-center h-[430px] w-[932px]"
+      style={{ backgroundImage: `url(${BACKGROUND_IMAGE})` }}
+    >
+      <div className="flex justify-between relative h-full">
         <div className="">
           <div className="p-2">
-            <ProfilePanel userName={userName} />
+            <ProfilePanel />
           </div>
-          <GladiatorSelectionPanel />
+          <GladiatorSelectionPanel
+            selectedGladiator={selectedGladiator}
+            selectedGladiatorCallback={setSelectedGladiator}
+          />
         </div>
         <SkillsPanel
-          skills={mockSkills}
+          selectedGladiator={selectedGladiator}
           stakedAmount={mockStakedInfo.stakedAmount}
           stakedUsd={mockStakedInfo.stakedUsd}
         />

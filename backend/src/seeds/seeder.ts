@@ -22,6 +22,7 @@ export async function seedDatabase(dataSource: DataSource) {
     await dataSource.manager.delete(Skill, {});
     await dataSource.manager.delete(Meme, {});
     await dataSource.manager.delete(Token, {});
+    await dataSource.manager.delete(Team, {});
     await dataSource.manager.delete(User, {});
     await dataSource.manager.delete(Team, {});
   

@@ -25,10 +25,11 @@ export const CoinInput = ({
   )?.iconUrl;
 
   const [usdRateValue, setUsdRateValue] = useState(0);
-  console.log({coinValue})
   useEffect(()=>{
     if(coinValue){
       setUsdRateValue(coinValue * userCoinUsdRate)
+    } else {
+      setUsdRateValue(0)
     }
   },[coinValue])
   return (
