@@ -17,9 +17,9 @@ export function TeamCard({
   isSelected = false,
 }: TeamCardProps) {
   const positionClasses = [
-    "absolute top-1 left-0",
-    "absolute top-1 left-1/2 -translate-x-1/2",
-    "absolute top-1 right-0",
+    "absolute top-1 right-[35%]",
+    "absolute top-1 left-1/2 -translate-x-1/2 z-10",
+    "absolute top-1 left-[35%]",
   ];
 
   return (
