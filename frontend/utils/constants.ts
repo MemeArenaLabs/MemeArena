@@ -43,9 +43,9 @@ export const supportedCoins: (MemeCoin | Coin)[] = [
     gladiatorIcon: "/assets/gladiators/no-bg/gigachad.png",
   },
   {
-    name: "PONKE",
-    tickerSymbol: Token.BONK,
-    iconUrl: "/assets/coin-logos/ponke.png",
-    gladiatorIcon: "/assets/gladiators/no-bg/ponke.png",
+    name: "MOODENG",
+    tickerSymbol: Token.MOODENG,
+    iconUrl: "/assets/coin-logos/moodeng.png",
+    gladiatorIcon: "/assets/gladiators/no-bg/moodeng.png",
   },
 ];

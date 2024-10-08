@@ -1,28 +1,38 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BottomMenu } from "@/components/gui/BottomMenu";
 import ProfilePanel from "@/components/ProfilePanel";
 import { TeamDetailsPanel } from "@/components/TeamDetailsPanel";
 import { mockedTeams, userName } from "@/mockedData/mockedData";
 import TeamSelectionPanel from "@/components/TeamSelectionPanel";
+import { useUserData } from "@/context/UserDataProvider";
+import { useUserTeams } from "@/hooks/useUserTeams";
+import { Team } from "@/types/serverDTOs";
 
 const Teams: React.FC = () => {
-  const [selectedTeam, setSelectedTeam] = useState(mockedTeams[0]);
-
+  const { id: userId } = useUserData();
+  const { teams: userTeams } = useUserTeams(userId ?? "");
+  const [selectedTeam, setSelectedTeam] = useState<Team>();
+  useEffect(() => {
+    if (userTeams && userTeams[0]) {
+      setSelectedTeam(userTeams[0]);
+    }
+  }, [userTeams]);
+  console.log(userTeams);
   return (
     <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="flex flex-grow">
-        <div className="">
+        {/* <div className="">
           <div className="p-2">
             <ProfilePanel />
           </div>
           <TeamSelectionPanel
-            teams={mockedTeams}
+            teams={userTeams}
             selectedTeam={selectedTeam}
             setSelectTeamCallBack={setSelectedTeam}
           />
         </div>
-        {selectedTeam && <TeamDetailsPanel team={selectedTeam} />}
+        {selectedTeam && <TeamDetailsPanel team={selectedTeam} />} */}
       </div>
       <BottomMenu />
     </main>

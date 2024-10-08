@@ -1,3 +1,5 @@
+import { UserMeme } from "./entities";
+
 export interface SkillDetails {
   skillId: string;
   name: string;
@@ -132,17 +134,9 @@ export type ProposeTeamDto = {
   team: { userMemeId: string; position: number }[];
 };
 
-// export type {
-//   ProposeSkillDto,
-//   FindOpponentDto,
-//   ProposeTeamDto,
-//   SkillDetails,
-//   TeamProposedResponseDto,
-//   JoinedResponseDto,
-//   ResolvedSkillsResponseDto,
-//   BattleLogDto,
-//   UserDataDto,
-//   MemeBattleStatus,
-//   UserMemeDto,
-//   UserResponseDto,
-// };
+export type Team = {
+  id: string;
+  name: string;
+  user: UserDataDto;
+  userMemes: UserMeme[];
+};
