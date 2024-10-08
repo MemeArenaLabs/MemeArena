@@ -7,22 +7,22 @@ import { mockedTeams, userName } from "@/mockedData/mockedData";
 import TeamSelectionPanel from "@/components/TeamSelectionPanel";
 import { useUserData } from "@/context/UserDataProvider";
 import { useUserTeams } from "@/hooks/useUserTeams";
-import { Team } from "@/types/serverDTOs";
+import { TeamResponseDto } from "@/types/serverDTOs";
 
 const Teams: React.FC = () => {
   const { id: userId } = useUserData();
   const { teams: userTeams } = useUserTeams(userId ?? "");
-  const [selectedTeam, setSelectedTeam] = useState<Team>();
+  const [selectedTeam, setSelectedTeam] = useState<TeamResponseDto>();
   useEffect(() => {
     if (userTeams && userTeams[0]) {
       setSelectedTeam(userTeams[0]);
     }
   }, [userTeams]);
-  console.log(userTeams);
+
   return (
     <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="flex flex-grow">
-        {/* <div className="">
+        <div className="">
           <div className="p-2">
             <ProfilePanel />
           </div>
@@ -32,7 +32,7 @@ const Teams: React.FC = () => {
             setSelectTeamCallBack={setSelectedTeam}
           />
         </div>
-        {selectedTeam && <TeamDetailsPanel team={selectedTeam} />} */}
+        {selectedTeam && <TeamDetailsPanel team={selectedTeam} />}
       </div>
       <BottomMenu />
     </main>
