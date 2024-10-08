@@ -38,13 +38,13 @@ export const CoinInput = ({
         <div className="w-full flex items-center">
           {solanaIconUrl && (
             <div className="">
-              <Image
+            {/*   <Image
                 src={solanaIconUrl}
                 alt="Solana logo"
                 height={24}
                 width={24}
                 className="mr-2 h-5 w-5"
-              />
+              /> */}
             </div>
           )}
           <div className="flex items-center justify-between w-full">
