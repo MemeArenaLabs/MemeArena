@@ -15,3 +15,12 @@ Accept: application/json
 # Obtener el usuario
 GET http://localhost:3001/users/wallet/7dY73Q3mbHj5VuDKnGXdWfu1Trpt1Nn9MmZ8ZdiM3nM5
 Accept: application/json
+
+###
+POST http://localhost:3001/user-memes
+Content-Type: application/json
+
+{
+  "userId": "c54f7460-2dcb-4795-ac66-ca5bf9b7077d",
+  "memeId": "8ab2fac4-3ca4-474d-ac09-7ae655fb14fd"
+}

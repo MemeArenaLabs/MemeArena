@@ -1,13 +1,15 @@
-import { supportedCoins, TickerSymbol } from "@/utils/constants";
-import React from "react";
+import { supportedCoins } from "@/utils/constants";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { Token } from "@/types/tokens";
 
 type StakeInputProps = {
-  coinSymbol?: TickerSymbol;
-  coinValue: string;
+  coinSymbol?: Token;
+  coinValue: number | undefined;
   handleStakeAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleMaxClick: () => void;
-  userCoinBalance: string;
+  userCoinBalance: number;
+  userCoinUsdRate: number;
 };
 
 export const CoinInput = ({
@@ -16,13 +18,20 @@ export const CoinInput = ({
   handleStakeAmountChange,
   handleMaxClick,
   userCoinBalance,
+  userCoinUsdRate
 }: StakeInputProps) => {
   const solanaIconUrl = supportedCoins.find(
     (coin) => coin.tickerSymbol === coinSymbol
   )?.iconUrl;
 
-  const usdValue = "10.00"; // replace with hook
-
+  const [usdRateValue, setUsdRateValue] = useState(0);
+  useEffect(()=>{
+    if(coinValue){
+      setUsdRateValue(coinValue * userCoinUsdRate)
+    } else {
+      setUsdRateValue(0)
+    }
+  },[coinValue])
   return (
     <div className="min-h-[64px] bg-dark-blue p-3 w-full">
       <div className="flex items-center w-full">
@@ -45,10 +54,12 @@ export const CoinInput = ({
               onChange={handleStakeAmountChange}
               className="w-full bg-dark-blue outline-none text-white text-2xl font-bold"
               placeholder="0.0"
+              disabled={!coinSymbol}
             />
             <button
               onClick={handleMaxClick}
               className=" text-light-blue h-5 text-[10px] hover:underline items-center flex"
+              disabled={!coinSymbol}
             >
               MAX
             </button>
@@ -58,7 +69,7 @@ export const CoinInput = ({
       <div>
         <div className="w-full flex justify-between">
           <p className="text-[#BABABA] text-[12px] font-medium">
-            USD {usdValue}
+            USD {usdRateValue || 0}
           </p>
           <p className="text-[#BABABA] text-[12px] font-medium">
             Available:{" "}

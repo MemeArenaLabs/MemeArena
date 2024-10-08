@@ -14,13 +14,9 @@
   }
 }
 
-/* debug Nahue */
-
-/*  div {
-  border: solid 0.1px red;
-}  */
-
-/* debug Nahue */
+html {
+  scrollbar-gutter: stable;
+}
 
 body {
   color: var(--foreground);

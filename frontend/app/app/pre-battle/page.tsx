@@ -41,14 +41,12 @@ export default function TeamSelection() {
       <div className="flex p-2">
         <div className="">
           {/* User CTA profile */}
-          <Profile
-            username="YourUsername"
-            showSettings={false}
-            onOpenModal={openModal}
-          />
-  <div className="flex py-2 text-yellow uppercase"><p>My team</p></div>
+          <Profile userName="YourUsername" readOnly={true} />
+          <div className="flex py-2 text-yellow uppercase">
+            <p>My team</p>
+          </div>
           {/* Left side and Center - Characters */}
-          <div >
+          <div>
             <div>
               <div className=" grid grid-cols-1 gap-1  ">
                 <div className=" flex items-center">
@@ -139,7 +137,9 @@ export default function TeamSelection() {
             <p>
               Organize who gladiator goes first, second, and third for the fight
             </p>
-            <p className="flex justify-center pt-20 text-yellow text-[138px]">{timer}</p>
+            <p className="flex justify-center pt-20 text-yellow text-[138px]">
+              {timer}
+            </p>
           </div>
         </div>
         {/* Right side - Skills */}
@@ -148,12 +148,14 @@ export default function TeamSelection() {
             <div>
               <div className="flex justify-end">
                 <Profile
-                  username="EnemyUsername"
-                  showSettings={false}
-                  isEnemy={true}
+                  userName="EnemyUsername"
+                  readOnly={true}
+                  isOpponent={true}
                 />
               </div>
-              <div className="flex justify-end p-2 text-yellow uppercase "><p>Enemy team</p></div>
+              <div className="flex justify-end p-2 text-yellow uppercase ">
+                <p>Enemy team</p>
+              </div>
 
               <div className="flex justify-end">
                 <div className="grid grid-cols-1 gap-1  ">
@@ -274,26 +276,19 @@ export default function TeamSelection() {
         </div>
       </Modal>
 
-      <TeamModal
+      {/* <TeamModal
         initialTitle={newTeamName}
         isOpen={isNewTeamModalOpen}
         onClose={closeNewTeamModal}
         onSave={handleSaveNewTeamName}
-      >
-        <div>
-          {/* Añade aquí los componentes necesarios para crear un nuevo equipo */}
-        </div>
-      </TeamModal>
+      ></TeamModal>
 
       <TeamModal
         initialTitle={editTeamName}
         isOpen={isEditTeamModalOpen}
         onClose={closeEditTeamModal}
         onSave={handleSaveEditTeamName}
-      >
-        <div></div>
-        {/* Añade aquí los componentes necesarios para editar el equipo */}
-      </TeamModal>
+      ></TeamModal> */}
     </main>
   );
 }

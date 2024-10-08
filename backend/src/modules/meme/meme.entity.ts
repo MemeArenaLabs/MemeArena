@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { BattleSessionUserMeme } from '../battle/battle.entity';
+import { Team } from '../team/team.entity';
 
 
 export enum SkillType {
@@ -76,6 +77,9 @@ export class UserMeme {
     (battleSessionUserMeme) => battleSessionUserMeme.userMeme,
   )
   battleSessions: BattleSessionUserMeme[];
+  
+  @ManyToOne(() => Team, (team) => team.userMemes, { nullable: true })
+  team: Team;
 }
 
 @Entity('skills')
