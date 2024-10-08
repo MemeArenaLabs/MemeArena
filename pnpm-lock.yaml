@@ -193,6 +193,15 @@ importers:
       axios:
         specifier: ^1.7.7
         version: 1.7.7
+<<<<<<< HEAD
+=======
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+      keyv:
+        specifier: ^5.1.0
+        version: 5.1.0
+>>>>>>> feat/vault-integration
       next:
         specifier: 14.2.6
         version: 14.2.6(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
