@@ -15,6 +15,7 @@ export interface GladiatorInfo {
 export type GladiImg = {
   name: string;
   imageUrl: string;
+  imagePfpUrl: string;
 };
 
 export type Team = {
@@ -42,9 +43,9 @@ export const mockedTeams: Team[] = [
     id: "team-a",
     teamName: "MEMEKILLERS",
     gladiators: [
-      { name: "gigachad", imageUrl: "/assets/gladiators/magaiba.png" },
-      { name: "popcat", imageUrl: "/assets/gladiators/magaiba.png" },
-      { name: "bonk", imageUrl: "/assets/gladiators/bonk.png" },
+      { name: "gigachad", imageUrl: "/assets/gladiators/no-bg/gigachad.png" , imagePfpUrl:"/assets/gladiators/pfp/gigachad.png" , },
+      { name: "popcat", imageUrl: "/assets/gladiators/no-bg/popcat.png" , imagePfpUrl:"/assets/gladiators/pfp/popcat.png" ,},
+      { name: "bonk", imageUrl: "/assets/gladiators/no-bg/bonk.png" , imagePfpUrl:"/assets/gladiators/pfp/bonk.png" ,},
     ],
   },
   {
