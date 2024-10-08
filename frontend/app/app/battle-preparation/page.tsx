@@ -1,76 +1,64 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProfilePanel from "@/components/ProfilePanel";
 import { TeamSelector } from "@/components/TeamSelector";
 import { BettingForm } from "@/components/BettingForm";
 import { Team } from "@/mockedData/mockedData";
 import Image from "next/image";
+import { BACKGROUND_IMAGE } from "@/utils/constants";
+import { useUserData } from "@/context/UserDataProvider";
+import { useUserTeams } from "@/hooks/useUserTeams";
+import { TeamResponseDto } from "@/types/serverDTOs";
 
-// export const TOKEN_INFO: Record<TokenType, TokenInfo> = {
-//   bear: {
-//     price: 0.000000021837,
-//     stakedAmount: 123456733,
-//     imageUrl: "/assets/logos/bear.png",
+// export const MOCKED_TEAMS: Team[] = [
+//   {
+//     id: "team-a",
+//     teamName: "TEAM A",
+//     gladiators: [
+//       {
+//         name: "bear",
+//         imageUrl: "/assets/gladiators/no-bg/moodeng.png",
+//       },
+//       {
+//         name: "bonk",
+//         imageUrl: "/assets/gladiators/no-bg/bonk.png",
+//       },
+//       {
+//         name: "mog",
+//         imageUrl: "/assets/gladiators/no-bg/gigachad.png",
+//       },
+//     ],
 //   },
-//   magaiba: {
-//     price: 0.00019104,
-//     stakedAmount: 3456789,
-//     imageUrl: "/assets/logos/magaiba.png",
+//   {
+//     id: "team-b",
+//     teamName: "TEAM B",
+//     gladiators: [
+//       {
+//         name: "mog",
+//         imageUrl: "/assets/team-selection/gladiators/mog-no-bg.png",
+//       },
+//       {
+//         name: "bear",
+//         imageUrl: "/assets/team-selection/gladiators/bear-no-bg.png",
+//       },
+//       {
+//         name: "bear",
+//         imageUrl: "/assets/team-selection/gladiators/bear-no-bg.png",
+//       },
+//     ],
 //   },
-//   mog: {
-//     price: 0.0000015,
-//     stakedAmount: 123456789,
-//     imageUrl: "/assets/logos/mog.png",
-//   },
-// };
-
-export const MOCKED_TEAMS: Team[] = [
-  {
-    id: "team-a",
-    teamName: "TEAM A",
-    gladiators: [
-      {
-        name: "bear",
-        imageUrl: "/assets/team-selection/gladiators/bear-no-bg.png",
-      },
-      {
-        name: "bonk",
-        imageUrl: "/assets/team-selection/gladiators/bonk.png",
-      },
-      {
-        name: "mog",
-        imageUrl: "/assets/team-selection/gladiators/mog-no-bg.png",
-      },
-    ],
-  },
-  {
-    id: "team-b",
-    teamName: "TEAM B",
-    gladiators: [
-      {
-        name: "mog",
-        imageUrl: "/assets/team-selection/gladiators/mog-no-bg.png",
-      },
-      {
-        name: "bear",
-        imageUrl: "/assets/team-selection/gladiators/bear-no-bg.png",
-      },
-      {
-        name: "bear",
-        imageUrl: "/assets/team-selection/gladiators/bear-no-bg.png",
-      },
-    ],
-  },
-];
+// ];
 
 export default function BattlePreparation() {
-  const [selectedTeam, setSelectedTeam] = useState<Team | undefined>(
-    MOCKED_TEAMS[0]
-  );
+  const { id: userId } = useUserData();
+  const { teams: userTeams } = useUserTeams(userId ?? "");
+  const [selectedTeam, setSelectedTeam] = useState<TeamResponseDto>();
 
-  const handleTeamSelect = (team: Team) => {
-    setSelectedTeam(team);
-  };
+  useEffect(() => {
+    if (userTeams && userTeams[0]) {
+      setSelectedTeam(userTeams[0]);
+    }
+  }, [userTeams]);
 
   return (
     <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
@@ -79,14 +67,14 @@ export default function BattlePreparation() {
           <ProfilePanel />
           <div className="flex h-full px-10">
             <TeamSelector
-              teams={MOCKED_TEAMS}
+              teams={userTeams}
               selectedTeam={selectedTeam}
-              onTeamSelect={handleTeamSelect}
+              onTeamSelect={setSelectedTeam}
             />
           </div>
         </div>
-
         <div className="relative">
+          {/* Betting form background */}
           <Image
             src="/assets/battle-layout/bg/battle-preparation.svg"
             alt="Battle Preparation Background"

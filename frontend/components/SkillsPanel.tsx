@@ -5,6 +5,7 @@ import { Modal } from "./Modal";
 import Image from "next/image";
 import { useUserData } from "@/context/UserDataProvider";
 import { SkillDetails, UserMemeDetails } from "@/types/serverDTOs";
+import { getGladiatorSkillImgUri } from "@/utils/getGladiatorAssets";
 
 interface SkillPanelProps {
   stakedAmount: number;
@@ -38,7 +39,7 @@ const SkillsPanel: React.FC<SkillPanelProps> = ({
                   <DetailedCard
                     key={index}
                     name={skill.name}
-                    imageUrl={"/assets/TODO.png"}
+                    imageUrl={getGladiatorSkillImgUri(skill.name)}
                     onClick={() => onSkillClick(skill)}
                   />
                 ))}

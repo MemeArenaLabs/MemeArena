@@ -29,7 +29,7 @@ export default function GladiatorSelectionPanel({
   };
 
   return (
-    <div className="flex gap-3 ml-2">
+    <div className="flex gap-3 ml-2 h-full">
       <GladiatorList
         selectedGladiator={selectedGladiator}
         onGladiatorSelect={selectedGladiatorCallback}
@@ -50,15 +50,15 @@ const GladiatorList: React.FC<GladiatorListProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userMemes } = useUserData();
-
+  console.log(userMemes);
   return (
-    <div className="flex flex-col">
-      <div className="overflow-y-auto scrollbar-hide max-h-[271px] flex-grow">
-        <div className="flex flex-col gap-[2px] max-w-[78px]">
+    <div className="flex flex-col h-full">
+      <div className="overflow-y-auto scrollbar-hide max-h-[271px] flex-grow h-full">
+        <div className="flex flex-col gap-[2px] max-w-[78px] h-full">
           {userMemes?.map((gladiator) => (
             <Image
               key={gladiator.userMemeId}
-              className={`border-2 cursor-pointer ${
+              className={`border-2 cursor-pointer bg-dark-blue-50 ${
                 selectedGladiator?.userMemeId === gladiator?.userMemeId
                   ? "border-yellow"
                   : "border-transparent hover:border-yellow"

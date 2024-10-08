@@ -22,7 +22,7 @@ const DetailedCard: React.FC<DetailedCardProps> = ({
         <div className="w-[94px] h-[100px] cursor-pointer border-4 border-dark-blue-70 border-opacity-70 relative overflow-hidden">
           <Image
             src={imageUrl}
-            alt={`${name} skill`}
+            alt={`${name}`}
             layout="fill"
             objectFit="cover"
             quality={90}

@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
 import { Team } from "@/mockedData/mockedData";
+import { TeamResponseDto } from "@/types/serverDTOs";
+import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
 
 interface BettingFormProps {
-  selectedTeam: Team;
+  selectedTeam: TeamResponseDto;
 }
 
 export const BettingForm: React.FC<BettingFormProps> = React.memo(
   ({ selectedTeam }) => {
     const [bets, setBets] = useState<number[]>(
-      new Array(selectedTeam.gladiators.length).fill(0)
+      new Array(selectedTeam.userMemes.length).fill(0)
     );
     const [totalBets, setTotalBets] = useState(0);
 
@@ -35,17 +37,18 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
         <div className="">
           <p className="text-xl">STAKED</p>
           <div className="flex gap-2 items-center justify-between">
-            {selectedTeam.gladiators.map((gladiator, index) => (
+            {selectedTeam.userMemes.map(({ meme }, index) => (
               <div
                 key={index}
                 className="flex gap-2 items-center justify-between"
               >
                 <div className="w-7 h-7">
                   <Image
-                    src={`/assets/coin-logos/${gladiator.name}.png`}
+                    src={`/assets/coin-logos/${meme.token.symbol.toLowerCase()}.png`}
+                    className="rounded-full"
                     width={28}
                     height={28}
-                    alt={`${gladiator.name} Logo`}
+                    alt={`${meme.name} Logo`}
                   />
                 </div>
                 <div>
@@ -63,17 +66,20 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
           <p className="text-xl uppercase">Enter your bet</p>
         </div>
         <div className="flex items-center justify-between gap-2">
-          {selectedTeam.gladiators.map((gladiator, index) => (
+          {selectedTeam.userMemes.map(({ meme }, index) => (
             <div key={index} className="bg-dark-blue-50 w-[113px]">
               <div className="p-1">
-                <Image
-                  src={gladiator.imageUrl}
-                  width={106}
-                  height={106}
-                  alt={`${gladiator.name} Gladiator`}
-                />
+                <div className="">
+                  <Image
+                    src={getGladiatorImgUri(meme.token.symbol)}
+                    width={106}
+                    height={106}
+                    className="bg-[#00000066]"
+                    alt={`${meme.name} Gladiator`}
+                  />
+                </div>
                 <div className="bg-dark-blue-70  flex justify-center">
-                  <p className="font-bold text-[10px]">{gladiator.name}</p>
+                  <p className="font-bold text-[10px]">{meme.name}</p>
                 </div>
                 <div className="py-1">
                   <div className="flex items-center justify-between gap-1">
@@ -88,12 +94,13 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="w-4 h-4">
+                  <div>
                     <Image
-                      src={`/assets/coin-logos/${gladiator.name}.png`}
+                      src={`/assets/coin-logos/${meme.token.symbol}.png`}
+                      className="rounded-full w-4 h-4"
                       width={16}
                       height={16}
-                      alt={`${gladiator.name} Logo`}
+                      alt={`${meme.name} Logo`}
                     />
                   </div>
                   <p className="text-light-blue font-medium text-[10px]">
