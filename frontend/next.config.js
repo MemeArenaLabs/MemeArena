@@ -14,6 +14,11 @@ module.exports = {
       rule.test?.test?.(".svg")
     );
 
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      crypto: require.resolve("crypto-browserify"),
+    };
+
     config.module.rules.push(
       {
         ...fileLoaderRule,
