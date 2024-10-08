@@ -108,6 +108,7 @@ export type UserMemeDetails = {
 export interface TokenDetails {
   id: string;
   symbol: string;
+  name: string;
   totalSupply: number;
   contractAddress: string;
 }

@@ -11,7 +11,7 @@ export async function seedUsers(dataSource: DataSource): Promise<User[]> {
     },
     {
       name:'nahue',
-      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+      walletAddress: '6wKRcxKTjJCWcHdSyeq9SLTDxKSwjR65PvB4ruDGkjjP'
     },
     {
       name:'mike',
