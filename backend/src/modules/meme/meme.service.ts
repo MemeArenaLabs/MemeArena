@@ -200,6 +200,7 @@ export class MemeService {
       token: {
         id: userMeme.meme.token.id,
         symbol: userMeme.meme.token.symbol,
+        name: userMeme.meme.token.name,
         totalSupply: userMeme.meme.token.totalSupply,
         contractAddress: userMeme.meme.token.contractAddress,
       },

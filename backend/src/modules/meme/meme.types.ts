@@ -3,6 +3,7 @@ import { SkillType } from './meme.entity';
 export interface TokenDetails {
   id: string;
   symbol: string;
+  name: string;
   totalSupply: number;
   contractAddress: string;
 }
