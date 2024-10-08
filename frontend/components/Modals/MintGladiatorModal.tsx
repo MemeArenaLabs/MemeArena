@@ -41,7 +41,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       <div className="flex w-[600px] gap-4">
         <div className="min-w-[226px]">
           <Image
-            src="/assets/mint/mog.png"
+            src="/assets/gladiators/gladiators.gif"
             width={226}
             height={226}
             alt="MOG"
