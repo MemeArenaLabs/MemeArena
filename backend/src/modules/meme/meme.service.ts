@@ -218,11 +218,11 @@ export class MemeService {
   }
 
   async createUserMeme(createUserMemeDto: CreateUserMemeDto): Promise<UserMeme> {
-    const { userId, memeId, tokensLocked = 0 } = createUserMemeDto;
+    const { userId, name, element, profession, tokensLocked = 0 } = createUserMemeDto;
 
-    const meme = await this.memeRepository.findOne({ where: { id: memeId } });
+    const meme = await this.memeRepository.findOne({ where: { name, element, profession } });
     if (!meme) {
-      throw new NotFoundException(`Meme with ID '${memeId}' not found`);
+      throw new NotFoundException(`Meme with name '${name}' element '${element}' and profession '${profession}' not found`);
     }
 
     const userMeme = this.userMemeRepository.create({

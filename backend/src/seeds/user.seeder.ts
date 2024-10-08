@@ -14,12 +14,12 @@ export async function seedUsers(dataSource: DataSource): Promise<User[]> {
       walletAddress: '6wKRcxKTjJCWcHdSyeq9SLTDxKSwjR65PvB4ruDGkjjP'
     },
     {
-      name:'mike',
-      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+      name:'franactis',
+      walletAddress: 'GVin63kayPZ8YrXRMXyZyF2nm9bjctWafbtjkDVVW7Ym'
     },
     {
       name:'dave',
-      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+      walletAddress: 'J3DF9fZfWpd5WMucvLk2VjoUcPu12M4nTKupWWMLx4Ge'
     },
     {
       name:'raquel',

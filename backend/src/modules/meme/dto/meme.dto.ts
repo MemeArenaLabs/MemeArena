@@ -1,5 +1,7 @@
 export class CreateUserMemeDto {
   userId: string;
-  memeId: string;
+  name: string;
+  element: string;
+  profession: string;
   tokensLocked?: number;
 }
