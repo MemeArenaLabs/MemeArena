@@ -79,6 +79,7 @@ const createNft = async () => {
     const metadata = metadataList[randomIndex];
   
     // Read the image file for the selected creature
+    console.log("METADATA.IMAGE ---",metadata.image)
     const imageFile = fs.readFileSync(
         path.join(__dirname, '.', metadata.image)
     );
