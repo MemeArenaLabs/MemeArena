@@ -24,11 +24,7 @@ const TeamSelectionPanel = ({
         <div className="overflow-y-auto flex scrollbar-hide flex-col gap-2 h-[270px] w-24">
           {teams.map((team, index) => (
             <TeamCard
-              className={`border-2 ${
-                team.id === selectedTeam?.id
-                  ? "border-yellow"
-                  : "border-transparent hover:border-yellow"
-              }`}
+              isSelected={team.id === selectedTeam?.id}
               key={team.name + "_" + index}
               team={team}
               onClick={() => setSelectTeamCallBack(team)}

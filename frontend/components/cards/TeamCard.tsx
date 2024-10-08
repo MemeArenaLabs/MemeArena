@@ -5,13 +5,21 @@ import { TeamResponseDto } from "@/types/serverDTOs";
 type TeamCardProps = {
   onClick?: () => void;
   team: TeamResponseDto;
-  className: string;
+  className?: string;
+  isSelected: boolean;
 };
 
-export function TeamCard({ onClick, team, className }: TeamCardProps) {
+export function TeamCard({
+  onClick,
+  team,
+  className,
+  isSelected = false,
+}: TeamCardProps) {
   return (
     <div
-      className={`flex flex-col relative group cursor-pointer ${className}`}
+      className={`flex flex-col relative group cursor-pointer border-2 ${
+        isSelected ? "border-yellow" : "border-transparent hover:border-yellow"
+      }`}
       onClick={onClick}
     >
       <div className="absolute inset-0 z-20 transition-shadow duration-300 group-hover:shadow-[inset_0_0_0_2px#FFFF00]" />
