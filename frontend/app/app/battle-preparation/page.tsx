@@ -73,10 +73,10 @@ export default function BattlePreparation() {
   };
 
   return (
-    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
+    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="flex justify-between h-full">
         <div className="pt-2 pl-2">
-          <ProfilePanel userName="User1" />
+          <ProfilePanel />
           <div className="flex h-full px-10">
             <TeamSelector
               teams={MOCKED_TEAMS}

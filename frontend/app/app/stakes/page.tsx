@@ -6,9 +6,9 @@ import { userName } from "@/mockedData/mockedData";
 
 export default function Stakes() {
   return (
-    <main className="flex flex-col justify-between bg-gray-900 text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
+    <main className="flex flex-col justify-between bg-gray-900 text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="p-2">
-        <ProfilePanel userName={userName} />
+        <ProfilePanel />
       </div>
       <div className="w-full flex justify-center items-center">
         <div className="w-[491px] flex justify-center">

@@ -37,11 +37,11 @@ export default function TeamSelection() {
   };
 
   return (
-    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
+    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="flex p-2">
         <div className="">
           {/* User CTA profile */}
-          <Profile userName="YourUsername" readOnly={true} />
+          <Profile readOnly={true} />
           <div className="flex py-2 text-yellow uppercase">
             <p>My team</p>
           </div>
@@ -147,11 +147,7 @@ export default function TeamSelection() {
           <div>
             <div>
               <div className="flex justify-end">
-                <Profile
-                  userName="EnemyUsername"
-                  readOnly={true}
-                  isOpponent={true}
-                />
+                <Profile readOnly={true} isOpponent={true} />
               </div>
               <div className="flex justify-end p-2 text-yellow uppercase ">
                 <p>Enemy team</p>
