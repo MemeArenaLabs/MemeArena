@@ -42,8 +42,8 @@ export const mockedTeams: Team[] = [
     id: "team-a",
     teamName: "MEMEKILLERS",
     gladiators: [
-      { name: "magaiba", imageUrl: "/assets/gladiators/magaiba.png" },
-      { name: "magaiba", imageUrl: "/assets/gladiators/magaiba.png" },
+      { name: "gigachad", imageUrl: "/assets/gladiators/magaiba.png" },
+      { name: "popcat", imageUrl: "/assets/gladiators/magaiba.png" },
       { name: "bonk", imageUrl: "/assets/gladiators/bonk.png" },
     ],
   },
