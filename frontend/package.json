@@ -35,6 +35,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@svgr/webpack": "^8.1.0",
+    "@types/bn.js": "^5.1.6",
     "@types/node": "^20",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18",
