@@ -56,7 +56,7 @@ const SkillsPanel: React.FC<SkillPanelProps> = ({
         <div className="flex gap-2 max-w-[617px]">
           <div className="min-w-[226px]">
             <Image
-              src="/assets/skills/magaiba/skills-info-kiss-of-death.png"
+              src={getGladiatorSkillImgUri(selectedSkill?.name ?? "")}
               width={226}
               height={226}
               alt="Kiss of Death"
@@ -64,16 +64,9 @@ const SkillsPanel: React.FC<SkillPanelProps> = ({
           </div>
           <div className="p-2 max-w-[347px]">
             <h3 className="text-yellow pb-2">{selectedSkill?.title}</h3>
-            <p className="font-normal text-[14px] ">
-              {selectedSkill?.description}
-            </p>
-            <div>
-              <ul className="text-[14px] font-bold p-2">
-                <li className="list-disc">Immobilizes the enemy for 1 turn.</li>
-                <li className="list-disc">
-                  Instant application with a high chance of paralysis.
-                </li>
-              </ul>
+            <p className="my-4">{selectedSkill?.description}</p>
+            <div className="my-6">
+              <p className="font-normal text-[14px] ">{selectedSkill?.quote}</p>
             </div>
           </div>
         </div>
