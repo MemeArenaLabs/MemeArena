@@ -17,7 +17,6 @@ const TeamSelectionPanel = ({
   >;
 }) => {
   const [isCreateTeamModalOpen, setIsCreateTeamModalOpen] = useState(false);
-  console.log(selectedTeam);
   return (
     <div className="flex pl-2">
       <div className="pr-1">

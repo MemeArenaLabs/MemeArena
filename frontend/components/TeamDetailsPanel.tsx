@@ -12,8 +12,13 @@ type TeamDetailsPanelProps = {
 
 export function TeamDetailsPanel({ team }: TeamDetailsPanelProps) {
   const [selectedGladiator, setSelectedGladiator] = useState<UserMemeDetails>();
-  const [isGladiatorModalOpen, setIsGladiatorModalOpen] = useState(false);
+  const [isGladiatorModalOpen, setIsGladiatorModalOpen] = useState(true);
   const [isEditTeamModalOpen, setIsEditTeamModalOpen] = useState(false);
+
+  const handleGladiatorCardClick = (gladiator: UserMemeDetails) => {
+    setSelectedGladiator(gladiator);
+    setIsGladiatorModalOpen(true);
+  };
 
   return (
     <div className="w-full flex justify-end">
@@ -31,16 +36,13 @@ export function TeamDetailsPanel({ team }: TeamDetailsPanelProps) {
 
           <div className="flex justify-end">
             <div className="grid grid-cols-1 gap-1">
-              {team.userMemes.map((gladiator, index) => (
-                <div
-                  key={gladiator.meme.name + index}
-                  className="flex items-center"
-                >
+              {team.userMemes.map(({ meme }, index) => (
+                <div key={meme.name + index} className="flex items-center">
                   <DetailedCard
-                    onClick={() => setIsGladiatorModalOpen(true)}
-                    name={gladiator.meme.name}
+                    onClick={() => handleGladiatorCardClick(meme)}
+                    name={meme.name}
                     imageUrl={getGladiatorColosseumBgImgUri(
-                      gladiator?.meme.token?.symbol ?? ""
+                      meme.token?.symbol ?? ""
                     )}
                   />
                 </div>

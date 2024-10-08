@@ -4,6 +4,7 @@ import { Modal } from "../Modal";
 import StatDisplay from "../StatDisplay";
 import { UserMemeDetails } from "@/types/serverDTOs";
 import { Stat } from "../GladiatorDetails";
+import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
 
 interface GladiatorInfoModalProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ const GladiatorInfoModal: React.FC<GladiatorInfoModalProps> = ({
       <div className="flex w-[600px] gap-4">
         <div className="min-w-[226px]">
           <Image
-            src="/assets/mint/mog.png"
+            src={getGladiatorImgUri(gladiator.token.symbol)}
             width={226}
             height={226}
             alt="MOG"
