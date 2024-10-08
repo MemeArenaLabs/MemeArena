@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { TeamResponseDto } from "@/types/serverDTOs";
+import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
 
 const TeamDisplay = ({ team }: { team: TeamResponseDto }) => {
   return (
@@ -13,13 +14,13 @@ const TeamDisplay = ({ team }: { team: TeamResponseDto }) => {
         <div className="w-full">
           <div className="grid mx-auto w-full justify-center h-40">
             <div className="flex max-w-[498px]">
-              {/* {team.userMemes.map(({meme}) => (
+              {team.userMemes.map(({meme}) => (
                 <CharacterImage
                   key={`team1_${meme.name}`}
                   name={meme.name}
-                  imageUrl={meme.imageUrl}
+                  imageUrl={getGladiatorImgUri(meme.token.name)}
                 />
-              ))} */}
+              ))}
             </div>
             <div className="flex justify-center">
               <Image

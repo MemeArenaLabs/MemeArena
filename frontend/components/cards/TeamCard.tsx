@@ -35,7 +35,7 @@ export function TeamCard({
           {team.userMemes.map((userMeme, index) => (
             <Image
               key={userMeme.meme.token.symbol}
-              src={getGladiatorImgUri(userMeme.meme.token.symbol)}
+              src={getGladiatorImgUri(userMeme.meme.token.name)}
               alt={`Gladiator ${index + 1}`}
               className={`w-[70px] h-[70px] ${positionClasses[index]}`}
               width={70}
