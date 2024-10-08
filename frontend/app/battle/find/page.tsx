@@ -4,7 +4,6 @@ import { formatTime } from "@/utils/utilFunctions";
 import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { transformUserMeme, useBattle } from "@/context/BattleProvider";
-import { getUserData } from "@/utils/api-service";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/navigation";
@@ -12,6 +11,7 @@ import { FindOpponentDto } from "@/types/serverDTOs";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import SolanaConnectButton from "@/components/SolanaConnectButton";
+import { getUserData } from "@/hooks/useUserData";
 
 export default function FindBattle() {
   const [walletAddress, setWalletAddress] = useState<string | PublicKey>("");

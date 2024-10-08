@@ -35,7 +35,7 @@ export default function TeamSelection() {
   };
 
   return (
-    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/team-selection/bg/bg.png')]">
+    <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="flex flex-grow">
         <div className="absolute ">
           {/* User CTA profile */}
@@ -43,14 +43,11 @@ export default function TeamSelection() {
         </div>
         {/* Left side and Center - Characters */}
         <div className=" flex w-full justify-center items-center">
-          
           <div>
-          <div className="flex justify-center">
-                <h2 className=" ">VICTORY!</h2>
-              </div>
+            <div className="flex justify-center">
+              <h2 className=" ">VICTORY!</h2>
+            </div>
             <div>
-              
-
               <div className="flex  justify-center pt-2">
                 <div className="w-full">
                   <div className="grid  mx-auto w-full  justify-center h-40">

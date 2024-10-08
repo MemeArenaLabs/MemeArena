@@ -3,47 +3,50 @@ import React, { useState } from "react";
 import DetailedCard from "./cards/DetailedCard";
 import { Modal } from "./Modal";
 import Image from "next/image";
-interface Skill {
-  name: string;
-  imageUrl: string;
-}
+import { useUserData } from "@/context/UserDataProvider";
+import { SkillDetails, UserMemeDetails } from "@/types/serverDTOs";
 
 interface SkillPanelProps {
-  skills: Skill[];
   stakedAmount: number;
   stakedUsd: number;
+  selectedGladiator?: UserMemeDetails;
 }
 
 const SkillsPanel: React.FC<SkillPanelProps> = ({
-  skills,
   stakedAmount,
   stakedUsd,
+  selectedGladiator,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState<SkillDetails>();
 
-  const onSkillClick = () => {
-    //handle skill show logic
+  const onSkillClick = (skill: SkillDetails) => {
+    setSelectedSkill(skill);
     setIsModalOpen(true);
   };
 
   return (
-    <div className="bg-[url('/assets/team-selection/bg/bg-skills-panel.svg')] z-0 pl-[75px]">
-      <div className="pr-2 pt-2">
-        <h2 className="text-right text-xl font-bold mb-4 pt-2">Skills</h2>
-        <div className="flex justify-end">
-          <div className="grid grid-cols-2 gap-1">
-            {skills.map((skill, index) => (
-              <DetailedCard
-                key={index}
-                name={skill.name}
-                imageUrl={skill.imageUrl}
-                onClick={() => onSkillClick()}
-              />
-            ))}
+    <div className="bg-[url('/assets/team-selection/bg/bg-skills-panel.svg')] z-0 pl-[75px] absolute top-0 right-0 h-full">
+      {selectedGladiator && (
+        <div className="pr-2 pt-2">
+          <h2 className="text-right text-xl font-bold mb-4 pt-2">Skills</h2>
+          <div className="flex justify-end">
+            <div className="grid grid-cols-2 gap-1">
+              {selectedGladiator?.skills
+                .filter((skill) => skill.type !== "SWITCH")
+                .map((skill, index) => (
+                  <DetailedCard
+                    key={index}
+                    name={skill.name}
+                    imageUrl={"/assets/TODO.png"}
+                    onClick={() => onSkillClick(skill)}
+                  />
+                ))}
+            </div>
           </div>
+          <StakedInfo amount={stakedAmount} usdValue={stakedUsd} />
         </div>
-        <StakedInfo amount={stakedAmount} usdValue={stakedUsd} />
-      </div>
+      )}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -59,7 +62,7 @@ const SkillsPanel: React.FC<SkillPanelProps> = ({
             />
           </div>
           <div className="p-2 max-w-[347px]">
-            <h3 className="text-yellow pb-2">KISS OF DEATH</h3>
+            <h3 className="text-yellow pb-2">{selectedSkill?.name}</h3>
             <p className="font-normal text-[14px] ">
               Magaiba unleashes a venomous tongue lash towards its opponent,
               loaded with paralyzing toxins. With lethal precision, the strike

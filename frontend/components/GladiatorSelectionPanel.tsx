@@ -1,93 +1,38 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import GladiatorDetails from "./GladiatorDetails";
 import SvgIcon from "@/utils/SvgIcon";
 import MintGladiatorModal from "./Modals/MintGladiatorModal";
 import { Gladiator } from "@/types/types";
+import { useUserData } from "@/context/UserDataProvider";
+import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
+import { UserMemeDetails } from "@/types/serverDTOs";
 
-const mockGladiators: Gladiator[] = [
-  {
-    id: 1,
-    name: "MAGAIBA",
-    image: "/assets/team-selection/gladiators/magaiba.png",
-    fullImage: "/assets/battle-layout/gladiators/magaiba.png",
-    type: "TANK",
-    subtype: "PLANT",
-    hp: 480,
-    attack: 36,
-    criticalChance: 10,
-    defense: 75,
-    speed: 45,
-  },
-  {
-    id: 2,
-    name: "BONK",
-    image: "/assets/team-selection/gladiators/magaiba.png",
-    fullImage: "/assets/battle-layout/gladiators/magaiba.png",
-    type: "FIGHTER",
-    subtype: "FIRE",
-    hp: 380,
-    attack: 78,
-    criticalChance: 20,
-    defense: 50,
-    speed: 65,
-  },
-  {
-    id: 3,
-    name: "GIGA",
-    image: "/assets/team-selection/gladiators/magaiba.png",
-    fullImage: "/assets/battle-layout/gladiators/magaiba.png",
-    type: "TANK",
-    subtype: "WATER",
-    hp: 520,
-    attack: 40,
-    criticalChance: 8,
-    defense: 80,
-    speed: 35,
-  },
-  {
-    id: 4,
-    name: "MEO",
-    image: "/assets/team-selection/gladiators/magaiba.png",
-    fullImage: "/assets/battle-layout/gladiators/magaiba.png",
-    type: "ROGUE",
-    subtype: "PLANT",
-    hp: 320,
-    attack: 70,
-    criticalChance: 25,
-    defense: 40,
-    speed: 85,
-  },
-  {
-    id: 5,
-    name: "ZAPP",
-    image: "/assets/team-selection/gladiators/magaiba.png",
-    fullImage: "/assets/battle-layout/gladiators/magaiba.png",
-    type: "ROGUE",
-    subtype: "FIRE",
-    hp: 300,
-    attack: 85,
-    criticalChance: 30,
-    defense: 35,
-    speed: 90,
-  },
-];
+export default function GladiatorSelectionPanel({
+  selectedGladiatorCallback,
+  selectedGladiator,
+}: {
+  selectedGladiatorCallback: (gladiator: UserMemeDetails) => void;
+  selectedGladiator?: UserMemeDetails;
+}) {
+  const { userMemes } = useUserData();
 
-export default function GladiatorSelectionPanel({}) {
-  const [selectedGladiator, setSelectedGladiator] = useState<
-    Gladiator | undefined
-  >(mockGladiators[0]);
+  useEffect(() => {
+    if (userMemes && userMemes[0]) {
+      selectedGladiatorCallback(userMemes[0]);
+    }
+  }, [userMemes]);
 
-  const handleGladiatorSelect = (gladiator: Gladiator) => {
-    setSelectedGladiator(gladiator);
+  const handleGladiatorSelect = (gladiator: UserMemeDetails) => {
+    selectedGladiatorCallback(gladiator);
   };
 
   return (
     <div className="flex gap-3 ml-2">
       <GladiatorList
         selectedGladiator={selectedGladiator}
-        onGladiatorSelect={handleGladiatorSelect}
+        onGladiatorSelect={selectedGladiatorCallback}
       />
       {selectedGladiator && <GladiatorDetails gladiator={selectedGladiator} />}
     </div>
@@ -95,8 +40,8 @@ export default function GladiatorSelectionPanel({}) {
 }
 
 interface GladiatorListProps {
-  selectedGladiator?: Gladiator;
-  onGladiatorSelect: (gladiator: Gladiator) => void;
+  selectedGladiator?: UserMemeDetails;
+  onGladiatorSelect: (gladiator: UserMemeDetails) => void;
 }
 
 const GladiatorList: React.FC<GladiatorListProps> = ({
@@ -104,20 +49,21 @@ const GladiatorList: React.FC<GladiatorListProps> = ({
   onGladiatorSelect,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { userMemes } = useUserData();
 
   return (
     <div className="flex flex-col">
       <div className="overflow-y-auto scrollbar-hide max-h-[271px] flex-grow">
         <div className="flex flex-col gap-[2px] max-w-[78px]">
-          {mockGladiators.map((gladiator) => (
+          {userMemes?.map((gladiator) => (
             <Image
-              key={gladiator.id}
+              key={gladiator.userMemeId}
               className={`border-2 cursor-pointer ${
-                selectedGladiator?.id === gladiator.id
+                selectedGladiator?.userMemeId === gladiator?.userMemeId
                   ? "border-yellow"
                   : "border-transparent hover:border-yellow"
               }`}
-              src={gladiator.image}
+              src={getGladiatorImgUri(gladiator.token.symbol)}
               width={78}
               height={78}
               alt={`${gladiator.name} avatar`}
@@ -132,7 +78,7 @@ const GladiatorList: React.FC<GladiatorListProps> = ({
           onClick={() => setIsModalOpen(true)}
         >
           <SvgIcon name="barbute" className="text-dark h-4 w-4" />
-          ADD
+          MINT
         </button>
       </div>
       <MintGladiatorModal
