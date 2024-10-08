@@ -34,7 +34,7 @@ export class TeamsService {
   async listTeamsByUser(userId: string): Promise<Team[]> {
     return this.teamRepository.find({
       where: { user: { id: userId } },
-      relations: ['userMemes', 'userMemes.meme'],
+      relations: ['user', 'userMemes', 'userMemes.meme'],
     });
   }
 
