@@ -60,7 +60,7 @@ export const useDepositLiquidity = () => {
             depositorAccountA: selectedCoin.token.ACCOUNT,
             depositorAccountLiquidity: selectedCoin.pool.TOKEN_ACCOUNT,
             tokenProgram: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),
-            associatedTokenProgram: new PublicKey('ATokenGPvR93p2Fb2a85kecGGn8k2tHm5uLrS8Z7pRz5'),
+            associatedTokenProgram: new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
             systemProgram: SystemProgram.programId,
             admin: meme.publicKey,
         };
@@ -90,8 +90,14 @@ export const useDepositLiquidity = () => {
        transaction.add(instruction);
 
        // Ensure the transaction is signed using the wallet's sendTransaction method
-       if (!publicKey) throw new Error('Wallet not connected');
-       const signature = await sendTransaction(transaction, connection);
+       if (!publicKey) {
+        console.error('Wallet not connected');
+        throw new Error('Wallet not connected');
+        }
+        console.log('Public Key:', publicKey.toBase58());
+        const signature = await sendTransaction(transaction, connection);
+        console.log('Transaction:', transaction);
+
 
        const latestBlockhash = await connection.getLatestBlockhash();
 
@@ -114,14 +120,16 @@ export const useDepositLiquidity = () => {
         lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
       }, 'processed');
 
+
        
 
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+        console.error('Transaction Error:', err);
+        if (err instanceof Error) {
+            setError(err.message);
+        } else {
+            setError('An unknown error occurred');
+        }
     } finally {
       setLoading(false);
     }
