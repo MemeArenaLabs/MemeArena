@@ -6,6 +6,9 @@ export interface SkillDetails {
   damage: number;
   speed: number;
   type: SkillType;
+  title: string;
+  quote: string;
+  description: string;
 }
 export enum SkillType {
   DAMAGE = "DAMAGE",
