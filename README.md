@@ -1,4 +1,42 @@
-# Memecoin Wars
+# Gladiators.meme
+
+##### Gladiators. Meme is a Pokemon-like " meme coins " battle in which users can fight for each other's bags. 
+
+Users can mint NFTs of their Gladiator cards, which represent the memecoins set to battle. These cards allow players to assemble their team of Gladiators to face off against other users in exciting duels.
+
+After building their team, players can stake their memecoins in our single-sided vaults and receive LP tokens. These LP tokens will serve as the in-game currency for betting during the Gladiator battles.
+
+Once the team is ready, players can jump into battle. During the match, their staked tokens are securely held in an escrow account, and once the fight concludes, our master account distributes the winnings to the victor.
+
+Each Gladiator in the game has unique attacks, with stats that fluctuate based on real-time market data. Factors like market activity, market cap, and the 24-hour price movement (% up or down) influence the Gladiator's performance. Currently, this data is fetched via an API, but we plan to upgrade to an oracle system in the future for enhanced reliability and decentralization.
+
+## Repo
+
+The project it's build using a turbo monorepo. 
+
+### Programs
+#### Configuration
+Solana version: solana-cli 1.18.18
+RPC URL: https://api.devnet.solana.com 
+WebSocket URL: wss://api.devnet.solana.com/
+Rust version: rustc 1.81.0
+Cargo version: cargo 1.81.0
+rustup toolchain list: stable-x86_64-apple-darwin (default)
+anchor version: anchor-cli 0.30.1
+
+#### Deployments
+
+- Vault Manager / AMM: 
+
+
+### Backend
+### Frontend
+
+
+
+
+
+
 
 [![Turborepo](https://img.shields.io/badge/built%20with-Turborepo-cc00ff.svg)](https://turbo.build/repo)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
