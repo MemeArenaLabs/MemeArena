@@ -1,6 +1,6 @@
 # Gladiators.meme
 
-##### Gladiators. Meme is a Pokemon-like " meme coins " battle in which users can fight for each other's bags. 
+#### Gladiators. Meme is a Pokemon-like " meme coins " battle in which users can fight for each other's bags. 
 
 Users can mint NFTs of their Gladiator cards, which represent the memecoins set to battle. These cards allow players to assemble their team of Gladiators to face off against other users in exciting duels.
 
