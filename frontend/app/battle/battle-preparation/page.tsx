@@ -9,45 +9,6 @@ import { useUserData } from "@/context/UserDataProvider";
 import { useUserTeams } from "@/hooks/useUserTeams";
 import { TeamResponseDto } from "@/types/serverDTOs";
 
-// export const MOCKED_TEAMS: Team[] = [
-//   {
-//     id: "team-a",
-//     teamName: "TEAM A",
-//     gladiators: [
-//       {
-//         name: "bear",
-//         imageUrl: "/assets/gladiators/no-bg/moodeng.png",
-//       },
-//       {
-//         name: "bonk",
-//         imageUrl: "/assets/gladiators/no-bg/bonk.png",
-//       },
-//       {
-//         name: "mog",
-//         imageUrl: "/assets/gladiators/no-bg/gigachad.png",
-//       },
-//     ],
-//   },
-//   {
-//     id: "team-b",
-//     teamName: "TEAM B",
-//     gladiators: [
-//       {
-//         name: "mog",
-//         imageUrl: "/assets/team-selection/gladiators/mog-no-bg.png",
-//       },
-//       {
-//         name: "bear",
-//         imageUrl: "/assets/team-selection/gladiators/bear-no-bg.png",
-//       },
-//       {
-//         name: "bear",
-//         imageUrl: "/assets/team-selection/gladiators/bear-no-bg.png",
-//       },
-//     ],
-//   },
-// ];
-
 export default function BattlePreparation() {
   const { id: userId } = useUserData();
   const { teams: userTeams } = useUserTeams(userId ?? "");

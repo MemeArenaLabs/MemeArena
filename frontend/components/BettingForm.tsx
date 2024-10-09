@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
-import { TeamResponseDto } from "@/types/serverDTOs";
+import { FindOpponentDto, TeamResponseDto } from "@/types/serverDTOs";
 import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
+import { Modal } from "./Modal";
+import { formatTime } from "@/utils/utilFunctions";
+import { ProgressActivity } from "@nine-thirty-five/material-symbols-react/outlined";
+import { PublicKey } from "@solana/web3.js";
+import { useRouter } from "next/navigation";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { transformUserMeme, useBattle } from "@/context/BattleProvider";
+import { useWebSocket } from "@/context/WebSocketProvider";
+import { getUserData } from "@/utils/api-service";
 
 interface BettingFormProps {
   selectedTeam: TeamResponseDto;
@@ -14,6 +23,12 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
       new Array(selectedTeam.userMemes.length).fill(0)
     );
     const [totalBets, setTotalBets] = useState(0);
+    const [time, setTime] = useState<number>(0);
+    const [isFinding, setIsFinding] = useState<boolean>(false);
+    const { isConnected, lastMessage, findOpponent } = useWebSocket();
+    const { setUserData, userData, userMemes, setUserMemes } = useBattle();
+    const router = useRouter();
+    const { publicKey } = useWallet();
 
     const handleBetChange = (index: number, value: string) => {
       const newBets = [...bets];
@@ -30,6 +45,62 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
       const total = bets.reduce((acc, bet) => acc + bet, 0);
       setTotalBets(total);
     }, [bets]);
+
+    useEffect(() => {
+      if (publicKey) {
+        const call = async () => {
+          const data = await getUserData(publicKey);
+          setUserData({
+            id: data.id,
+            walletAddress: data.walletAddress,
+            username: data.username,
+          });
+          setUserMemes(
+            data.userMemes.map((memeDto) => transformUserMeme(memeDto))
+          );
+        };
+        call();
+      }
+    }, [publicKey]);
+
+    useEffect(() => {
+      if (lastMessage?.event === "JOINED") {
+        router.push("/battle/preparation");
+        handleCloseModal();
+      }
+    }, [lastMessage]);
+
+    useEffect(() => {
+      let timerInterval: NodeJS.Timeout;
+      if (isFinding) {
+        timerInterval = setInterval(() => {
+          setTime((prev) => prev + 1);
+        }, 1000);
+      }
+      return () => {
+        clearInterval(timerInterval);
+      };
+    }, [isFinding]);
+
+    const handleFindBattle = () => {
+      setIsFinding(true);
+      setTime(0);
+      if (userData) {
+        const findOpponentDto: FindOpponentDto = {
+          userId: userData.id,
+          userMemeIds: userMemes.map((meme) => meme.userMemeId),
+        };
+        findOpponent(findOpponentDto);
+      } else {
+        console.log("No userData");
+      }
+    };
+
+    const handleCloseModal = () => {
+      setIsFinding(false);
+      setTime(0);
+      // handle cancel find battle
+    };
 
     return (
       <div className="px-6 py-2 flex flex-col justify-between">
@@ -116,10 +187,23 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
           <p className="text-3xl text-yellow">${totalBets.toFixed(2)}</p>
         </div>
 
-        <button className="bg-yellow text-black font-bold text-[14px] h-10 w-full flex items-center justify-center gap-1">
+        <button
+          className="bg-yellow text-black font-bold text-[14px] h-10 w-full flex items-center justify-center gap-1"
+          onClick={() => handleFindBattle()}
+        >
           <SvgIcon name="all-for-one" className="text-dark h-5 w-5" />
           I'M READY
         </button>
+        <Modal
+          isOpen={isFinding}
+          onClose={handleCloseModal}
+          title="Finding Battle"
+        >
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-lg">{formatTime(time)}</p>
+            <ProgressActivity className="animate-spin" />
+          </div>
+        </Modal>
       </div>
     );
   }

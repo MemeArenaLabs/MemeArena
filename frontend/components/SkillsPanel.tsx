@@ -45,7 +45,7 @@ const SkillsPanel: React.FC<SkillPanelProps> = ({
                 ))}
             </div>
           </div>
-          <StakedInfo amount={stakedAmount} usdValue={stakedUsd} />
+          {/* <StakedInfo amount={stakedAmount} usdValue={stakedUsd} /> */}
         </div>
       )}
       <Modal
