@@ -12,6 +12,19 @@ Once the team is ready, players can jump into battle. During the match, their st
 
 Each Gladiator in the game has unique attacks, with stats that fluctuate based on real-time market data. Factors like market activity, market cap, and the 24-hour price movement (% up or down) influence the Gladiator's performance. Currently, this data is fetched via an API, but we plan to upgrade to an oracle system in the future for enhanced reliability and decentralization.
 
+## Gladiators
+
+Our gladiators can have 3 different elements and 3 different class modifiers, and we have chosen 5 memecoins to be our Gladiators, a total of 45 configurations. Check their skills: https://synonymous-porch-d73.notion.site/Skills-11367921bb39807ab76ff125f6a31147?pvs=4
+
+
+- <img width="399" alt="image" src="https://github.com/user-attachments/assets/9eb3fea5-a2be-4736-9390-ac3255cb974a"><img width="398" alt="image" src="https://github.com/user-attachments/assets/7209a63f-3963-4811-b41f-43618bed6d38">
+- ![image](https://github.com/user-attachments/assets/0d568d54-031b-4fb7-a3ca-a8477df2e6c1)
+- ![image](https://github.com/user-attachments/assets/f231635f-3d0c-4691-8d3d-3560be16f4dd)
+- ![image](https://github.com/user-attachments/assets/514a08c7-be1c-499e-acb2-ff0f19807a87)
+- ![image](https://github.com/user-attachments/assets/1448333e-b385-40ee-aa79-81da812b2d64)
+- ![image](https://github.com/user-attachments/assets/dc1a9eed-39c9-4adf-982b-b46be3406841)
+
+
 ## Repo
 
 The project it's build using a turbo monorepo. 
@@ -27,6 +40,20 @@ rustup toolchain list: stable-x86_64-apple-darwin (default)
 anchor version: anchor-cli 0.30.1
 
 ## Deployments
+
+### Gladiators NFTs
+It has been used the Metaplex core SDK, the scripts can be found here: https://github.com/MemeArenaLabs/MemeArena/blob/32847617e4ed106af09aed368f2e67e4dd4a405a/frontend/components/Modals/MintGladiatorModal.tsx
+
+### The NFT Collection: 
+- imageUri: https://arweave.net/5eMJ9YmoTPY9JEcXwQBi8BbwvyDYCEaa2S3A2fg2nKFH
+
+Collection Created
+View Transaction on Solana Explorer
+- https://explorer.solana.com/tx/5Wkfbu3YFz8HdtZQkYnKkdhKZhJYrRj88cT3PHfKFK31pK9LR7qytNHHq7uQcjkGX4vbiRMchsb6iaHztbt8nhqw?cluster=devnet
+
+View Collection on Metaplex Explorer
+- https://core.metaplex.com/explorer/ENc8zjHjmipY3ZeccvxAG8Z8wudVmbWcyjLrjNug4NDy?env=devnet
+
 
 ### Vault Manager / AMM: 
   - https://solscan.io/account/7uiv49yQump51zMgNXCs98iPGq2oUHgUmbe33uUMiiv3?cluster=devnet
@@ -81,33 +108,18 @@ anchor version: anchor-cli 0.30.1
 
 
 ### Backend
-
-The backend is built in NodeJS using the NestJS framework.
-It includes both a REST API and a WebSocket server for managing battles in real-time.
-The backend consists of five modules: battle, meme, token, user, and team, all of which are connected to a PostgreSQL database for data persistence.
-The WebSocket-based battle system includes end-to-end (e2e) tests to ensure the correct execution of the battle sequence.
-Additionally, the backend has defined seeds to populate the database.
-Deployment is handled via Railway, with CI configured to automatically deploy changes from a specific branch of the repository.
-
 ### Frontend
-Built using Next.js, React, and Tailwind CSS, with full integration to interact with the Solana blockchain.
 
-#### Core Technologies
 
-Next.js: A React framework for building web applications.
-React: JavaScript library for creating dynamic user interfaces.
-Tailwind CSS: A utility-first CSS framework for designing responsive layouts.
-DaisyUI: A component library for Tailwind CSS to enhance UI design.
-TypeScript: A typed superset of JavaScript, enhancing code reliability.
 
-####Features
 
-Seamless integration with the Solana blockchain.
-Support for Solana-compatible wallets.
-NFT functionalities utilizing libraries from the Metaplex Foundation.
-Responsive, modern design powered by Tailwind CSS and DaisyUI.
-Optimized development workflow with Next.js and Turborepo.
 
+
+
+[![Turborepo](https://img.shields.io/badge/built%20with-Turborepo-cc00ff.svg)](https://turbo.build/repo)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
+Memecoin Wars is a cutting-edge web3 game featuring PvP battles with memes on the Solana blockchain.
 
 ## 🚀 Quick Start
 
