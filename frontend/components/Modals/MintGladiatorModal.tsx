@@ -72,17 +72,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
         profession: profession,
       };
       const userMemeResponse = await createUserMeme(body);
-
-      const userMemeData = await userMemeResponse.json();
-      console.log({ userMemeData });
-      if (!userMemeResponse.ok) {
-        throw new Error(userMemeData.error || "Error creating UserMeme");
-      }
-
-      console.log("UserMeme created successfully:", userMemeData);
-
-      console.log("Minting successful:", userMemeData);
-
+      console.log(userMemeResponse);
       // Actualiza el estado según sea necesario
       setIsMinted(true);
     } catch (err) {
@@ -111,7 +101,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
     }
     return { name, profession: "", element: "" };
   };
-
+  console.log(error);
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Mint Gladiator">
       <div className="flex w-[600px] gap-4">
@@ -195,7 +185,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
                   </>
                 )}
               </button>
-              {error && <p className="text-red-500 mt-2">{error}</p>}
+              {/* {error && <p className="text-red-500 mt-2">{error}</p>} */}
             </>
           )}
         </div>
