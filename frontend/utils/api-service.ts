@@ -1,4 +1,4 @@
-import { UserResponseDto } from "@/types/serverDTOs";
+import { ELEMENTS, PROFESSIONS, UserResponseDto } from "@/types/serverDTOs";
 import { PublicKey } from "@solana/web3.js";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "";
@@ -80,6 +80,35 @@ export const createTeam = async (body: { name: string; userMemeIds: string[]; us
       body: JSON.stringify(body),
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error saving user team:", error);
+    throw error;
+  }
+};
+
+
+export const createUserMeme = async (body: { userId?: string; name?: string; element?: string; profession?: string }) => {
+  try {
+    const { userId, name, element, profession} = body
+    const response = await fetch(`${serverUrl}/user-memes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        name,
+        element: element,
+        profession: profession,
+        tokensLocked: 0,
+      }),
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meme, Skill, UserMeme } from './meme.entity';
 import { Repository } from 'typeorm';
@@ -220,9 +220,9 @@ export class MemeService {
   async createUserMeme(createUserMemeDto: CreateUserMemeDto): Promise<UserMeme> {
     const { userId, name, element, profession, tokensLocked = 0 } = createUserMemeDto;
 
-    const meme = await this.memeRepository.findOne({ where: { name, element, profession } });
+    const meme = await this.memeRepository.findOne({ where: { name, element: element.toUpperCase(), profession: profession.toUpperCase() } });
     if (!meme) {
-      throw new NotFoundException(`Meme with name '${name}' element '${element}' and profession '${profession}' not found`);
+      throw new BadRequestException(`Meme with name '${name}' element '${element}' and profession '${profession}' not found`);
     }
 
     const userMeme = this.userMemeRepository.create({
