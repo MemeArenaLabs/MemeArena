@@ -1,4 +1,4 @@
-import { ELEMENTS, PROFESSIONS } from "./serverDTOs";
+import { ELEMENTS, PROFESSIONS, TokenDetails } from "./serverDTOs";
 
 export type UserData = {
   id: string;
@@ -13,6 +13,7 @@ export type UserMeme = {
   maxHp: number;
   attack: number;
   defense: number;
+  token: TokenDetails;
   speed: number;
   element?: ELEMENTS;
   profession?: PROFESSIONS;
@@ -28,6 +29,9 @@ export type SkillDetails = {
   damage: number;
   speed: number;
   type: SkillType;
+  title: string;
+  quote: string;
+  description: string;
 };
 
 export type SkillType = "DAMAGE" | "SWITCH";

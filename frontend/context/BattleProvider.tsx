@@ -13,6 +13,7 @@ import {
   ResolvedSkillsResponseDto,
   UserMemeDto,
   ELEMENTS,
+  TokenDetails,
 } from "@/types/serverDTOs";
 import {
   UserData,
@@ -75,6 +76,7 @@ export const transformUserMeme = (
       speed: memeDto.speed ?? 0,
       element: memeDto.element,
       profession: memeDto.profession,
+      token: memeDto.token || ({} as TokenDetails),
       status: (memeDto.status as MemeStatus) || "BENCH",
       skills:
         memeDto.skills?.map((skill: SkillDetails) => ({
@@ -82,6 +84,9 @@ export const transformUserMeme = (
           name: skill.name || "",
           damage: skill.damage ?? 0,
           speed: skill.speed ?? 0,
+          title: skill.title ?? "",
+          description: skill.description ?? "",
+          quote: skill.quote ?? "",
           type: (skill.type as SkillType) || "DAMAGE",
         })) || [],
     };
@@ -106,6 +111,9 @@ export const transformUserMeme = (
             name: skill.name || "",
             damage: skill.damage ?? 0,
             speed: skill.speed ?? 0,
+            title: skill.title ?? "",
+            description: skill.description ?? "",
+            quote: skill.quote ?? "",
             type: (skill.type as SkillType) || "DAMAGE",
           }))
         : currentMeme.skills,

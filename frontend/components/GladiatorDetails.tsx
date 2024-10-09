@@ -15,7 +15,6 @@ export type Stat = {
   value: number;
 };
 
-
 export default function GladiatorDetails({ gladiator }: GladiatorDetailsProps) {
   const GLADIATOR_STATS: Stat[] = [
     { icon: "broken-heart", label: "HP", value: gladiator.hpBase * 100 },
@@ -29,7 +28,7 @@ export default function GladiatorDetails({ gladiator }: GladiatorDetailsProps) {
     },
     { icon: "speedometer", label: "SPEED", value: gladiator.speedBase },
   ];
-
+  console.log(getGladiatorImgUri(gladiator.token.symbol));
   return (
     <div>
       <div className="flex flex-col gap-2">
@@ -48,7 +47,7 @@ export default function GladiatorDetails({ gladiator }: GladiatorDetailsProps) {
           <div className="mt-[-100px] mx-auto w-full justify-center h-40">
             <Image
               className="relative z-10"
-              src={getGladiatorImgUri(gladiator.token.symbol)}
+              src={getGladiatorImgUri(gladiator.token.name)}
               width={226}
               height={226}
               alt={`${gladiator.name} full image`}

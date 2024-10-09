@@ -1,62 +1,53 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-
-interface PlayerProps {
-  src: string;
-  width: number;
-  height: number;
-  alt: string;
-  isReversed?: boolean;
-}
-
-const players = [
-  {
-    src: "/assets/battle-layout/gladiators/magaiba.png",
-    width: 151,
-    height: 170,
-    alt: "Player 1",
-  },
-  {
-    src: "/assets/battle-layout/gladiators/bonk.png",
-    width: 164,
-    height: 180,
-    alt: "Player 2",
-    isReversed: true,
-  },
-];
+import { useBattle } from "@/context/BattleProvider";
+import { getGladiatorImgUri } from "@/utils/getGladiatorAssets";
+import { UserMeme } from "@/types/entities";
 
 export default function BattleArena() {
+  const { userMemes, opponentMemes } = useBattle();
+  const activeUserMeme = userMemes.find((meme) => meme.status === "ACTIVE");
+  const activeOpponentMeme = opponentMemes.find(
+    (meme) => meme.status === "ACTIVE"
+  );
+
+  const memes = [activeUserMeme, activeOpponentMeme];
   return (
     <div className="w-full flex justify-center gap-[250px]">
-      {players.map((player, index) => (
-        <Player key={index} {...player} />
-      ))}
+      {activeUserMeme && <Player meme={activeUserMeme} />}
+      {activeOpponentMeme && (
+        <Player meme={activeOpponentMeme} isReversed={true} />
+      )}
     </div>
   );
 }
 
-const Player: React.FC<PlayerProps> = ({
-  src,
-  width,
-  height,
-  alt,
+function Player({
   isReversed = false,
-}) => (
-  <div className={`grid ${isReversed ? "justify-start" : "justify-end"}`}>
-    <Image
-      className={`relative z-10`}
-      src={src}
-      width={width}
-      height={height}
-      alt={alt}
-    />
-    <Image
-      className={`mt-[-30px] ${isReversed ? "" : "animate-pulse"} z-0`}
-      src="/assets/battle-layout/gui-gladiators/shadow-gladiators.png"
-      width={width}
-      height={50}
-      alt={`Shadow of ${alt}`}
-    />
-  </div>
-);
+  meme,
+}: {
+  isReversed?: boolean;
+  meme: UserMeme;
+}) {
+  return (
+    <div
+      className={`grid ${isReversed ? "justify-start scale-x-[-1]" : "justify-end"}`}
+    >
+      <Image
+        className={`relative z-10`}
+        src={getGladiatorImgUri(meme.token.name)}
+        width={160}
+        height={160}
+        alt={""}
+      />
+      <Image
+        className={`mt-[-30px] ${isReversed ? "" : "animate-pulse"} z-0`}
+        src="/assets/battle-layout/gui-gladiators/shadow-gladiators.png"
+        width={160}
+        height={160}
+        alt={""}
+      />
+    </div>
+  );
+}

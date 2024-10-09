@@ -148,14 +148,13 @@ export const useDepositLiquidity = () => {
         admin: meme.publicKey,
       };
 
-        // // Ensure the user's associated token account for the LP token exists
-        // const depositorAccountLiquidity = await getOrCreateAssociatedTokenAccount(
-        //     connection,
-        //     payerKeypair, // payer
-        //     selectedCoin.pool.LP_TOKEN_MINT, // LP token mint
-        //     payerKeypair.publicKey // owner
-        // );
-    
+      // // Ensure the user's associated token account for the LP token exists
+      // const depositorAccountLiquidity = await getOrCreateAssociatedTokenAccount(
+      //     connection,
+      //     payerKeypair, // payer
+      //     selectedCoin.pool.LP_TOKEN_MINT, // LP token mint
+      //     payerKeypair.publicKey // owner
+      // );
 
       // Create the instruction to call your on-chain program
       const instruction = new TransactionInstruction({
@@ -182,7 +181,7 @@ export const useDepositLiquidity = () => {
           },
           { pubkey: values.systemProgram, isSigner: false, isWritable: false },
           { pubkey: values.admin, isSigner: true, isWritable: false },
-          { pubkey: publicKey, isSigner: true, isWritable: false }, // Use the connected wallet as a signer
+          // { pubkey: publicKey, isSigner: true, isWritable: false }, // Use the connected wallet as a signer
           { pubkey: payerKeypair.publicKey, isSigner: true, isWritable: false }, // Add payerKeypair as a signer
         ],
         programId: new PublicKey(

@@ -59,7 +59,7 @@ export function BottomMenu() {
           </button>
         ))}
         <button
-          onClick={() => navigate("/app/battle-preparation")}
+          onClick={() => navigate("/battle/battle-preparation")}
           className="clip-path-buttom-bar-right w-full h-[40px] bg-yellow hover:bg-yellow-600 text-black flex justify-center hover:opacity-85 font-bold py-2 transition-colors duration-200"
         >
           <span className="mr-2">

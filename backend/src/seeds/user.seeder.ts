@@ -23,7 +23,7 @@ export async function seedUsers(dataSource: DataSource): Promise<User[]> {
     },
     {
       name:'raquel',
-      walletAddress: 'HsAdvNNVWtmnXRMDKYz12JNXq15beZdSkwyJjX7PxtFb'
+      walletAddress: 'ETqMTjGZUj2a3Jhp41X7PtNUMFDVJfnmdXRihy6rTxtG'
     },
     {
       name:'lucho1',

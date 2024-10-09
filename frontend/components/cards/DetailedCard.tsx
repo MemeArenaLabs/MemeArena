@@ -5,7 +5,7 @@ import SvgIcon from "@/utils/SvgIcon";
 interface DetailedCardProps {
   name: string;
   imageUrl: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const DetailedCard: React.FC<DetailedCardProps> = ({
@@ -14,7 +14,7 @@ const DetailedCard: React.FC<DetailedCardProps> = ({
   onClick,
 }) => {
   const handleClick = () => {
-    onClick();
+    onClick?.();
     console.log("click");
   };
   return (
