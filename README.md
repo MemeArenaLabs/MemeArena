@@ -33,35 +33,45 @@ anchor version: anchor-cli 0.30.1
   - AMM created with public key: 7uiv49yQump51zMgNXCs98iPGq2oUHgUmbe33uUMiiv3
 
 ### Vauls:
-  #### WIF token:
+  #### WIF:
+  -     TOKEN_ADDRESS_WIF="4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY"
+  -     TOKEN_ACCOUNT_WIF="3kL2DgRZmcbb4PXE42FivG73uWNHF829CzsnwcJdNSo7"
   -     Pool Account: 4rHBKyXD7YzuLMX8edJ8kYZ9Qf5pMqpg1adRNidMQXu8
   -     Pool Token Account: GXJRZAViJJBsCeCW2PayWjT1FooJ99ShK3ihAUiE9fJE
   -     LP Token Mint Account: H9XaYVZ197y2Qxtua6ra3wbwa7jcQD9adqbjGU6QGBS2
   -     LP Token Account: 2PMi5J4TJDAGCJWNWYxcJvNqwigSRyEgQn5N6KV9tp4S
   -     Pool created for token: 4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY with signature: 4LJNK35LCAMKsybD4KxmBtMBd3LPoXyfwUxoyM1B5CTryTaavw69JapYuW546DH8VMATmcU7UfirgFe1nk13wYgC
 
-  #### BONK token:
+  #### BONK:
+  -     TOKEN_ADDRESS_BONK="B1Yhn1aypY8sDLbdamcrFvZsVRGXPzvo5nDgyeaSmhzU"
+  -     TOKEN_ACCOUNT_BONK="H2mWpW3sKybLV12EZ9UwJSkbwUWaZsgs1fW7PmpM88tf"
   -     Pool Account: 5ceMwfAuuCgChWiyVsAGP7GJYwh6HSWyKU7w7Qv5PTd2
   -     Pool Token Account: Ai1jvEpB4nwjP4DgMRBQQtgAkhMbBUPzuZYEc26fSNBC
   -     LP Token Mint Account: 6NyHVMLTXhgTB9dE1VrKciKGeYML9pXFizDuW7ARQQ4N
   -     LP Token Account: EwWEs1TjB2XmGxmTMoTze1gQKfpm76kT4u6x6ngHzaAa
   -     Pool created for token: B1Yhn1aypY8sDLbdamcrFvZsVRGXPzvo5nDgyeaSmhzU with signature: 2QtJUsAzSWLjuDaGVZSmtozFcAYcEEkjmgPgAkcfbTuZSA4nEhAk8tHq1ZtKrZ8sQdTZou7KCPWhmpvDLCNTZM6J
 
-  #### MOODENG token:
+  #### MOODENG:
+  -     TOKEN_ADDRESS_MOODENG="7iiZfGagYpn1c2C9KXKeSRFRVHFBBQeQsqAnVHGoJ3s5"
+  -     TOKEN_ACCOUNT_MOODENG="5Z4RqNkMHjWiEBDyUMibJHCwYGbj1kz4cDBDTfw23iw9"
   -     Pool Account: C6tWtChv9rK3wwf5NdwvwvWghiZmaHbsMihFoBjrBksb
   -     Pool Token Account: 7YaeHRrNWEcazXoaSQBq8ZXRD8QHtSZqm3Nr6khtWW2M
   -     LP Token Mint Account: 2rWmMZn5gncaDYjuz8UKtDbL3JdcEUtWjQrzmhQaJmDn
   -     LP Token Account: GBBaVkp4AbFjn5WWcPasYCW7tRPzKx5LdbtZMWW2v8vc
   -     Pool created for token: 7iiZfGagYpn1c2C9KXKeSRFRVHFBBQeQsqAnVHGoJ3s5 with signature: MDkpCvi5JrsoSA7yWPDyFBdz6Gd1X9vJvUwboJQhXMHNacoYvq3P5jWEkZmCpMDbmKv8GoLVVSx47RwD5UuHDfa
 
-  #### POPCAT token:
+  #### POPCAT:
+  -     TOKEN_ADDRESS_POPCAT="HzZGhbJQ9T6VZrffMtEVtGt51sNhKSAEHEY4T8xEud9Q"
+  -     TOKEN_ACCOUNT_POPCAT="6dMhpNfZZgM7aEjm5JdDeBLjtAxpSaGioWxmNWriGivm"
   -     Pool Account: 8aU216VZhog19iYvWDiShCWy7ykTd2D1RHaQUeSd5RLy
   -     Pool Token Account: GedEBAgKbPnNc4LhgTFpXLWByvd4jzmW57RRtGBihEUk
   -     LP Token Mint Account: 7iW7gA7YaibJVEN4kFd4vC9s2iACCJbhHBhrHzcaFTGo
   -     LP Token Account: 6KVWxa3JJjkDzTgv9VwTQ5ceE7Py1DiqGotGx5Sycyz7
   -     Pool created for token: HzZGhbJQ9T6VZrffMtEVtGt51sNhKSAEHEY4T8xEud9Q with signature: eHFFq5KUjBsoRW9xW19m6AmHZvxCxbDCCDUe22tGxMXaYCbsz1zkNQEZQG9i7BASoPquWwQnX2RmDLJ5YRuKsYi
 
-  #### GIGACHAT token:
+  #### GIGACHAT:
+  -     TOKEN_ADDRESS_GIGACHAT="2HHGkN3PEKiDT2ZiE65VuW6BvjdUQsxySmdZ2JF4RAf3"
+  -     TOKEN_ACCOUNT_GIGACHAT="GTbYi1jVDcnpXKnXCNcDrLfPKjAYh4XBBpk6ZD8DqTKx"
   -     Pool Account: 8pzHGfLxa6McF7NaJeEAFUeYvdnz2Cep6n17bGjWEFTF
   -     Pool Token Account: 7HqnjSAD4KCW6VJ7bxsNmJiMTxPFnEPrLhVqaTWNa5mw
   -     LP Token Mint Account: GsTpabYD9X7VizgBng1AVugdmRJifSG6hHC1FvZqE5TZ
