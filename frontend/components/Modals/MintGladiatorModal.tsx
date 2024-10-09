@@ -85,6 +85,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       setLoading(false);
     }
   };
+  
 
   const handleMaxAmount = () => {
     console.log("max amount...");
