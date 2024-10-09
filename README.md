@@ -12,6 +12,16 @@ Once the team is ready, players can jump into battle. During the match, their st
 
 Each Gladiator in the game has unique attacks, with stats that fluctuate based on real-time market data. Factors like market activity, market cap, and the 24-hour price movement (% up or down) influence the Gladiator's performance. Currently, this data is fetched via an API, but we plan to upgrade to an oracle system in the future for enhanced reliability and decentralization.
 
+## Gladiators
+
+Our gladiators can have 3 different elements and 3 different class modifiers, and we have chosen 5 memecoins to be our Gladiators, a total of 45 configurations. 
+<img width="399" alt="image" src="https://github.com/user-attachments/assets/9eb3fea5-a2be-4736-9390-ac3255cb974a">
+<img width="398" alt="image" src="https://github.com/user-attachments/assets/7209a63f-3963-4811-b41f-43618bed6d38">
+
+
+
+attacks: https://synonymous-porch-d73.notion.site/Skills-11367921bb39807ab76ff125f6a31147
+
 ## Repo
 
 The project it's build using a turbo monorepo. 
@@ -27,6 +37,20 @@ rustup toolchain list: stable-x86_64-apple-darwin (default)
 anchor version: anchor-cli 0.30.1
 
 ## Deployments
+
+### Gladiators NFTs
+It has been used the Metaplex core SDK, the scripts can be found here: https://github.com/MemeArenaLabs/MemeArena/blob/32847617e4ed106af09aed368f2e67e4dd4a405a/frontend/components/Modals/MintGladiatorModal.tsx
+
+### The NFT Collection: 
+- imageUri: https://arweave.net/5eMJ9YmoTPY9JEcXwQBi8BbwvyDYCEaa2S3A2fg2nKFH
+
+Collection Created
+View Transaction on Solana Explorer
+- https://explorer.solana.com/tx/5Wkfbu3YFz8HdtZQkYnKkdhKZhJYrRj88cT3PHfKFK31pK9LR7qytNHHq7uQcjkGX4vbiRMchsb6iaHztbt8nhqw?cluster=devnet
+
+View Collection on Metaplex Explorer
+- https://core.metaplex.com/explorer/ENc8zjHjmipY3ZeccvxAG8Z8wudVmbWcyjLrjNug4NDy?env=devnet
+
 
 ### Vault Manager / AMM: 
   - https://solscan.io/account/7uiv49yQump51zMgNXCs98iPGq2oUHgUmbe33uUMiiv3?cluster=devnet
