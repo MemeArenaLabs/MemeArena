@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
 import Profile from "@/components/ProfilePanel";
+import { Settings } from "../../../components/ProfilePanel";
 
 type GladiatorProps = {
   name: string;
