@@ -60,13 +60,13 @@ export default function BattlePreparation() {
   return (
     <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="flex p-2">
-        <Team team={userMemes.slice(0, 3)} username={userData?.username} />
+        <Team team={userMemes} username={userData?.username} />
         <div className="w-full flex justify-center items-center">
           <Timer seconds={seconds} />
         </div>
         <Team
           isOpponent
-          team={opponentMemes.slice(0, 3)}
+          team={opponentMemes}
           username={opponentData?.username}
         />
       </div>

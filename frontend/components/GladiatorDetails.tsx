@@ -28,7 +28,6 @@ export default function GladiatorDetails({ gladiator }: GladiatorDetailsProps) {
     },
     { icon: "speedometer", label: "SPEED", value: gladiator.speedBase },
   ];
-  console.log(getGladiatorImgUri(gladiator.token.symbol));
   return (
     <div>
       <div className="flex flex-col gap-2">

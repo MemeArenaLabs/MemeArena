@@ -12,6 +12,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { transformUserMeme, useBattle } from "@/context/BattleProvider";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { getUserData } from "@/utils/api-service";
+import { useUserData } from "@/context/UserDataProvider";
 
 interface BettingFormProps {
   selectedTeam: TeamResponseDto;
@@ -25,10 +26,9 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
     const [totalBets, setTotalBets] = useState(0);
     const [time, setTime] = useState<number>(0);
     const [isFinding, setIsFinding] = useState<boolean>(false);
-    const { isConnected, lastMessage, findOpponent } = useWebSocket();
-    const { setUserData, userData, userMemes, setUserMemes } = useBattle();
+    const { lastMessage, findOpponent } = useWebSocket();
+    const { id: userId } = useUserData();
     const router = useRouter();
-    const { publicKey } = useWallet();
 
     const handleBetChange = (index: number, value: string) => {
       const newBets = [...bets];
@@ -45,23 +45,6 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
       const total = bets.reduce((acc, bet) => acc + bet, 0);
       setTotalBets(total);
     }, [bets]);
-
-    useEffect(() => {
-      if (publicKey) {
-        const call = async () => {
-          const data = await getUserData(publicKey);
-          setUserData({
-            id: data.id,
-            walletAddress: data.walletAddress,
-            username: data.username,
-          });
-          setUserMemes(
-            data.userMemes.map((memeDto) => transformUserMeme(memeDto))
-          );
-        };
-        call();
-      }
-    }, [publicKey]);
 
     useEffect(() => {
       if (lastMessage?.event === "JOINED") {
@@ -85,10 +68,10 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
     const handleFindBattle = () => {
       setIsFinding(true);
       setTime(0);
-      if (userData) {
+      if (userId) {
         const findOpponentDto: FindOpponentDto = {
-          userId: userData.id,
-          userMemeIds: userMemes.map((meme) => meme.userMemeId),
+          userId: userId,
+          userMemeIds: selectedTeam.userMemes.map((meme) => meme.id),
         };
         findOpponent(findOpponentDto);
       } else {
