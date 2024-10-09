@@ -61,7 +61,7 @@ async function createPools() {
           fromPubkey: payerKeypair.publicKey,
           newAccountPubkey: lpTokenMint.publicKey,
           lamports: await connection.getMinimumBalanceForRentExemption(82), // Adjust size as needed
-          space: 82, // Adjust size as needed
+          space: 82, 
           programId: TOKEN_PROGRAM_ID,
         })
       );
@@ -69,7 +69,7 @@ async function createPools() {
       transaction.add(
         createInitializeMintInstruction(
           lpTokenMint.publicKey,
-          6, // Decimals
+          9, // Decimals
           poolAccount.publicKey, // Mint authority
           null, // Freeze authority
           TOKEN_PROGRAM_ID
