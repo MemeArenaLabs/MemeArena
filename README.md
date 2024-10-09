@@ -14,13 +14,16 @@ Each Gladiator in the game has unique attacks, with stats that fluctuate based o
 
 ## Gladiators
 
-Our gladiators can have 3 different elements and 3 different class modifiers, and we have chosen 5 memecoins to be our Gladiators, a total of 45 configurations. 
-<img width="399" alt="image" src="https://github.com/user-attachments/assets/9eb3fea5-a2be-4736-9390-ac3255cb974a">
-<img width="398" alt="image" src="https://github.com/user-attachments/assets/7209a63f-3963-4811-b41f-43618bed6d38">
+Our gladiators can have 3 different elements and 3 different class modifiers, and we have chosen 5 memecoins to be our Gladiators, a total of 45 configurations. Check their skills: https://synonymous-porch-d73.notion.site/Skills-11367921bb39807ab76ff125f6a31147?pvs=4
 
 
+- <img width="399" alt="image" src="https://github.com/user-attachments/assets/9eb3fea5-a2be-4736-9390-ac3255cb974a"><img width="398" alt="image" src="https://github.com/user-attachments/assets/7209a63f-3963-4811-b41f-43618bed6d38">
+- ![image](https://github.com/user-attachments/assets/0d568d54-031b-4fb7-a3ca-a8477df2e6c1)
+- ![image](https://github.com/user-attachments/assets/f231635f-3d0c-4691-8d3d-3560be16f4dd)
+- ![image](https://github.com/user-attachments/assets/514a08c7-be1c-499e-acb2-ff0f19807a87)
+- ![image](https://github.com/user-attachments/assets/1448333e-b385-40ee-aa79-81da812b2d64)
+- ![image](https://github.com/user-attachments/assets/dc1a9eed-39c9-4adf-982b-b46be3406841)
 
-attacks: https://synonymous-porch-d73.notion.site/Skills-11367921bb39807ab76ff125f6a31147
 
 ## Repo
 
