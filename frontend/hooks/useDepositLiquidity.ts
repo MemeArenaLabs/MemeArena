@@ -98,6 +98,7 @@ export const useDepositLiquidity = () => {
             selectedCoin.pool.LP_TOKEN_MINT, // LP token mint
             payerKeypair.publicKey // owner
         );
+    
 
         
         const values = {
@@ -128,8 +129,8 @@ export const useDepositLiquidity = () => {
           { pubkey: values.associatedTokenProgram, isSigner: false, isWritable: false },
           { pubkey: values.systemProgram, isSigner: false, isWritable: false },
           { pubkey: values.admin, isSigner: true, isWritable: false },
-          { pubkey: new PublicKey('ETqMTjGZUj2a3Jhp41X7PtNUMFDVJfnmdXRihy6rTxtG'), isSigner: true, isWritable: false }, // Add feePayer as a signer
-
+          { pubkey: publicKey, isSigner: true, isWritable: false }, // Use the connected wallet as a signer
+          { pubkey: payerKeypair.publicKey, isSigner: true, isWritable: false }, // Add payerKeypair as a signer
         ],
         programId: new PublicKey('FqvM2PgVPQED3GLNJK1GNrFvDodVtH7SRZKPVxafvfTV'),
         data: Buffer.from(Uint8Array.of(0, ...new BN(100).toArray("le", 8))),
