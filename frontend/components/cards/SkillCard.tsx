@@ -1,11 +1,15 @@
 import React from "react";
 import Image from "next/image";
 import { MemeStatus } from "@/types/entities";
-import { getGladiatorSkillImgUri } from "@/utils/getGladiatorAssets";
+import {
+  getGladiatorColosseumBgImgUri,
+  getGladiatorSkillImgUri,
+} from "@/utils/getGladiatorAssets";
 
 interface SkillCardProps {
   skillName?: string;
   title: string;
+  memeImg?: string;
   status?: MemeStatus;
   isSelected?: boolean;
   onClick?: () => void;
@@ -15,6 +19,7 @@ export default function SkillCard({
   skillName = "",
   title,
   status,
+  memeImg,
   isSelected = false,
   onClick,
 }: SkillCardProps) {
@@ -50,7 +55,9 @@ export default function SkillCard({
             src={
               isDisabled
                 ? "/assets/battle-layout/skills/disabled-background.png"
-                : getGladiatorSkillImgUri(skillName)
+                : memeImg
+                  ? getGladiatorColosseumBgImgUri(memeImg)
+                  : getGladiatorSkillImgUri(skillName)
             }
             layout="fill"
             objectFit="cover"
@@ -60,12 +67,12 @@ export default function SkillCard({
             <div className="absolute inset-0 bg-black bg-opacity-30 z-20"></div>
           )}
           <div className="flex justify-end p-1 relative z-30">
-            <Image
+            {/* <Image
               src={getGladiatorSkillImgUri(skillName)}
               width={12}
               height={12}
               alt="Skill Info"
-            />
+            /> */}
           </div>
           <div className="w-full bg-[#05345A] bg-opacity-70 p-1 relative z-30">
             <div

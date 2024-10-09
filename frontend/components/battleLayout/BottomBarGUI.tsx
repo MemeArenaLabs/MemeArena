@@ -106,6 +106,7 @@ export default function BottomBarGUI() {
               ))
             : memesInBench?.map((meme) => (
                 <SkillCard
+                  memeImg={meme.token.name}
                   key={meme.userMemeId}
                   title={meme.name}
                   status={meme.status}
