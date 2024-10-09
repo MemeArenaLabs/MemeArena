@@ -5,6 +5,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  ManyToMany,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { BattleSessionUserMeme } from '../battle/battle.entity';
@@ -69,17 +70,14 @@ export class UserMeme {
   @ManyToOne(() => Meme, (meme) => meme.userMemes)
   meme: Meme;
 
-  @Column()
+  @Column({ default: 0 })
   tokensLocked: number; 
 
-  @OneToMany(
-    () => BattleSessionUserMeme,
-    (battleSessionUserMeme) => battleSessionUserMeme.userMeme,
-  )
+  @OneToMany(() => BattleSessionUserMeme, (battleSessionUserMeme) => battleSessionUserMeme.userMeme)
   battleSessions: BattleSessionUserMeme[];
-  
-  @ManyToOne(() => Team, (team) => team.userMemes, { nullable: true })
-  team: Team;
+
+  @ManyToMany(() => Team, (team) => team.userMemes)
+  teams: Team[];
 }
 
 @Entity('skills')

@@ -70,16 +70,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const asset = generateSigner(umi);
     const tx = await create(umi, {
       asset,
-      name: `${metadata.attributes.find(attr => attr.trait_type === 'Role')?.value} ${metadata.name} type ${metadata.attributes.find(attr => attr.trait_type === 'Element')?.value}`,
+      name: `role ${metadata.name} type ${metadata.attributes.find(attr => attr.trait_type === 'Element')?.value}`,
       uri: metadataUri,
       collection,
     }).sendAndConfirm(umi);
-
+    const [name, profession, element] = metadata.name.split(' ');
     const signature = base58.deserialize(tx.signature)[0];
     console.log('NFT Created:', signature);
 
     // Devolver la firma o cualquier información relevante
-    return res.status(200).json({ success: true, signature });
+    return res.status(200).json({ success: true, signature, name, profession, element });
   } catch (error) {
     console.error('Error in minting:', error);
     return res.status(500).json({ error });

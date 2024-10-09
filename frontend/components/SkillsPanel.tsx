@@ -38,7 +38,7 @@ const SkillsPanel: React.FC<SkillPanelProps> = ({
                 .map((skill, index) => (
                   <DetailedCard
                     key={index}
-                    name={skill.name}
+                    name={skill.title}
                     imageUrl={getGladiatorSkillImgUri(skill.name)}
                     onClick={() => onSkillClick(skill)}
                   />
@@ -56,27 +56,17 @@ const SkillsPanel: React.FC<SkillPanelProps> = ({
         <div className="flex gap-2 max-w-[617px]">
           <div className="min-w-[226px]">
             <Image
-              src="/assets/skills/magaiba/skills-info-kiss-of-death.png"
+              src={getGladiatorSkillImgUri(selectedSkill?.name ?? "")}
               width={226}
               height={226}
               alt="Kiss of Death"
             />
           </div>
           <div className="p-2 max-w-[347px]">
-            <h3 className="text-yellow pb-2">{selectedSkill?.name}</h3>
-            <p className="font-normal text-[14px] ">
-              Magaiba unleashes a venomous tongue lash towards its opponent,
-              loaded with paralyzing toxins. With lethal precision, the strike
-              immobilizes the adversary, leaving them unable to move for a full
-              turn.
-            </p>
-            <div>
-              <ul className="text-[14px] font-bold p-2">
-                <li className="list-disc">Immobilizes the enemy for 1 turn.</li>
-                <li className="list-disc">
-                  Instant application with a high chance of paralysis.
-                </li>
-              </ul>
+            <h3 className="text-yellow pb-2">{selectedSkill?.title}</h3>
+            <p className="my-4">{selectedSkill?.description}</p>
+            <div className="my-6">
+              <p className="font-normal text-[14px] ">{selectedSkill?.quote}</p>
             </div>
           </div>
         </div>

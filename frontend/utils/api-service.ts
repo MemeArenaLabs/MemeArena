@@ -67,3 +67,27 @@ export const getUserTeams = async (userId: string): Promise<any> => {
     throw error;
   }
 };
+
+
+export const createTeam = async (body: { name: string; userMemeIds: string[]; userId: string }) => {
+  try {
+    const response = await fetch(`${serverUrl}/teams`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error saving user team:", error);
+    throw error;
+  }
+};

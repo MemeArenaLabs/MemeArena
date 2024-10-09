@@ -43,7 +43,7 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
               >
                 <div className="w-7 h-7">
                   <Image
-                    src={`/assets/coin-logos/${meme.token.symbol.toLowerCase()}.png`}
+                    src={`/assets/coin-logos/${meme.token.name.toLowerCase()}.png`}
                     className="rounded-full"
                     width={28}
                     height={28}
@@ -70,7 +70,7 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
               <div className="p-1">
                 <div className="">
                   <Image
-                    src={getGladiatorImgUri(meme.token.symbol)}
+                    src={getGladiatorImgUri(meme.token.name)}
                     width={106}
                     height={106}
                     className="bg-[#00000066]"
@@ -95,7 +95,7 @@ export const BettingForm: React.FC<BettingFormProps> = React.memo(
                 <div className="flex items-center gap-1">
                   <div>
                     <Image
-                      src={`/assets/coin-logos/${meme.token.symbol}.png`}
+                      src={`/assets/coin-logos/${meme.token.name}.png`}
                       className="rounded-full w-4 h-4"
                       width={16}
                       height={16}

@@ -1,6 +1,6 @@
 // src/modules/teams/entities/team.entity.ts
 
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { User } from '../user/user.entity';
 import { UserMeme } from '../meme/meme.entity';
 
@@ -15,6 +15,7 @@ export class Team {
   @ManyToOne(() => User, (user) => user.teams)
   user: User;
 
-  @OneToMany(() => UserMeme, (userMeme) => userMeme.team)
+  @ManyToMany(() => UserMeme, (userMeme) => userMeme.teams)
+  @JoinTable()
   userMemes: UserMeme[];
 }

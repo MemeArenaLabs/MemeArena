@@ -17,17 +17,15 @@ export class TeamsService {
 
   async createTeam(createTeamDto: CreateTeamDto): Promise<Team> {
     const { name, userId, userMemeIds } = createTeamDto;
-  
-    // Crear el equipo directamente con los IDs
+
     const team = this.teamRepository.create({
       name,
-      user: { id: userId } as User, // Asociamos el ID del usuario al equipo
-      userMemes: userMemeIds.map((id) => ({ id } as UserMeme)), // Asociamos los IDs de UserMemes
+      user: { id: userId } as User,
+      userMemes: userMemeIds.map((id) => ({ id } as UserMeme)),
     });
-  
-    // Guardar el equipo
+
     await this.teamRepository.save(team);
-  
+
     return team;
   }
 

@@ -3,26 +3,13 @@ import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
 import { Modal } from "../Modal";
 import { CoinInput } from "../CoinInput";
+import {
 
-//Mint logic imports
-import {
-  create,
-  fetchCollectionV1,
-  mplCore,
-} from "@metaplex-foundation/mpl-core";
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
-import { base58 } from "@metaplex-foundation/umi/serializers";
-import {
-  publicKey,
-  generateSigner,
-  keypairIdentity,
-  createGenericFile,
   GenericFileTag,
 } from "@metaplex-foundation/umi";
 import { useGenerateMetadata, Metadata } from "../../hooks/useGenerateMetadata";
 import path from "path";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useUserData } from "@/context/UserDataProvider";
 
 interface MintGladiatorModalProps {
   isOpen: boolean;
@@ -33,25 +20,16 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [mintAmount, setMintAmount] = useState<string>("0.1");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mintAmount, setMintAmount] = useState<string>("0.1");
   const [isMinted, setIsMinted] = useState(false);
   const [selectedMetadata, setSelectedMetadata] = useState<Metadata | null>(
     null
   );
   const [imageFile, setImageFile] = useState<Blob | null>(null);
+  const { id } = useUserData();
 
-  let imageUri: string[];
-  let umiImageFile: {
-    buffer: Uint8Array;
-    fileName: string;
-    displayName: string;
-    uniqueName: string;
-    contentType: string | null;
-    extension: string | null;
-    tags: GenericFileTag[];
-  };
 
   useEffect(() => {
     if (!isOpen) {
@@ -109,12 +87,11 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   }
 
   const handleMintGladiator = async () => {
-    setLoading(true);
-    setError(null);
 
     try {
       const gladiatorName = selectedMetadata?.image;
       console.log({ gladiatorName });
+    
       const response = await fetch("/api/mintGladiator", {
         method: "POST",
         headers: {
@@ -122,15 +99,38 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
         },
         body: JSON.stringify({ imageName: gladiatorName }),
       });
-
+    
       const data = await response.json();
-
+    
       if (!response.ok) {
         throw new Error(data.error || "Error in minting");
       }
-
+    
+    
+      const userMemeResponse = await fetch("/user-memes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: id,
+          memeName: data.name,
+          element: data.element,
+          profession: data.profession,
+          tokensLocked: 0,
+        }),
+      });
+    
+      const userMemeData = await userMemeResponse.json();
+    
+      if (!userMemeResponse.ok) {
+        throw new Error(userMemeData.error || "Error creating UserMeme");
+      }
+    
+      console.log("UserMeme created successfully:", userMemeData);
+    
       console.log("Minting successful:", data);
-
+    
       // Actualiza el estado según sea necesario
       setIsMinted(true);
     } catch (err) {

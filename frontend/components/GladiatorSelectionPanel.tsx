@@ -63,7 +63,7 @@ const GladiatorList: React.FC<GladiatorListProps> = ({
                   ? "border-yellow"
                   : "border-transparent hover:border-yellow"
               }`}
-              src={getGladiatorImgUri(gladiator.token.symbol)}
+              src={getGladiatorImgUri(gladiator.token.name)}
               width={78}
               height={78}
               alt={`${gladiator.name} avatar`}

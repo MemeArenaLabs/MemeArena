@@ -42,7 +42,7 @@ export function TeamDetailsPanel({ team }: TeamDetailsPanelProps) {
                     onClick={() => handleGladiatorCardClick(meme)}
                     name={meme.name}
                     imageUrl={getGladiatorColosseumBgImgUri(
-                      meme.token?.symbol ?? ""
+                      meme.token?.name ?? ""
                     )}
                   />
                 </div>

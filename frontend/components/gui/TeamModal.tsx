@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { Modal } from "@/components/Modal";
 import { Edit } from "@nine-thirty-five/material-symbols-react/outlined";
 import SvgIcon from "@/utils/SvgIcon";
+import { useUserData } from "@/context/UserDataProvider";
+import { UserMemeDetails } from "@/types/serverDTOs";
+import { getGladiatorColosseumBgImgUri } from "@/utils/getGladiatorAssets";
+import { createTeam } from "@/utils/api-service";
 
 interface TeamModalProps {
   initialTitle: string;
@@ -11,25 +15,23 @@ interface TeamModalProps {
 }
 
 const MAX_GLADIATORS = 3;
-const TOTAL_SLOTS = 15;
 
 export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(initialTitle);
-  const [selectedGladiators, setSelectedGladiators] = useState<number[]>([]);
-
+  const [selectedGladiators, setSelectedGladiators] = useState<string[]>([]);
+  const { userMemes, id } = useUserData();
   const handleTitleClick = () => setIsEditing(true);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
-
-  const handleGladiatorSelect = (index: number) => {
+  const handleGladiatorSelect = (userMemeId: string) => {
     setSelectedGladiators((prev) => {
-      if (prev.includes(index)) {
-        return prev.filter((i) => i !== index);
+      if (prev.includes(userMemeId)) {
+        return prev.filter((i) => i !== userMemeId);
       } else if (prev.length < MAX_GLADIATORS) {
-        return [...prev, index];
+        return [...prev, userMemeId];
       }
       return prev;
     });
@@ -60,19 +62,26 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
     </div>
   );
 
-  const renderGladiatorSlot = (index: number) => {
-    const isSelected = selectedGladiators.includes(index);
-    const selectionOrder = selectedGladiators.indexOf(index) + 1;
-
+  const renderGladiatorSlot = (userMeme: UserMemeDetails, index: number) => {
+    const isSelected = selectedGladiators.includes(userMeme.userMemeId);
+    const selectionOrder = selectedGladiators.indexOf(userMeme.userMemeId) + 1;
+    const imageUri = getGladiatorColosseumBgImgUri(userMeme.token.name)
     return (
       <div
         key={index}
         className={`w-[94px] h-[100px] border-2 ${
           isSelected ? "border-yellow" : "border-dark-blue-70 border-opacity-70"
         } cursor-pointer relative ${!isSelected ? "brightness-[40%]" : ""}`}
-        onClick={() => handleGladiatorSelect(index)}
+        onClick={() => handleGladiatorSelect(userMeme.userMemeId)}
       >
-        <div className="h-full flex flex-col justify-between bg-[url('/assets/team-selection/gladiators/mog.png')]">
+          <div
+            className="h-full flex flex-col justify-between"
+            style={{
+              backgroundImage: `url(${imageUri})`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+            }}
+          >
           <div className="flex justify-end p-1">
             {isSelected && (
               <p className="w-4 h-4 bg-yellow rounded-full flex items-center justify-center text-black font-bold text-[14px]">
@@ -96,15 +105,21 @@ export function TeamModal({ initialTitle, isOpen, onClose }: TeamModalProps) {
     <Modal isOpen={isOpen} onClose={onClose} title={renderTitle()}>
       <div className="flex flex-col items-center">
         <div className="grid grid-cols-5 gap-2 h-[240px] overflow-x-hidden">
-          {Array.from({ length: TOTAL_SLOTS }, (_, index) =>
-            renderGladiatorSlot(index)
-          )}
+          {userMemes?.map((userMeme, i) => renderGladiatorSlot(userMeme, i))}
         </div>
       </div>
       <div>
         <button
           className="bg-yellow text-black font-bold text-[14px] w-36 h-[28px] flex items-center justify-center gap-2"
-          onClick={() => console.log("Save Team")}
+          onClick={async () => {
+            const body = { name: title, userMemeIds: selectedGladiators, userId: id || '' };
+            try {
+              const response = await createTeam(body);
+              console.log("Team saved successfully:", response);
+            } catch (error) {
+              console.error("Failed to save team:", error);
+            }
+          }}
         >
           <SvgIcon name="battle-gear" className="text-dark h-5 w-5" />
           SAVE TEAM

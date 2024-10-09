@@ -133,27 +133,6 @@ export default function TeamSelection() {
           </div>
         </div>
       </Modal>
-
-      <TeamModal
-        initialTitle={newTeamName}
-        isOpen={isNewTeamModalOpen}
-        onClose={closeNewTeamModal}
-        onSave={handleSaveNewTeamName}
-      >
-        <div>
-          {/* Añade aquí los componentes necesarios para crear un nuevo equipo */}
-        </div>
-      </TeamModal>
-
-      <TeamModal
-        initialTitle={editTeamName}
-        isOpen={isEditTeamModalOpen}
-        onClose={closeEditTeamModal}
-        onSave={handleSaveEditTeamName}
-      >
-        <div></div>
-        {/* Añade aquí los componentes necesarios para editar el equipo */}
-      </TeamModal>
     </main>
   );
 }

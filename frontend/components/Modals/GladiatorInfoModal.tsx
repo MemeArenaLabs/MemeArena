@@ -18,7 +18,7 @@ const GladiatorInfoModal: React.FC<GladiatorInfoModalProps> = ({
   gladiator,
 }) => {
   const GLADIATOR_STATS: Stat[] = [
-    { icon: "broken-heart", label: "HP", value: gladiator.hpBase },
+    { icon: "broken-heart", label: "HP", value: gladiator.hpBase * 100 },
     { icon: "battered-axe", label: "ATTACK", value: gladiator.attackBase },
     // TODO: Critical Chance not coming from backend
     // { icon: "crossed-swords", label: "CRITIC CHANCE", value: gladiator.defenseBase },
