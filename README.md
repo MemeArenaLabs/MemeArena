@@ -18,9 +18,88 @@ Our gladiators can have 3 different elements and 3 different class modifiers, an
 <img width="399" alt="image" src="https://github.com/user-attachments/assets/9eb3fea5-a2be-4736-9390-ac3255cb974a">
 <img width="398" alt="image" src="https://github.com/user-attachments/assets/7209a63f-3963-4811-b41f-43618bed6d38">
 
+### **Dog wif hat ($WIF)**
+![image](https://github.com/user-attachments/assets/ea274383-57c7-4c62-942d-3017c6606289)
 
 
-attacks: https://synonymous-porch-d73.notion.site/Skills-11367921bb39807ab76ff125f6a31147
+#### **Moonshot**
+*“Unleash a moon fragment to crush your opponent!”*
+Dog wif Hat hurls a piece of the moon, dealing heavy damage.
+![image](https://github.com/user-attachments/assets/ffc5ff47-240f-421b-a304-85c2232a6a09)
+
+#### Crochet Trap
+*“A handmade net that stops opponents in their tracks.”*
+Dog wif Hat throws a crochet net, immobilizing the enemy for 1 to 3 turns.
+![image](https://github.com/user-attachments/assets/10d53a9d-9f0b-4316-a29f-d62495921049)
+
+#### Dog wif helmet
+*“A helmet that boosts defense and resilience.”*
+Equipping a sturdy helmet, Dog wif Hat increases defense by 30%.
+![image](https://github.com/user-attachments/assets/bd76349a-a4f2-48dc-9f39-f14385831521)
+
+#### Fatal Fetch
+*“A deadly gamble—could end it all in one shot.”*
+1 in 20 chance to instantly defeat the opponent with a single attack.
+![image](https://github.com/user-attachments/assets/841f5dc2-43e7-47d7-aa4f-7b4a1c797b81)
+
+### Bonk ($BONK)
+![image](https://github.com/user-attachments/assets/eb837769-5628-44c5-b71b-953bdb7e4db4)
+
+
+### ** Home run hit **
+
+*“Swing for the fences! Either land a massive hit or miss completely.”*
+Bonk takes a wild swing with his bat. It has a chance to deal high damage (home run) or miss entirely (strikeout).
+![image](https://github.com/user-attachments/assets/a1ec1f8e-9dae-461c-8212-bfff1e267881)
+
+### **Blitz attack**
+*“Strike before your opponent can react.”*
+Bonk charges forward with incredible speed, landing a quick attack that ensures you move faster than your opponent.
+![image](https://github.com/user-attachments/assets/43bdf424-9b29-4c73-a0fe-d92025d70f09)
+
+**Golden Slammer**
+
+*“A bat of legends, boosting your power.”*
+Bonk wields a golden bat, increasing his attack power by 20% for a short duration.
+![image](https://github.com/user-attachments/assets/46ec9825-f32d-4474-b646-ed2618904fba)
+
+**Bat Shield**
+*“Deflect incoming damage with precision.”*
+Bonk uses his bat to block the next incoming attack, reducing 99% of the damage.
+![image](https://github.com/user-attachments/assets/114cacce-73ab-474d-960f-cd721f8f2d10)
+
+
+### Gigachad ($GIGA)
+![image](https://github.com/user-attachments/assets/422f2e36-9ec6-4e2d-ad0d-43cd91c33b00)
+
+### **Skill 1: Alpha Flex**
+*“Strike a pose and power up!”*
+Gigachad flexes his muscles, gaining 20% more damage and increasing his defense by 10%.
+![image](https://github.com/user-attachments/assets/47ff1cd3-ce83-4ebf-91c7-75904d7333f1)
+
+
+### **Skill 2: Giga Slam**
+*“Lift and slam your opponent with raw power.”*
+Gigachad grabs his opponent and slams them to the ground, dealing heavy damage.
+![image](https://github.com/user-attachments/assets/e86ffadc-3628-49bb-a249-cafc5bff5add)
+
+
+### **Skill 3: Bro Barrage**
+*“Deliver a rapid combo of powerful punches.”*
+Gigachad unleashes a series of punches, hitting the enemy 2 to 3 times in quick succession.
+![image](https://github.com/user-attachments/assets/1e523f08-36ad-47a9-b759-3bb695d5ea4c)
+
+
+### **Skill 4: Timber Bash**
+*“Wield a massive trunk to crush your foes.”*
+Gigachad swings a heavy tree trunk he cut down himself, dealing massive damage to all enemies.
+![image](https://github.com/user-attachments/assets/a98362f3-a996-4b72-8d56-9de233dca860)
+
+### Popcat $POPCAT
+
+
+
+
 
 ## Repo
 
