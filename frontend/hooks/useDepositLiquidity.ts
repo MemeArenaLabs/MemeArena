@@ -148,18 +148,14 @@ export const useDepositLiquidity = () => {
         admin: meme.publicKey,
       };
 
-<<<<<<< HEAD
-        // Ensure the user's associated token account for the LP token exists
-        const depositorAccountLiquidity = await getOrCreateAssociatedTokenAccount(
-            connection,
-            payerKeypair, // payer
-            selectedCoin.pool.LP_TOKEN_MINT, // LP token mint
-            payerKeypair.publicKey // owner
-        );
+        // // Ensure the user's associated token account for the LP token exists
+        // const depositorAccountLiquidity = await getOrCreateAssociatedTokenAccount(
+        //     connection,
+        //     payerKeypair, // payer
+        //     selectedCoin.pool.LP_TOKEN_MINT, // LP token mint
+        //     payerKeypair.publicKey // owner
+        // );
     
-=======
-      console.log("values", values);
->>>>>>> 2eb5fc05846b0b6ba7813279372df7f30f1188b0
 
       // Create the instruction to call your on-chain program
       const instruction = new TransactionInstruction({
@@ -186,18 +182,8 @@ export const useDepositLiquidity = () => {
           },
           { pubkey: values.systemProgram, isSigner: false, isWritable: false },
           { pubkey: values.admin, isSigner: true, isWritable: false },
-<<<<<<< HEAD
           { pubkey: publicKey, isSigner: true, isWritable: false }, // Use the connected wallet as a signer
           { pubkey: payerKeypair.publicKey, isSigner: true, isWritable: false }, // Add payerKeypair as a signer
-=======
-          {
-            pubkey: new PublicKey(
-              "ETqMTjGZUj2a3Jhp41X7PtNUMFDVJfnmdXRihy6rTxtG"
-            ),
-            isSigner: true,
-            isWritable: false,
-          }, // Add feePayer as a signer
->>>>>>> 2eb5fc05846b0b6ba7813279372df7f30f1188b0
         ],
         programId: new PublicKey(
           "FqvM2PgVPQED3GLNJK1GNrFvDodVtH7SRZKPVxafvfTV"
