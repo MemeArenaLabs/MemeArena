@@ -92,7 +92,6 @@ export const createTeam = async (body: { name: string; userMemeIds: string[]; us
   }
 };
 
-
 export const createUserMeme = async (body: { userId?: string; name?: string; element?: string; profession?: string }) => {
   try {
     const { userId, name, element, profession} = body
