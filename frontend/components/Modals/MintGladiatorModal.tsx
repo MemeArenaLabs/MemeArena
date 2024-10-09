@@ -10,6 +10,8 @@ import {
 import { useGenerateMetadata, Metadata } from "../../hooks/useGenerateMetadata";
 import path from "path";
 import { useUserData } from "@/context/UserDataProvider";
+import axios from "axios";
+import { createUserMeme } from "@/utils/api-service";
 
 interface MintGladiatorModalProps {
   isOpen: boolean;
@@ -24,10 +26,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [mintAmount, setMintAmount] = useState<string>("0.1");
   const [isMinted, setIsMinted] = useState(false);
-  const [selectedMetadata, setSelectedMetadata] = useState<Metadata | null>(
-    null
-  );
-  const [imageFile, setImageFile] = useState<Blob | null>(null);
+  const [selectedMetadata, setSelectedMetadata] = useState<Metadata>({} as Metadata);
   const { id } = useUserData();
 
 
@@ -40,96 +39,45 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   useEffect(() => {
     const metadataList = useGenerateMetadata();
     const randomIndex = Math.floor(Math.random() * metadataList.length);
-    const metadata = metadataList[randomIndex] ?? null; // Use null if metadata is undefined
+    const metadata = metadataList[randomIndex] || {} as Metadata; // Use null if metadata is undefined
     setSelectedMetadata(metadata);
   }, []);
 
-  useEffect(() => {
-    console.log({ selectedMetadata });
-    if (selectedMetadata) {
-      console.log(selectedMetadata);
-      const imagePath = selectedMetadata.image.startsWith("/")
-        ? selectedMetadata.image
-        : `/${selectedMetadata.image}`;
-      const imageUrl = imagePath; // Since the public folder is served at the root
-
-      fetch(imageUrl)
-        .then((blob) => blob.arrayBuffer())
-        .then((arrayBuffer) => {
-          const uint8Array = new Uint8Array(arrayBuffer);
-          const newBlob = new Blob([uint8Array]);
-          setImageFile(newBlob);
-        })
-        .catch((error) => console.error("Error fetching image file:", error));
-    }
-  }, [selectedMetadata]);
-
-  async function blobToUint8Array(blob: Blob): Promise<Uint8Array> {
-    const reader = new FileReader();
-
-    const arrayBuffer: ArrayBuffer = await new Promise((resolve, reject) => {
-      reader.onloadend = function () {
-        if (reader.result) {
-          resolve(reader.result as ArrayBuffer);
-        } else {
-          reject(new Error("Error reading the Blob"));
-        }
-      };
-
-      reader.onerror = function () {
-        reject(new Error("Error reading the Blob"));
-      };
-
-      reader.readAsArrayBuffer(blob);
-    });
-
-    return new Uint8Array(arrayBuffer);
-  }
 
   const handleMintGladiator = async () => {
 
     try {
       const gladiatorName = selectedMetadata?.image;
       console.log({ gladiatorName });
+      const [name, profession, element] = selectedMetadata?.name.split(' ');
     
-      const response = await fetch("/api/mintGladiator", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ imageName: gladiatorName }),
-      });
+      // const { data } = await axios.post("/api/mintGladiator", 
+      //   { imageName: gladiatorName }, 
+      //   { 
+      //     headers: { "Content-Type": "application/json" }, 
+      //     timeout: 8000
+      //   }
+      // );
     
-      const data = await response.json();
-    
-      if (!response.ok) {
-        throw new Error(data.error || "Error in minting");
+      // console.log({data})
+
+      const body = {
+        userId: id,
+        name,
+        element: element,
+        profession: profession,
       }
-    
-    
-      const userMemeResponse = await fetch("/user-memes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: id,
-          memeName: data.name,
-          element: data.element,
-          profession: data.profession,
-          tokensLocked: 0,
-        }),
-      });
+      const userMemeResponse = await createUserMeme(body);
     
       const userMemeData = await userMemeResponse.json();
-    
+      console.log({userMemeData})
       if (!userMemeResponse.ok) {
         throw new Error(userMemeData.error || "Error creating UserMeme");
       }
     
       console.log("UserMeme created successfully:", userMemeData);
     
-      console.log("Minting successful:", data);
+      console.log("Minting successful:", userMemeData);
     
       // Actualiza el estado según sea necesario
       setIsMinted(true);

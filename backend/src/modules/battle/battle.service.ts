@@ -182,7 +182,7 @@ export class BattleService {
         });
       }
     } catch (error) {
-      client.send(JSON.stringify({ event: 'FINDING_ERROR' }));
+      client.send(JSON.stringify({ event: 'FINDING_ERROR', error }));
     }
   }
 
