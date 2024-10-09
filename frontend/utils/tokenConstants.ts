@@ -1,7 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 
 export const TOKEN_WIF = {
-  ADDRESS: new PublicKey('4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY'),
   ACCOUNT: new PublicKey('3kL2DgRZmcbb4PXE42FivG73uWNHF829CzsnwcJdNSo7'),
 };
 

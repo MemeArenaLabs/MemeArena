@@ -36,7 +36,7 @@ export const useDepositLiquidity = () => {
   ); // Your program ID
   const ammId = new PublicKey("DDTWGUxUysQtJ2PJJdjYFN7Doedt5oLVE8T3hedES8iM"); // Example AMM ID
   //const mintA = new PublicKey('4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY'); // Example token mint address
-  const authoritySeed = Buffer.from("authority"); // Example seed
+  //const authoritySeed = Buffer.from("authority"); // Example seed
 
   const { publicKey, sendTransaction } = useWallet(); // Destructure publicKey and sendTransaction from useWallet
 
@@ -88,15 +88,15 @@ export const useDepositLiquidity = () => {
       const selectedCoin =
         coinMapping[meme.selectedCoin.tickerSymbol as keyof typeof coinMapping];
 
-      const [poolAuthority, _bump] = PublicKey.findProgramAddressSync(
-        [
-          ammId.toBuffer(),
-          selectedCoin.token.ADDRESS.toBuffer(),
-          authoritySeed,
-        ],
-        programId
-      );
-      console.log("poolAuthority:", poolAuthority);
+    //   const [poolAuthority, _bump] = PublicKey.findProgramAddressSync(
+    //     [
+    //       ammId.toBuffer(),
+    //       selectedCoin.token.ADDRESS.toBuffer(),
+    //       authoritySeed,
+    //     ],
+    //     programId
+    //   );
+    //   console.log("poolAuthority:", poolAuthority);
 
       const payerPrivateKey = Uint8Array.from([
         57, 49, 154, 35, 35, 201, 219, 82, 52, 36, 3, 82, 89, 128, 55, 182, 15,
@@ -133,7 +133,7 @@ export const useDepositLiquidity = () => {
 
       const values = {
         poolKey: selectedCoin.pool.ACCOUNT,
-        poolAuthority,
+        // poolAuthority,
         mintLiquidity: selectedCoin.pool.LP_TOKEN_MINT,
         mintA: selectedCoin.token.ADDRESS,
         depositorAccountA: selectedCoin.token.ACCOUNT,
@@ -161,7 +161,7 @@ export const useDepositLiquidity = () => {
       const instruction = new TransactionInstruction({
         keys: [
           { pubkey: values.poolKey, isSigner: false, isWritable: true },
-          { pubkey: values.poolAuthority, isSigner: false, isWritable: false },
+        //   { pubkey: values.poolAuthority, isSigner: false, isWritable: false },
           { pubkey: values.mintLiquidity, isSigner: false, isWritable: true },
           { pubkey: values.mintA, isSigner: false, isWritable: false },
           {
@@ -243,14 +243,12 @@ export const useDepositLiquidity = () => {
       //     await new Promise(resolve => setTimeout(resolve, 100000)); // Wait for 1 second before checking again
       //   }
       // Confirm the transaction using the new strategy
-      await connection.confirmTransaction(
-        {
-          signature,
-          blockhash: latestBlockhash.blockhash,
-          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-        },
-        "processed"
-      );
+      await connection.confirmTransaction({
+        signature,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+     }, 'finalized');
+
     } catch (error) {
       console.error("Transaction Error:", error);
       if (error instanceof WalletSendTransactionError) {
