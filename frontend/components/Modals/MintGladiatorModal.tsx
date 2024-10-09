@@ -3,8 +3,8 @@ import Image from "next/image";
 import SvgIcon from "@/utils/SvgIcon";
 import { Modal } from "../Modal";
 import { CoinInput } from "../CoinInput";
-
-//Mint logic imports
+import { IconName } from "@/utils/SvgIcon";
+import StatDisplay from "@/components/StatDisplay";
 import {
   create,
   fetchCollectionV1,
@@ -28,6 +28,13 @@ interface MintGladiatorModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const HARDCODED_GLADIATOR_STATS = [
+  { icon: "broken-heart" as IconName, label: "HP", value: 1200 },
+  { icon: "battered-axe" as IconName, label: "ATTACK", value: 130 },
+  { icon: "shield-impact" as IconName, label: "DEFENSE", value: 150 },
+  { icon: "speedometer" as IconName, label: "SPEED", value: 200 },
+];
 
 const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   isOpen,
@@ -62,7 +69,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
   useEffect(() => {
     const metadataList = useGenerateMetadata();
     const randomIndex = Math.floor(Math.random() * metadataList.length);
-    const metadata = metadataList[randomIndex] ?? null; // Use null if metadata is undefined
+    const metadata = metadataList[randomIndex] ?? null;
     setSelectedMetadata(metadata);
   }, []);
 
@@ -73,7 +80,7 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
       const imagePath = selectedMetadata.image.startsWith("/")
         ? selectedMetadata.image
         : `/${selectedMetadata.image}`;
-      const imageUrl = imagePath; // Since the public folder is served at the root
+      const imageUrl = imagePath;
 
       fetch(imageUrl)
         .then((blob) => blob.arrayBuffer())
@@ -131,7 +138,6 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
 
       console.log("Minting successful:", data);
 
-      // Actualiza el estado según sea necesario
       setIsMinted(true);
     } catch (err) {
       if (err instanceof Error) {
@@ -144,23 +150,20 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
     }
   };
 
-  // handle mint logic
-  // const mockGladiatorInfo: GladiatorInfo = {
-
-  //   name: "MAGAIBA",
-  //   type: "TANK / PLANT",
-  //   stats: [
-  //     { value: 420, icon: "broken-heart", label: "HP" },
-  //     { value: 36, icon: "battered-axe", label: "ATTACK" },
-  //     { value: 12, icon: "crossed-swords", label: "CRITICAL CHANCE" },
-  //     { value: 45, icon: "shield-impact", label: "DEFENSE" },
-  //     { value: 69, icon: "speedometer", label: "SPEED" },
-  //   ],
-  // };
-
   const handleMaxAmount = () => {
-    //handle max input amount
     console.log("max amount...");
+  };
+
+  const extractGladiatorInfo = (name: string) => {
+    const parts = name.split(" ");
+    if (parts.length >= 3) {
+      return {
+        name: parts.slice(0, -2).join(" "),
+        profession: parts[parts.length - 2],
+        element: parts[parts.length - 1],
+      };
+    }
+    return { name, profession: "", element: "" };
   };
 
   return (
@@ -181,20 +184,35 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
         <div className="w-full max-w-[347px]" id="enter-amount">
           {isMinted ? (
             <>
-              <p className="text-white text-[14px] font-medium">
-                Congratulations! Your NFT has been minted successfully.
-              </p>
               {selectedMetadata && (
                 <>
-                  <p className="text-white text-[14px] font-medium">
-                    Name: {selectedMetadata.name}
-                  </p>
-                  <Image
-                    src={selectedMetadata.image}
-                    width={100}
-                    height={100}
-                    alt={selectedMetadata.name}
-                  />
+                  {(() => {
+                    const { name, profession, element } = extractGladiatorInfo(
+                      selectedMetadata.name
+                    );
+                    return (
+                      <>
+                        <div className="grid gap-4 py-4">
+                          <p className="text-white text-[40px] font-bold">
+                            {name}
+                          </p>
+                          <p className="text-[20px] font-bold text-yellow uppercase">
+                            {profession} / {element}
+                          </p>
+                        </div>
+                        <div className="mt-2 flex flex-col gap-[6px]">
+                          {HARDCODED_GLADIATOR_STATS.map(({ label, icon, value }) => (
+                            <StatDisplay
+                              key={label}
+                              label={label}
+                              icon={icon}
+                              value={value}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()}
                 </>
               )}
             </>
@@ -218,10 +236,18 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
               <button
                 onClick={handleMintGladiator}
                 className="flex gap-2 items-center bg-yellow text-black text-[14px] font-bold py-2 px-4 min-w-[171px] h-[28px]"
+                disabled={loading}
               >
-                <SvgIcon name="barbute" className="text-black h-4 w-4" />
-                MINT GLADIATOR
+                {loading ? (
+                  "Minting..."
+                ) : (
+                  <>
+                    <SvgIcon name="barbute" className="text-black h-4 w-4" />
+                    MINT GLADIATOR
+                  </>
+                )}
               </button>
+              {error && <p className="text-red-500 mt-2">{error}</p>}
             </>
           )}
         </div>
@@ -231,14 +257,3 @@ const MintGladiatorModal: React.FC<MintGladiatorModalProps> = ({
 };
 
 export default MintGladiatorModal;
-
-// function useEffect(arg0: () => void, arg1: any[]) {
-//   throw new Error("Function not implemented.");
-// }
-
-function handleImageUpload(
-  imageFile: Blob | null,
-  selectedMetadata: Metadata | null
-) {
-  throw new Error("Function not implemented.");
-}
