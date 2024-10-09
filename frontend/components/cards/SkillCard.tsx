@@ -1,16 +1,19 @@
 import React from "react";
 import Image from "next/image";
 import { MemeStatus } from "@/types/entities";
+import { getGladiatorSkillImgUri } from "@/utils/getGladiatorAssets";
 
 interface SkillCardProps {
-  skillName: string;
+  skillName?: string;
+  title: string;
   status?: MemeStatus;
   isSelected?: boolean;
   onClick?: () => void;
 }
 
 export default function SkillCard({
-  skillName,
+  skillName = "",
+  title,
   status,
   isSelected = false,
   onClick,
@@ -42,22 +45,23 @@ export default function SkillCard({
           ${!isDisabled ? "group-hover:border-yellow" : ""}
         `}
       >
-        <div
-          className={`
-          relative z-10 h-full flex flex-col justify-between
-          ${
-            isDisabled
-              ? "bg-gray-600"
-              : "bg-[url('/assets/battle-layout/skills/magaiba-card.png')]"
-          }
-        `}
-        >
+        <div className="relative z-10 h-full flex flex-col justify-between">
+          <Image
+            src={
+              isDisabled
+                ? "/assets/battle-layout/skills/disabled-background.png"
+                : getGladiatorSkillImgUri(skillName)
+            }
+            layout="fill"
+            objectFit="cover"
+            alt="Skill Card Background"
+          />
           {isDisabled && (
             <div className="absolute inset-0 bg-black bg-opacity-30 z-20"></div>
           )}
           <div className="flex justify-end p-1 relative z-30">
             <Image
-              src="/assets/battle-layout/gui-skills/info-skills.svg"
+              src={getGladiatorSkillImgUri(skillName)}
               width={12}
               height={12}
               alt="Skill Info"
@@ -67,7 +71,7 @@ export default function SkillCard({
             <div
               className={`text-xs font-bold ${isDisabled ? "text-gray-300" : "text-white"} text-center`}
             >
-              {skillName}
+              {title}
             </div>
           </div>
         </div>

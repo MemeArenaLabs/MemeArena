@@ -1,9 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useWebSocket } from "@/context/WebSocketProvider";
 import { useRouter } from "next/navigation";
 import { useBattle } from "@/context/BattleProvider";
-import { Button } from "@/components/Button";
 import { ProposeTeamDto } from "@/types/serverDTOs";
 import { Profile } from "@/components/ProfilePanel";
 import { UserMeme } from "@/types/entities";
@@ -15,12 +14,13 @@ export default function BattlePreparation() {
   const { userData, battleSessionId, userMemes, opponentMemes, opponentData } =
     useBattle();
   const router = useRouter();
+  const [seconds, setSeconds] = useState(5);
 
   useEffect(() => {
     if (lastMessage?.event === "TEAM_PROPOSED") {
       router.push("/battle");
     }
-  }, [lastMessage]);
+  }, [lastMessage, router]);
 
   const handleProposeTeam = () => {
     console.log("battleSessionId: " + battleSessionId);
@@ -39,13 +39,30 @@ export default function BattlePreparation() {
       console.log("No battleSessionId or userData");
     }
   };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds((prevSeconds) => {
+        if (prevSeconds === 1) {
+          clearInterval(timer);
+          handleProposeTeam();
+          return 0;
+        }
+        return prevSeconds - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   console.log(userMemes, opponentMemes);
+
   return (
     <main className="flex flex-col text-white bg-cover bg-center h-[430px] w-[932px] bg-[url('/assets/backgrounds/main-bg.png')]">
       <div className="flex p-2">
         <Team team={userMemes} username={userData?.username} />
         <div className="w-full flex justify-center items-center">
-          <Timer />
+          <Timer seconds={seconds} />
         </div>
         <Team
           isOpponent
@@ -79,25 +96,21 @@ function Team({ isOpponent = false, team, username }: TeamProps) {
       <div
         className={`grid grid-cols-1 gap-1 ${isOpponent ? "justify-items-end" : ""}`}
       >
-        {/* {team.map((gladiator, index) => (
+        {team.map((gladiator, index) => (
           <DetailedCard
+            key={index}
             name={gladiator.name}
-            imageUrl={getGladiatorColosseumBgImgUri(gladiator.)}
+            imageUrl={getGladiatorColosseumBgImgUri(gladiator.token.name)}
           />
-        ))} */}
+        ))}
       </div>
     </div>
   );
 }
 
-function Timer({ seconds }: { seconds?: number }) {
-  const timer = 5;
+function Timer({ seconds }: { seconds: number }) {
   return (
     <div className="absolute grid justify-between">
-      {/* <h2 className="mt-[8px] text-[40px] uppercase">
-        10 seconds for strategy
-      </h2>
-      <p>Organize who gladiator goes first, second, and third for the fight</p> */}
       <p className="flex justify-center pt-20 text-yellow text-[138px]">
         {seconds}
       </p>

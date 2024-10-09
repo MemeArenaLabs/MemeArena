@@ -98,6 +98,7 @@ export default function BottomBarGUI() {
             ? skillsInMenu?.map((skill) => (
                 <SkillCard
                   key={skill.skillId}
+                  title={skill.title}
                   skillName={skill.name}
                   isSelected={skill.skillId === selectedSkillId}
                   onClick={() => handleSkillClick(skill.skillId)}
@@ -106,7 +107,7 @@ export default function BottomBarGUI() {
             : memesInBench?.map((meme) => (
                 <SkillCard
                   key={meme.userMemeId}
-                  skillName={meme.name}
+                  title={meme.name}
                   status={meme.status}
                   isSelected={meme.userMemeId === selectedMemeId}
                   onClick={() => handleMemeClick(meme.userMemeId)}

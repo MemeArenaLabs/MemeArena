@@ -30,12 +30,12 @@ export default function TopBarGUI() {
     <div className="flex justify-between mb-4 items-start">
       <div className="text-white min-w-[336px] flex">
         <PlayerPanel player={userData} activeMeme={userActiveMeme} />
-        <MarketPanel market={market1} />
+        {/* <MarketPanel market={market1} /> */}
       </div>
-      <Timer time={12} />
+      {/* <Timer time={12} /> */}
       <div className="text-white min-w-[336px] flex flex-col gap-2">
         <div className="flex">
-          <MarketPanel market={market2} isReversed />
+          {/* <MarketPanel market={market2} isReversed /> */}
           <PlayerPanel
             player={opponentData}
             activeMeme={opponentActiveMeme}
@@ -66,7 +66,7 @@ const PlayerPanel: React.FC<{
     >
       {!isReversed && (
         <Image
-          src="/assets/battle-layout/user-avatars/Frame 17.png"
+          src="/assets/profile/avatar-example.png"
           width={42}
           height={42}
           alt={`Avatar ${player.username}`}
@@ -94,7 +94,7 @@ const PlayerPanel: React.FC<{
       </div>
       {isReversed && (
         <Image
-          src="/assets/battle-layout/user-avatars/image.png"
+          src="/assets/profile/avatar-example.png"
           width={42}
           height={42}
           alt={`Avatar ${player.username}`}
