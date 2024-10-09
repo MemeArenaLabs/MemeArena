@@ -28,7 +28,9 @@ anchor version: anchor-cli 0.30.1
 
 #### Deployments
 
-- Vault Manager / AMM: 
+- Vault Manager / AMM:
+-     Generated AMM ID: DDTWGUxUysQtJ2PJJdjYFN7Doedt5oLVE8T3hedES8iM
+-     AMM created with public key: 7uiv49yQump51zMgNXCs98iPGq2oUHgUmbe33uUMiiv3
 
 
 ### Backend
