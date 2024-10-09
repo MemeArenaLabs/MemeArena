@@ -147,65 +147,75 @@ export const BattleProvider: React.FC<BattleProviderProps> = ({ children }) => {
       walletAddress: joinedData.opponentData.walletAddress,
       username: joinedData.opponentData.username,
     });
-    setUserMemes((prevMemes) =>
-      joinedData.userData.userMemes.map((memeDto) =>
-        transformUserMeme(
-          memeDto,
-          prevMemes.find((m) => m.userMemeId === memeDto.userMemeId)
-        )
-      )
+
+    // Replace userMemes with new data
+    setUserMemes(
+      joinedData.userData.userMemes.map((memeDto) => transformUserMeme(memeDto))
     );
-    setOpponentMemes((prevMemes) =>
+
+    // Replace opponentMemes with new data
+    setOpponentMemes(
       joinedData.opponentData.userMemes.map((memeDto) =>
-        transformUserMeme(
-          memeDto,
-          prevMemes.find((m) => m.userMemeId === memeDto.userMemeId)
-        )
+        transformUserMeme(memeDto)
       )
     );
   };
+
   console.log(userData, userMemes);
   const handleTeamProposedEvent = (
     teamProposedData: TeamProposedResponseDto
   ) => {
     teamProposedData.teams.forEach((team) => {
-      const updateMemes =
-        team.userId === userData?.id ? setUserMemes : setOpponentMemes;
-      updateMemes((prevMemes) =>
-        prevMemes.map((meme) => {
-          const proposedMeme = team.team.find(
-            (m) => m.userMemeId === meme.userMemeId
-          );
-          return proposedMeme
-            ? {
-                ...meme,
-                status: proposedMeme.status as MemeStatus,
-                position: proposedMeme.position,
-              }
-            : meme;
-        })
-      );
+      if (team.userId === userData?.id) {
+        // Replace userMemes with new data
+        setUserMemes((prevMemes) =>
+          team.team.map((proposedMeme) => {
+            const existingMeme = prevMemes.find(
+              (m) => m.userMemeId === proposedMeme.userMemeId
+            );
+            return existingMeme
+              ? {
+                  ...existingMeme,
+                  status: proposedMeme.status as MemeStatus,
+                  position: proposedMeme.position,
+                }
+              : transformUserMeme(proposedMeme);
+          })
+        );
+      } else {
+        // Replace opponentMemes with new data
+        setOpponentMemes((prevMemes) =>
+          team.team.map((proposedMeme) => {
+            const existingMeme = prevMemes.find(
+              (m) => m.userMemeId === proposedMeme.userMemeId
+            );
+            return existingMeme
+              ? {
+                  ...existingMeme,
+                  status: proposedMeme.status as MemeStatus,
+                  position: proposedMeme.position,
+                }
+              : transformUserMeme(proposedMeme);
+          })
+        );
+      }
     });
   };
 
   const handleResolvedSkillsEvent = (
     resolvedSkillsData: ResolvedSkillsResponseDto
   ) => {
-    setUserMemes((prevMemes) =>
+    // Replace userMemes with new data
+    setUserMemes(
       resolvedSkillsData.userData.userMemes.map((memeDto) =>
-        transformUserMeme(
-          memeDto,
-          prevMemes.find((m) => m.userMemeId === memeDto.userMemeId)
-        )
+        transformUserMeme(memeDto)
       )
     );
 
-    setOpponentMemes((prevMemes) =>
+    // Replace opponentMemes with new data
+    setOpponentMemes(
       resolvedSkillsData.opponentData.userMemes.map((memeDto) =>
-        transformUserMeme(
-          memeDto,
-          prevMemes.find((m) => m.userMemeId === memeDto.userMemeId)
-        )
+        transformUserMeme(memeDto)
       )
     );
 

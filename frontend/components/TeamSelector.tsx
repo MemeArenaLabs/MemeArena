@@ -18,6 +18,7 @@ export const TeamSelector: React.FC<TeamSelectorProps> = React.memo(
             <TeamCard
               key={team.id}
               team={team}
+              onClick={() => onTeamSelect(team)}
               isSelected={team.id === selectedTeam?.id}
             />
           ))}
