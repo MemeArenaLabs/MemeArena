@@ -23,11 +23,12 @@ Our gladiators can have 3 different elements and 3 different class modifiers, an
 
 ![image](https://github.com/user-attachments/assets/0d568d54-031b-4fb7-a3ca-a8477df2e6c1)
 
-### Wifrix
+### Bongo
+
 
 ![image](https://github.com/user-attachments/assets/f231635f-3d0c-4691-8d3d-3560be16f4dd)
 
-### Bongo
+### Moodenkuro
 
 ![image](https://github.com/user-attachments/assets/514a08c7-be1c-499e-acb2-ff0f19807a87)
 
@@ -35,7 +36,9 @@ Our gladiators can have 3 different elements and 3 different class modifiers, an
 
 ![image](https://github.com/user-attachments/assets/1448333e-b385-40ee-aa79-81da812b2d64)
 
-### Moodenkuro
+
+### Wifrix
+
 
 ![image](https://github.com/user-attachments/assets/dc1a9eed-39c9-4adf-982b-b46be3406841)
 
