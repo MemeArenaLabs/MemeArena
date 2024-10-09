@@ -29,10 +29,17 @@ anchor version: anchor-cli 0.30.1
 #### Deployments
 
 - Vault Manager / AMM: https://solscan.io/account/7uiv49yQump51zMgNXCs98iPGq2oUHgUmbe33uUMiiv3?cluster=devnet
-- -    Generated AMM ID: DDTWGUxUysQtJ2PJJdjYFN7Doedt5oLVE8T3hedES8iM
-- -   AMM created with public key: 7uiv49yQump51zMgNXCs98iPGq2oUHgUmbe33uUMiiv3
+  - Generated AMM ID: DDTWGUxUysQtJ2PJJdjYFN7Doedt5oLVE8T3hedES8iM
+  - AMM created with public key: 7uiv49yQump51zMgNXCs98iPGq2oUHgUmbe33uUMiiv3
 
-- - Vault Manager / AMM: https://solscan.io/account/7uiv49yQump51zMgNXCs98iPGq2oUHgUmbe33uUMiiv3?cluster=devnet
+- Vauls:
+  - WIF token:
+  -     Pool Account: 4rHBKyXD7YzuLMX8edJ8kYZ9Qf5pMqpg1adRNidMQXu8
+  -     Pool Token Account: GXJRZAViJJBsCeCW2PayWjT1FooJ99ShK3ihAUiE9fJE
+  -     LP Token Mint Account: H9XaYVZ197y2Qxtua6ra3wbwa7jcQD9adqbjGU6QGBS2
+  -     LP Token Account: 2PMi5J4TJDAGCJWNWYxcJvNqwigSRyEgQn5N6KV9tp4S
+  -     Pool created for token: 4gn22HqJ9ksDULRaekC53A51HzkbAYpGCiLvGB4DhaZY with signature: 4LJNK35LCAMKsybD4KxmBtMBd3LPoXyfwUxoyM1B5CTryTaavw69JapYuW546DH8VMATmcU7UfirgFe1nk13wYgC
+
 
 
 
