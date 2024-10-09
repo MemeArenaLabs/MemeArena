@@ -108,7 +108,37 @@ View Collection on Metaplex Explorer
 
 
 ### Backend
+
+The backend is built in NodeJS using the NestJS framework.
+
+It includes both a REST API and a WebSocket server for managing battles in real-time.
+
+The backend consists of five modules: battle, meme, token, user, and team, all of which are connected to a PostgreSQL database for data persistence.
+
+The WebSocket-based battle system includes end-to-end (e2e) tests to ensure the correct execution of the battle sequence.
+
+Additionally, the backend has defined seeds to populate the database.
+
+Deployment is handled via Railway, with CI configured to automatically deploy changes from a specific branch of the repository.
+
 ### Frontend
+
+Built using Next.js, React, and Tailwind CSS, with full integration to interact with the Solana blockchain.
+
+#### Core Technologies
+
+Next.js: A React framework for building web applications.
+React: JavaScript library for creating dynamic user interfaces.
+Tailwind CSS: A utility-first CSS framework for designing responsive layouts.
+DaisyUI: A component library for Tailwind CSS to enhance UI design.
+TypeScript: A typed superset of JavaScript, enhancing code reliability.
+#### Features
+
+Seamless integration with the Solana blockchain.
+Support for Solana-compatible wallets.
+NFT functionalities utilizing libraries from the Metaplex Foundation.
+Responsive, modern design powered by Tailwind CSS and DaisyUI.
+Optimized development workflow with Next.js and Turborepo.
 
 
 
