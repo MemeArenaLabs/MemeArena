@@ -7,6 +7,7 @@ import { Modal } from "@/components/Modal";
 import { TeamModal } from "@/components/gui/TeamModal";
 import { BottomMenu } from "@/components/gui/BottomMenu";
 import Profile from "@/components/ProfilePanel";
+import { Settings } from '../../../components/ProfilePanel';
 
 export default function TeamSelection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,7 +42,7 @@ export default function TeamSelection() {
       <div className="flex p-2">
         <div className="">
           {/* User CTA profile */}
-          <Profile readOnly={true} />
+          <Profile readOnly={true} showSettings={false} />
           <div className="flex py-2 text-yellow uppercase">
             <p>My team</p>
           </div>
@@ -147,7 +148,7 @@ export default function TeamSelection() {
           <div>
             <div>
               <div className="flex justify-end">
-                <Profile readOnly={true} isOpponent={true} />
+                <Profile readOnly={true} isOpponent={true} showSettings={false} />
               </div>
               <div className="flex justify-end p-2 text-yellow uppercase ">
                 <p>Enemy team</p>

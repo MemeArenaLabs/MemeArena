@@ -10,11 +10,13 @@ import { useUserData } from "@/context/UserDataProvider";
 interface ProfilePanelProps {
   isOpponent?: boolean;
   readOnly?: boolean;
+  showSettings?: boolean; 
 }
 
 export default function ProfilePanel({
   isOpponent = false,
   readOnly = false,
+  showSettings = true,
 }: ProfilePanelProps) {
   const { username } = useUserData();
   return (
@@ -24,7 +26,7 @@ export default function ProfilePanel({
         readOnly={readOnly}
         isOpponent={isOpponent}
       />
-      <Settings />
+      {showSettings && <Settings />}
     </div>
   );
 }
